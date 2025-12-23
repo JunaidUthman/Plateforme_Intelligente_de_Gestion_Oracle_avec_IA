@@ -24,7 +24,7 @@ optimization:
       "gain_estime": "Pourcentage de réduction de coût estimé"
     }}
     [cite_start]Ne fais aucune introduction, juste le JSON. [cite: 105-109]
-    
+
 security:
   prompt: |
     Tu es un expert Oracle DBA. Analyse la config suivante : {config}
@@ -42,9 +42,20 @@ security:
 
 anomaly:
   prompt: |
-    Examine ces logs d'audit :
-    {logs}
+    Tu es un expert en cybersécurité Oracle spécialisé dans l'analyse de logs d'audit.
+    Analyse les logs suivants : {logs}
     
-    CONTEXTE EXPERT : {context}
+    En te basant sur ce contexte d'expert : {context}
     
-    [cite_start]Tâche : Classifie si ces logs sont "NORMAUX", "SUSPECTS" ou "CRITIQUES" avec une justification [cite: 127-128].
+    RETOURNE EXCLUSIVEMENT UN OBJET JSON (un tableau d'objets) sous cette forme :
+    [
+      {{
+        "timestamp": "...",
+        "user": "...",
+        "classification": "NORMAL / SUSPECT / CRITIQUE",
+        "justification": "Explique pourquoi c'est une menace ou une activité normale",
+        "severite": "0 à 10",
+        "type_attaque": "SQL Injection / Escalade / Accès hors heures / Aucun"
+      }}
+    ]
+    [cite_start]Ne fais aucune introduction, juste le JSON. [cite: 126-129]
