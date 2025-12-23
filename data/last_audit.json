@@ -1,0 +1,26 @@
+{
+    "score": 20,
+    "risques": [
+        {
+            "nom": "GHOST_USER",
+            "severite": "Critique",
+            "details": "L'utilisateur 'GHOST_USER' possède le rôle DBA, ce qui est une violation flagrante du principe du moindre privilège pour un compte dont le nom suggère qu'il pourrait être non-officiel ou non audité. De plus, son profil par défaut permet un nombre excessif de tentatives de connexion échouées (10) et une durée de vie de mot de passe illimitée (UNLIMITED), le rendant vulnérable aux attaques par force brute et à l'absence de rotation de mot de passe. Sa dernière connexion est récente, ce qui souligne un risque actif."
+        },
+        {
+            "nom": "SYS",
+            "severite": "Élevée",
+            "details": "Le compte SYS, le plus privilégié de la base de données, a une durée de vie de mot de passe illimitée (UNLIMITED). Ceci contredit les bonnes pratiques de sécurité qui exigent une rotation régulière des mots de passe (maximum 90 jours selon le contexte) pour réduire le risque de compromission à long terme."
+        },
+        {
+            "nom": "HR_APP",
+            "severite": "Moyenne",
+            "details": "L'utilisateur applicatif 'HR_APP' détient les rôles 'CONNECT' et 'RESOURCE'. Bien que 'CONNECT' soit nécessaire pour se connecter, 'RESOURCE' accorde des privilèges étendus (par ex. CREATE TABLE, CREATE PROCEDURE) qui dépassent généralement le principe du moindre privilège pour un compte applicatif. Il est préférable d'octroyer des privilèges granulaires spécifiques à ses fonctions."
+        }
+    ],
+    "recommandations": [
+        "**Investigation et neutralisation de GHOST_USER** : Identifier immédiatement l'origine et la légitimité du compte 'GHOST_USER'. Si non autorisé, révoquer le rôle DBA, puis bloquer (ALTER USER GHOST_USER ACCOUNT LOCK) et/ou supprimer le compte. Si, par exception, il s'avérait légitime (ce qui est peu probable pour un tel nom), lui assigner un profil sécurisé avec `FAILED_LOGIN_ATTEMPTS` <= 5 et `PASSWORD_LIFE_TIME` <= 90 jours, et révoquer le rôle DBA en lui attribuant des privilèges granulaires strictement nécessaires.",
+        "**Renforcement de la sécurité du compte SYS** : Modifier le profil 'DEFAULT' (ou créer et assigner un profil spécifique au compte SYS) pour définir une durée de vie de mot de passe maximale de 90 jours (`PASSWORD_LIFE_TIME 90`). Mettre en place une fonction de vérification de complexité des mots de passe pour ce profil.",
+        "**Application du moindre privilège pour HR_APP** : Révoquer les rôles 'CONNECT' et 'RESOURCE' de 'HR_APP'. Accorder uniquement les privilèges granulaires strictement nécessaires à l'application (ex: `CREATE SESSION`, `SELECT`, `INSERT`, `UPDATE`, `DELETE` sur des objets spécifiques du schéma, exécution de packages/procédures spécifiques).",
+        "**Audit et renforcement des profils** : Examiner et modifier le profil 'DEFAULT' pour qu'il applique des politiques de sécurité strictes (nombre de tentatives de connexion échouées limité à 3-5, durée de vie de mot de passe maximum 90 jours et fonction de vérification de complexité). S'assurer que 'APP_PROFILE' est également robuste et conforme aux exigences de sécurité."
+    ]
+}

@@ -7,22 +7,38 @@ system_role: |
 
 optimization:
   prompt: |
-    Analyse cette requête SQL et son plan d'exécution :
+    Tu es un expert Oracle Performance Tuning. Analyse la requête suivante :
     SQL : {query}
-    PLAN : {plan}
+    Opération du Plan : {plan}
     
-    CONTEXTE EXPERT : {context}
+    Contexte d'optimisation (RAG) : {context}
     
-    [cite_start]Tâche : Explique le plan d'exécution et propose 2-3 optimisations (index, hints, ou réécriture) [cite: 101-103].
-
+    RETOURNE EXCLUSIVEMENT UN OBJET JSON avec cette structure :
+    {{
+      "sql_id": "ID de la requête",
+      "explication_plan": "Explication simple de ce que fait la base",
+      "points_couteux": ["Liste des goulots d'étranglement"],
+      "recommandations": [
+        {{ "type": "Index/Hint/SQL", "description": "Action précise à faire" }}
+      ],
+      "gain_estime": "Pourcentage de réduction de coût estimé"
+    }}
+    [cite_start]Ne fais aucune introduction, juste le JSON. [cite: 105-109]
+    
 security:
   prompt: |
-    Analyse cette configuration de sécurité Oracle :
-    {config}
-    
-    CONTEXTE EXPERT : {context}
-    
-    [cite_start]Tâche : Identifie les risques critiques et donne un score de sécurité de 0 à 100 [cite: 90-91].
+    Tu es un expert Oracle DBA. Analyse la config suivante : {config}
+    Contexte : {context}
+
+    RETOURNE EXCLUSIVEMENT UN OBJET JSON avec cette structure exacte :
+    {{
+      "score": 20,
+      "risques": [
+        {{ "nom": "GHOST_USER", "severite": "Critique", "details": "..." }}
+      ],
+      "recommandations": ["Action 1", "Action 2"]
+    }}
+    Ne fais aucune introduction ni conclusion, juste le JSON.
 
 anomaly:
   prompt: |
