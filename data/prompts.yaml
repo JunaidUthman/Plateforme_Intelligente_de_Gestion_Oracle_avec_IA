@@ -1,0 +1,34 @@
+# Hub centralisé des instructions pour l'IA 
+
+system_role: |
+  Tu es un expert Oracle DBA spécialisé en IA.
+  Utilise toujours le contexte fourni pour répondre de manière technique et précise.
+  Si une information n'est pas dans le contexte, utilise tes connaissances générales en précisant que c'est une estimation.
+
+optimization:
+  prompt: |
+    Analyse cette requête SQL et son plan d'exécution :
+    SQL : {query}
+    PLAN : {plan}
+    
+    CONTEXTE EXPERT : {context}
+    
+    [cite_start]Tâche : Explique le plan d'exécution et propose 2-3 optimisations (index, hints, ou réécriture) [cite: 101-103].
+
+security:
+  prompt: |
+    Analyse cette configuration de sécurité Oracle :
+    {config}
+    
+    CONTEXTE EXPERT : {context}
+    
+    [cite_start]Tâche : Identifie les risques critiques et donne un score de sécurité de 0 à 100 [cite: 90-91].
+
+anomaly:
+  prompt: |
+    Examine ces logs d'audit :
+    {logs}
+    
+    CONTEXTE EXPERT : {context}
+    
+    [cite_start]Tâche : Classifie si ces logs sont "NORMAUX", "SUSPECTS" ou "CRITIQUES" avec une justification [cite: 127-128].

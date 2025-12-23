@@ -1,82 +1,76 @@
 import os
 import chromadb
-from dotenv import load_dotenv
-import google.generativeai as genai
 from chromadb.utils import embedding_functions
-
-load_dotenv()
-
-# 1. Configuration de Gemini
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") # À mettre dans un fichier .env
-if not GOOGLE_API_KEY:
-    raise ValueError("❌ GOOGLE_API_KEY non trouvée dans le fichier .env")
-    
-genai.configure(api_key=GOOGLE_API_KEY)
 
 class OracleRAG:
     def __init__(self, db_path="data/chroma_db"):
-        # Initialisation de ChromaDB (Stockage local)
+        """Initialise ChromaDB avec un modèle d'embedding local [cite: 55, 58]"""
+        # Création du dossier de base s'il n'existe pas
+        if not os.path.exists("data"):
+            os.makedirs("data")
+
+        # Initialisation du client persistant (stockage sur disque) 
         self.client = chromadb.PersistentClient(path=db_path)
         
-        # Création (ou récupération) de la collection "oracle_docs"
-        # On utilise une fonction d'embedding personnalisée via Gemini
-        self.collection = self.client.get_or_create_collection(name="oracle_docs")
-        print("✅ Base Vectorielle ChromaDB prête.")
+        # Modèle local : all-MiniLM-L6-v2 (rapide, léger et gratuit) [cite: 13, 234]
+        self.emb_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name="all-MiniLM-L6-v2"
+        )
+        
+        # Création ou récupération de la collection 
+        self.collection = self.client.get_or_create_collection(
+            name="oracle_docs", 
+            embedding_function=self.emb_fn
+        )
+        print("✅ Base Vectorielle ChromaDB prête (Mode Local).")
 
     def add_documents(self, folder_path):
-        """Lit les fichiers texte et les ajoute à la Vector DB"""
+        """Lit les fichiers .txt et les indexe dans la base [cite: 59]"""
         if not os.path.exists(folder_path):
             print(f"⚠️ Dossier {folder_path} introuvable.")
             return
 
+        documents = []
+        ids = []
+        metadatas = []
+
         for filename in os.listdir(folder_path):
             if filename.endswith(".txt"):
-                with open(os.path.join(folder_path, filename), 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    
-                    # 2. Vectorisation via Gemini (Embedding)
-                    # Note : Dans une version réelle, on découperait le texte en morceaux (chunks)
-                    response = genai.embed_content(
-                        model="models/embedding-001",
-                        content=content,
-                        task_type="retrieval_document"
-                    )
-                    embedding = response['embedding']
-
-                    # 3. Stockage dans ChromaDB
-                    self.collection.add(
-                        ids=[filename],
-                        embeddings=[embedding],
-                        documents=[content],
-                        metadatas=[{"source": filename}]
-                    )
-                    print(f"📖 Document '{filename}' indexé.")
+                file_path = os.path.join(folder_path, filename)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    documents.append(f.read())
+                    ids.append(filename) # L'ID est le nom du fichier
+                    metadatas.append({"source": filename})
+        
+        if documents:
+            # Utilisation de upsert pour éviter les erreurs d'ID existant
+            self.collection.upsert(ids=ids, documents=documents, metadatas=metadatas)
+            print(f"📖 {len(documents)} documents indexés/mis à jour avec succès.")
+        else:
+            print("⚠️ Aucun fichier .txt trouvé dans le dossier.")
 
     def retrieve_context(self, query, n_results=3):
-        """Fonction de recherche par similarité [cite: 65]"""
-        # Vectorisation de la question de l'utilisateur
-        query_embedding = genai.embed_content(
-            model="models/embedding-001",
-            content=query,
-            task_type="retrieval_query"
-        )['embedding']
-
-        # Recherche des documents les plus proches
+        """Recherche par similarité sémantique [cite: 65]"""
         results = self.collection.query(
-            query_embeddings=[query_embedding],
+            query_texts=[query],
             n_results=n_results
         )
         return results['documents'][0]
 
-# --- TEST DU MODULE 2 ---
+# --- BLOC DE TEST POUR VÉRIFICATION ---
 if __name__ == "__main__":
     rag = OracleRAG()
     
-    # Étape d'ingestion (à faire une seule fois ou lors de nouveaux docs)
-    # rag.add_documents("data/knowledge") 
+    # Étape 1 : Indexation (Pointer vers votre dossier de texte)
+    # Assurez-vous d'avoir créé 'data/knowledge/' avec vos fichiers .txt
+    rag.add_documents("data/knowledge") 
 
-    # Étape de test de récupération 
-    query = "Comment optimiser un index lent ?"
-    context = rag.retrieve_context(query)
-    print(f"\n🔍 Question : {query}")
-    print(f"💡 Contexte trouvé : {context[0][:200]}...")
+    # Étape 2 : Test de récupération [cite: 66]
+    test_query = "Comment optimiser un index lent ?"
+    print(f"\n🔍 Recherche : {test_query}")
+    
+    try:
+        context = rag.retrieve_context(test_query)
+        print(f"💡 Premier résultat trouvé :\n{context[0][:200]}...")
+    except Exception as e:
+        print(f"❌ Erreur lors de la récupération : {e}")
