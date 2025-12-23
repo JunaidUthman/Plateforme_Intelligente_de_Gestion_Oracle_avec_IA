@@ -59,3 +59,27 @@ anomaly:
       }}
     ]
     [cite_start]Ne fais aucune introduction, juste le JSON. [cite: 126-129]
+    
+backup:
+  prompt: |
+    Tu es un expert Oracle Recovery Manager (RMAN). 
+    Analyse les paramètres suivants :
+    - Métriques base : {metrics}
+    - RPO (Perte de données max) : {rpo}
+    - RTO (Temps de reprise max) : {rto}
+    - Budget/Ressources : {budget}
+    
+    Contexte d'expert : {context}
+
+    RETOURNE EXCLUSIVEMENT UN OBJET JSON avec cette structure :
+    {{
+      "strategie": {{
+        "type": "complète / incrémentale / différentielle",
+        "frequence": "horaire / quotidienne / hebdomadaire",
+        "retention_jours": 30,
+        "emplacement": "Disk / Cloud / Tape",
+        "cout_estime": "Bas / Moyen / Haut"
+      }},
+      "script_rman": "Le code RMAN complet pour mettre en place cette stratégie",
+      "justification": "Pourquoi ce choix selon le RPO/RTO"
+    }}
