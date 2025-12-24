@@ -1,0 +1,5 @@
+EVENT,TOTAL_WAITS,TIME_WAITED,AVERAGE_WAIT
+db file sequential read,4500,1200,0.26
+log file sync,1200,850,0.7
+buffer busy waits,300,150,0.5
+direct path read,800,400,0.5

@@ -1,26 +1,27 @@
 {
-    "score": 20,
+    "score": 10,
     "risques": [
         {
-            "nom": "GHOST_USER",
+            "nom": "Utilisateur GHOST_USER avec privilèges excessifs et comportement suspect",
             "severite": "Critique",
-            "details": "L'utilisateur 'GHOST_USER' possède le rôle DBA, ce qui est une violation flagrante du principe du moindre privilège pour un compte dont le nom suggère qu'il pourrait être non-officiel ou non audité. De plus, son profil par défaut permet un nombre excessif de tentatives de connexion échouées (10) et une durée de vie de mot de passe illimitée (UNLIMITED), le rendant vulnérable aux attaques par force brute et à l'absence de rotation de mot de passe. Sa dernière connexion est récente, ce qui souligne un risque actif."
+            "details": "L'utilisateur 'GHOST_USER' est fortement suspect, son nom suggère un compte non officiel ou 'fantôme'. Il possède le privilège 'DROP ANY TABLE' qui est excessivement dangereux et viole le principe du moindre privilège, permettant la destruction de données sur n'importe quel schéma. Sa dernière connexion à 23:45 est une anomalie potentielle selon le contexte expert, indiquant une activité en dehors des heures de bureau habituelles. Cela représente un risque critique pour l'intégrité et la disponibilité des données."
         },
         {
-            "nom": "SYS",
-            "severite": "Élevée",
-            "details": "Le compte SYS, le plus privilégié de la base de données, a une durée de vie de mot de passe illimitée (UNLIMITED). Ceci contredit les bonnes pratiques de sécurité qui exigent une rotation régulière des mots de passe (maximum 90 jours selon le contexte) pour réduire le risque de compromission à long terme."
+            "nom": "Profils de mots de passe potentiellement non sécurisés",
+            "severite": "Majeure",
+            "details": "Les profils 'DEFAULT' (utilisé par SYS et GHOST_USER) et 'APP_PROFILE' (utilisé par HR_APP) n'ont pas leur configuration détaillée fournie. Par conséquent, il est une estimation probable (basée sur l'absence d'information) qu'ils ne respectent pas les bonnes pratiques de sécurité (ex: limitation des tentatives de connexion échouées, durée de vie des mots de passe, fonction de vérification de complexité), tel que spécifié dans le contexte expert. Ceci expose le système à des attaques par force brute ou à l'utilisation de mots de passe faibles/compromis."
         },
         {
-            "nom": "HR_APP",
-            "severite": "Moyenne",
-            "details": "L'utilisateur applicatif 'HR_APP' détient les rôles 'CONNECT' et 'RESOURCE'. Bien que 'CONNECT' soit nécessaire pour se connecter, 'RESOURCE' accorde des privilèges étendus (par ex. CREATE TABLE, CREATE PROCEDURE) qui dépassent généralement le principe du moindre privilège pour un compte applicatif. Il est préférable d'octroyer des privilèges granulaires spécifiques à ses fonctions."
+            "nom": "Rôles standards sans protection par mot de passe",
+            "severite": "Modérée",
+            "details": "Les rôles 'DBA', 'CONNECT' et 'RESOURCE' sont configurés avec 'PASSWORD_REQUIRED: NO' et 'AUTHENTICATION_TYPE: NONE'. Bien que ce soit standard pour ces rôles eux-mêmes, si un attaquant parvenait à obtenir le privilège 'GRANT ANY ROLE' (ou similaire) sans autres contrôles, il pourrait s'attribuer ces rôles sans mot de passe, facilitant une escalade de privilèges."
         }
     ],
     "recommandations": [
-        "**Investigation et neutralisation de GHOST_USER** : Identifier immédiatement l'origine et la légitimité du compte 'GHOST_USER'. Si non autorisé, révoquer le rôle DBA, puis bloquer (ALTER USER GHOST_USER ACCOUNT LOCK) et/ou supprimer le compte. Si, par exception, il s'avérait légitime (ce qui est peu probable pour un tel nom), lui assigner un profil sécurisé avec `FAILED_LOGIN_ATTEMPTS` <= 5 et `PASSWORD_LIFE_TIME` <= 90 jours, et révoquer le rôle DBA en lui attribuant des privilèges granulaires strictement nécessaires.",
-        "**Renforcement de la sécurité du compte SYS** : Modifier le profil 'DEFAULT' (ou créer et assigner un profil spécifique au compte SYS) pour définir une durée de vie de mot de passe maximale de 90 jours (`PASSWORD_LIFE_TIME 90`). Mettre en place une fonction de vérification de complexité des mots de passe pour ce profil.",
-        "**Application du moindre privilège pour HR_APP** : Révoquer les rôles 'CONNECT' et 'RESOURCE' de 'HR_APP'. Accorder uniquement les privilèges granulaires strictement nécessaires à l'application (ex: `CREATE SESSION`, `SELECT`, `INSERT`, `UPDATE`, `DELETE` sur des objets spécifiques du schéma, exécution de packages/procédures spécifiques).",
-        "**Audit et renforcement des profils** : Examiner et modifier le profil 'DEFAULT' pour qu'il applique des politiques de sécurité strictes (nombre de tentatives de connexion échouées limité à 3-5, durée de vie de mot de passe maximum 90 jours et fonction de vérification de complexité). S'assurer que 'APP_PROFILE' est également robuste et conforme aux exigences de sécurité."
+        "1. **Désactiver/Supprimer GHOST_USER :** Désactiver ou supprimer immédiatement l'utilisateur 'GHOST_USER'. Si ce compte est légitime (ce qui est peu probable vu le nom et les privilèges), il doit être renommé, ses privilèges réduits au strict minimum ('CREATE SESSION' et privilèges granulaires sur des objets spécifiques), et son activité auditée rétroactivement. Le principe du moindre privilège doit être appliqué rigoureusement.",
+        "2. **Renforcer les profils de mots de passe :** Créer un ou plusieurs profils de mots de passe sécurisés. Pour chaque profil, configurer les paramètres clés : 'FAILED_LOGIN_ATTEMPTS' (ex: 3-5), 'PASSWORD_LIFE_TIME' (ex: 90 jours maximum), 'PASSWORD_GRACE_TIME' et une 'PASSWORD_VERIFY_FUNCTION' pour la complexité. Appliquer ces profils sécurisés aux utilisateurs SYS, HR_APP et tout autre utilisateur administratif ou applicatif. Le profil 'DEFAULT' ne doit pas être utilisé pour des comptes critiques.",
+        "3. **Appliquer le principe du moindre privilège :** Revoir tous les privilèges systèmes et objets accordés aux utilisateurs et rôles. Éliminer tous les privilèges excessifs, en particulier ceux avec 'ANY' (ex: 'DROP ANY TABLE', 'ALTER ANY TABLE', 'GRANT ANY PRIVILEGE', 'GRANT ANY ROLE') sauf pour les administrateurs légitimes (SYS, comptes DBA clairement définis). Privilégier des privilèges granulaires (ex: 'GRANT SELECT ON schema.table TO user').",
+        "4. **Activer l'audit de sécurité :** Mettre en place un audit robuste, de préférence l'Audit Unifié si la version d'Oracle est 12c ou supérieure. Auditer en particulier les tentatives de connexion échouées ('FAILED_LOGIN_ATTEMPTS'), les modifications de structure (DDL), les octrois de privilèges et rôles (GRANT/REVOKE), et les connexions en dehors des heures de bureau.",
+        "5. **Protéger les rôles standards :** S'assurer que le privilège 'GRANT ANY ROLE' n'est pas accordé de manière abusive. Le mécanisme d'octroi des rôles standards doit être sécurisé et soumis à l'audit. Bien que les rôles eux-mêmes n'aient pas de mot de passe, l'administration de ces rôles doit être strictement contrôlée."
     ]
 }

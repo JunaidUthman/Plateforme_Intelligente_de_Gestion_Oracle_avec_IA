@@ -29,8 +29,7 @@ class QueryOptimizer:
             sql_id = row['SQL_ID']
 
             # 2. Récupération du contexte d'optimisation via le RAG (Module 2) [cite: 65]
-            # On cherche des patterns liés au "TABLE ACCESS FULL" et "indexation"
-            context_docs = self.rag.retrieve_context(f"Comment optimiser une opération {plan_op} sur la table {row.get('OBJECT_NAME', '')}")
+            context_docs, _ = self.rag.retrieve_context(f"Comment optimiser une opération {plan_op} sur la table {row.get('OBJECT_NAME', '')}")
             context_text = "\n".join(context_docs)
 
             # 3. Génération de l'analyse via Gemini (Module 3) 

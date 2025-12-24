@@ -47,6 +47,13 @@ class LLMEngine:
         template = self.prompts['security']['prompt']
         prompt_final = template.format(config=config, context=context)
         return self.generate(prompt_final)
+        
+    def detect_anomaly(self, log_entry, context):
+        """Module 6 : Détection d'anomalies """
+        template = self.prompts['anomaly']['prompt']
+        # On passe le log et le contexte au template
+        prompt_final = template.format(logs=log_entry, context=context)
+        return self.generate(prompt_final)
 
 # --- TEST DE VALIDATION DU MODULE 3 ---
 if __name__ == "__main__":

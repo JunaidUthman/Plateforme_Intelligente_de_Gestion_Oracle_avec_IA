@@ -1,0 +1,46 @@
+RUN {
+  # --- Configuration RMAN Permanente (à exécuter une seule fois ou au besoin) ---
+  # Configure la politique de rétention à une fenêtre de récupération de 30 jours
+  # Cela permet de restaurer la base à n'importe quel point dans les 30 derniers jours.
+  CONFIGURE RETENTION POLICY TO RECOVERY WINDOW OF 30 DAYS;
+
+  # Active l'autobackup du Control File et du SPFILE après chaque sauvegarde de la base de données ou des archivelogs.
+  # Crucial pour la récupération en cas de perte du control file.
+  CONFIGURE CONTROLFILE AUTOBACKUP ON;
+
+  # Configure les canaux de sauvegarde pour le type de périphérique DISK, avec un format de nom de fichier standard.
+  # Pour un environnement de production, il est recommandé de définir plusieurs canaux pour améliorer les performances.
+  CONFIGURE CHANNEL DEVICE TYPE DISK FORMAT   '/u01/backups/oracle/%U'; # Adaptez le chemin de destination selon votre environnement
+
+  # --- Stratégie de Sauvegarde Exécutable Quotidiennement (Exemple de Script pour une tâche planifiée) ---
+
+  # 1. Sauvegarde Incrémentale de Niveau 1 (Différentielle par défaut)
+  #    Cette commande est idéale pour une exécution quotidienne (Mon-Sam).
+  #    Elle sauvegarde uniquement les blocs modifiés depuis la dernière sauvegarde de niveau 0 ou 1.
+  #    Le TAG aide à identifier et gérer les sauvegardes.
+  #    Elle inclut également une sauvegarde de tous les archivelogs générés jusqu'à présent et les supprime après succès.
+  #    Une sauvegarde de Niveau 0 (Complète) serait planifiée séparément, typiquement une fois par semaine (par exemple le dimanche).
+  #    Exemple de commande pour le Niveau 0 hebdomadaire (non exécutée par ce script quotidien, mais faisant partie de la stratégie globale) :
+  #    BACKUP AS COMPRESSED BACKUPSET INCREMENTAL LEVEL 0 DATABASE TAG 'WEEKLY_FULL' PLUS ARCHIVELOG DELETE INPUT;
+  BACKUP AS COMPRESSED BACKUPSET
+  INCREMENTAL LEVEL 1 DATABASE TAG 'DAILY_INCREMENTAL'
+  PLUS ARCHIVELOG
+  DELETE INPUT; # Supprime les archivelogs une fois qu'ils sont sauvegardés avec succès
+
+  # 2. Sauvegarde Fréquente des Archivelogs
+  #    Pour garantir un RPO de 15 minutes, il est CRITIQUE d'avoir une tâche de sauvegarde des archivelogs
+  #    planifiée séparément pour s'exécuter toutes les 15-30 minutes. La commande ci-dessous représente cette tâche.
+  #    Elle doit être exécutée beaucoup plus fréquemment que la sauvegarde quotidienne.
+  BACKUP AS COMPRESSED BACKUPSET
+  ARCHIVELOG ALL
+  DELETE INPUT; # Supprime tous les archivelogs une fois sauvegardés
+
+  # 3. Nettoyage
+  #    Supprime toutes les sauvegardes et archivelogs obsolètes selon la politique de rétention configurée.
+  #    'NOPROMPT' pour automatiser la suppression sans interaction.
+  DELETE NOPROMPT OBSOLETE;
+
+  # 4. (Optionnel) Validation des sauvegardes
+  #    Bonne pratique pour vérifier l'intégrité des fichiers de sauvegarde.
+  #    VALIDATE BACKUPSET ALL;
+}

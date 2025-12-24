@@ -1,34 +1,122 @@
 [
     {
-        "timestamp": "2026-01-13 09:00:00",
-        "user": "HR_APP",
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 14:28:00",
         "classification": "NORMAL",
-        "justification": "Activité normale d'une application effectuant une opération de lecture (SELECT) sur une table de données pendant les heures de bureau habituelles.",
-        "severite": 0,
-        "type_attaque": "Aucun"
+        "justification": "Opération de mise à jour standard par l'application RH.",
+        "severite": 0
     },
     {
         "timestamp": "2026-01-13 03:15:00",
-        "user": "SYS",
-        "classification": "CRITIQUE",
-        "justification": "Connexion réussie de l'utilisateur SYS, le super-utilisateur de la base de données, en dehors des heures d'activité normales (03h15), depuis une source 'unknown' et un terminal 'Remote'. C'est une forte indication d'un accès non autorisé ou d'une activité administrative non planifiée et potentiellement malveillante.",
-        "severite": 9,
-        "type_attaque": "Accès hors heures"
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
     },
     {
-        "timestamp": "2026-01-13 14:20:10",
-        "user": "APP_USER",
-        "classification": "CRITIQUE",
-        "justification": "Tentative d'injection SQL détectée par le pattern ' OR '1'='1' dans l'action, comme spécifié dans le contexte. Bien que l'opération ait échoué, l'intention malveillante est claire et représente une attaque directe.",
-        "severite": 8,
-        "type_attaque": "SQL Injection"
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
     },
     {
-        "timestamp": "2026-01-13 16:45:00",
-        "user": "GHOST_USER",
-        "classification": "CRITIQUE",
-        "justification": "Octroi réussi du rôle 'DBA' à 'GHOST_USER'. Le contexte stipule que l'escalade de privilèges est une anomalie critique, en particulier lorsqu'un utilisateur tente d'exécuter 'GRANT DBA'. Cela viole le principe du moindre privilège et représente une brèche de sécurité majeure.",
-        "severite": 10,
-        "type_attaque": "Escalade"
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 11:41:00",
+        "classification": "NORMAL",
+        "justification": "Consultation standard par l'application RH.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 10:23:00",
+        "classification": "NORMAL",
+        "justification": "Opération d'insertion standard par l'utilisateur Finance.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 09:01:00",
+        "classification": "NORMAL",
+        "justification": "Consultation standard des employés par l'utilisateur Finance.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 13:22:00",
+        "classification": "NORMAL",
+        "justification": "Opération d'insertion standard par un processus automatisé.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 12:09:00",
+        "classification": "NORMAL",
+        "justification": "Opération de mise à jour standard des employés par l'utilisateur Finance.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 10:38:00",
+        "classification": "NORMAL",
+        "justification": "Consultation standard des produits par l'utilisateur Finance.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 11:42:00",
+        "classification": "NORMAL",
+        "justification": "Opération d'insertion standard des employés par l'utilisateur Finance.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 03:15:00",
+        "classification": "SUSPECT",
+        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-13 08:21:00",
+        "classification": "NORMAL",
+        "justification": "Opération d'insertion standard par l'application RH.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 15:23:00",
+        "classification": "NORMAL",
+        "justification": "Consultation standard des commandes par l'utilisateur Finance.",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 12:05:00",
+        "classification": "NORMAL",
+        "justification": "Opération d'insertion standard par l'application RH.",
+        "severite": 0
     }
 ]

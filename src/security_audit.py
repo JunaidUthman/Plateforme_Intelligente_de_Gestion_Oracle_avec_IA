@@ -6,33 +6,54 @@ from rag_setup import OracleRAG
 
 class SecurityAuditor:
     def __init__(self):
+        """Initialisation des moteurs IA et RAG"""
         self.engine = LLMEngine() 
         self.rag = OracleRAG()     
 
-    def run_audit(self, config_file="data/security_config.csv"):
-        """Exécute l'audit et retourne un objet JSON [cite: 81, 89]"""
-        if not os.path.exists(config_file):
-            return {"error": f"Fichier {config_file} introuvable."}
-
-        # 1. Chargement des données [cite: 83]
-        df = pd.read_csv(config_file)
-        config_summary = df.to_string(index=False)
+    def run_audit(self):
+        """
+        Exécute l'audit de sécurité complet en agrégeant les fichiers CSV
+        Livrables : Analyse des utilisateurs, rôles et privilèges
+        """
+        # Liste des fichiers extraits par le Module 1
+        security_files = [
+            "data/dba_users.csv", 
+            "data/dba_roles.csv", 
+            "data/dba_sys_privs.csv"
+        ]
         
-        # 2. Récupération du contexte [cite: 56]
-        context_docs = self.rag.retrieve_context("privilèges DBA critiques, sécurité des mots de passe, rôles Oracle")
+        all_config_text = ""
+        found_files = 0
+
+        # 1. Chargement et agrégation des données de configuration
+        for file_path in security_files:
+            if os.path.exists(file_path):
+                df = pd.read_csv(file_path)
+                # Ajout d'un en-tête pour aider le LLM à distinguer les tables
+                all_config_text += f"\n--- TABLE ORACLE : {os.path.basename(file_path).upper()} ---\n"
+                all_config_text += df.to_string(index=False) + "\n"
+                found_files += 1
+        
+        if found_files == 0:
+            return {"error": "Aucun fichier de configuration (users, roles, privs) trouvé dans data/."}
+
+        # 2. Récupération du contexte via le RAG (Top-5 docs)
+        # Recherche basée sur les thèmes du Module 4
+        context_docs, _ = self.rag.retrieve_context("privilèges excessifs, sécurité des mots de passe, audit rôles")
         context_text = "\n".join(context_docs)
         
-        # 3. Génération du rapport via LLM [cite: 74, 84]
-        print("🕵️ Analyse des vulnérabilités en cours par Gemini (Format JSON)...")
-        report_raw = self.engine.assess_security(config_summary, context_text)
+        # 3. Génération du rapport via LLM
+        print(f"🕵️ Analyse de {found_files} fichiers de sécurité en cours...")
+        report_raw = self.engine.assess_security(all_config_text, context_text)
         
-        # 4. Conversion de la réponse texte en JSON 
+        # 4. Conversion et validation du rapport JSON
         try:
-            # Nettoyage des balises Markdown (```json ... ```) si présentes
+            # Nettoyage pour garantir un JSON valide
             clean_json = report_raw.replace("```json", "").replace("```", "").strip()
             report_data = json.loads(clean_json)
             
-            # Sauvegarde du rapport pour le Dashboard (Module 9)
+            # Sauvegarde pour le Dashboard final (Module 9)
+            os.makedirs("data", exist_ok=True)
             with open("data/last_audit.json", "w", encoding='utf-8') as f:
                 json.dump(report_data, f, indent=4, ensure_ascii=False)
                 
@@ -43,9 +64,10 @@ class SecurityAuditor:
 
 if __name__ == "__main__":
     auditor = SecurityAuditor()
-    print("\n🛡️  LANCEMENT DE L'AUDIT DE SÉCURITÉ (MODE JSON)")
+    print("\n🛡️  LANCEMENT DE L'AUDIT DE SÉCURITÉ AUTOMATISÉ")
     
+    # Exécution de l'audit multi-fichiers
     rapport_json = auditor.run_audit()
     
-    # Affichage propre du JSON dans la console
+    # Affichage structuré du résultat
     print(json.dumps(rapport_json, indent=4, ensure_ascii=False))
