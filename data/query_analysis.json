@@ -26,5 +26,33 @@
             }
         ],
         "gain_estime": "Le gain estimé dépend fortement de la possibilité de modifier la requête. Si la requête peut être optimisée en ajoutant une clause `WHERE` qui utilise un index (par exemple, `WHERE id = 5` comme dans l'Exemple 1), le gain de performance peut être **supérieur à 90%**. Si le `TABLE ACCESS FULL` est inévitable pour l'objectif de la requête (`SELECT * FROM SALES` sur une très grande table pour des raisons légitimes), les gains d'optimisation par d'autres moyens seraient plus marginaux (<10%) et liés à l'infrastructure (optimisation I/O, cache)."
-    }
+    },
+    {
+    "sql_id": "sql_slow_002",
+    "explication_plan": "Le plan d'exécution montre un `INDEX RANGE SCAN` suivi d’un `TABLE ACCESS BY INDEX ROWID` sur la table ORDERS. Cela signifie que l'optimiseur utilise bien un index pour localiser les lignes, mais que la plage de valeurs parcourue est trop large, entraînant la lecture de nombreuses entrées d’index et un accès fréquent à la table.",
+    "points_couteux": [
+      "**Sélectivité faible de l’index** : L’index utilisé (par exemple sur `order_date`) couvre une plage trop large de valeurs, ce qui réduit son efficacité.",
+      "**Accès répétés à la table** : Chaque entrée trouvée dans l’index nécessite un accès supplémentaire à la table via le ROWID, augmentant le coût I/O.",
+      "**Charge CPU modérée** : Le traitement d’un grand nombre de lignes indexées génère une consommation CPU non négligeable, surtout en cas de concurrence élevée."
+    ],
+    "recommandations": [
+      {
+        "type": "SQL/Conception",
+        "description": "Affiner la clause `WHERE` afin de réduire la plage de valeurs scannée par l’index. Par exemple, combiner une condition sur la date avec une autre colonne plus sélective (`status`, `customer_id`)."
+      },
+      {
+        "type": "Index",
+        "description": "Créer un index composite (B-Tree) sur plusieurs colonnes utilisées conjointement dans la clause `WHERE`, par exemple `(order_date, status)`. Cela permettrait de réduire le nombre de lignes retournées par l’index et d’améliorer la sélectivité."
+      },
+      {
+        "type": "Index couvrant",
+        "description": "Si la requête sélectionne peu de colonnes, envisager un index couvrant (incluant toutes les colonnes nécessaires dans l’index). Cela peut permettre un `INDEX ONLY SCAN` et éviter totalement l’accès à la table."
+      },
+      {
+        "type": "Statistiques",
+        "description": "Vérifier et mettre à jour les statistiques des index et de la table ORDERS avec `DBMS_STATS.GATHER_TABLE_STATS('VOTRE_SCHEMA', 'ORDERS', cascade=>true)` afin que le CBO estime correctement la cardinalité et le coût du plan."
+      }
+    ],
+    "gain_estime": "Si un index composite ou couvrant est mis en place et que la sélectivité est améliorée, le gain de performance peut atteindre **60 à 80%**. Sans modification de l’index, l’amélioration restera limitée (**10 à 20%**) et dépendra principalement de la réduction du volume de données retournées."
+  }
 ]

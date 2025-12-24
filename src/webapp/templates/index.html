@@ -35,16 +35,16 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card card-stat bg-{{ 'danger' if stats.anomalies_crit > 0 else 'success' }} text-white mb-4">
+        <div class="card card-stat bg-{{ stats.anom_color }} text-white mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title">Menaces Critiques</h6>
-                        <h2 class="display-4">{{ stats.anomalies_crit }}</h2>
+                        <h6 class="card-title">Alertes de Sécurité</h6>
+                        <h2 class="display-4">{{ stats.anomalies_count }}</h2>
                     </div>
                     <i class="fas fa-exclamation-triangle fa-3x opacity-50"></i>
                 </div>
-                <p class="card-text">Intrusions détectées (24h)</p>
+                <p class="card-text">Intrusions & Comportements Suspects</p>
             </div>
         </div>
     </div>
