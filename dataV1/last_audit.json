@@ -2,51 +2,43 @@
     "score": 65,
     "risques": [
         {
-            "nom": "Utilisateurs avec privilèges DROP ANY excessifs",
+            "nom": "Utilisateurs avec privilèges excessifs",
             "severite": "Critique",
-            "details": "Le rôle DBA possède DROP ANY TABLE, DROP ANY VIEW, DROP ANY INDEX, DROP ANY PROCEDURE, DROP ANY TRIGGER, DROP ANY TYPE, DROP ANY DIRECTORY, DROP ANY MATERIALIZED VIEW, DROP ANY SYNONYM, DROP ANY CLUSTER, DROP ANY SEQUENCE, DROP ANY CONTEXT, DROP ANY OUTLINE, DROP ANY DIMENSION, DROP ANY INDEXTYPE, DROP ANY OPERATOR, DROP ANY LIBRARY, DROP ANY RULE, DROP ANY RULE SET, DROP ANY EVALUATION CONTEXT, DROP ANY ASSEMBLY, DROP ANY EDITION, DROP ANY MINING MODEL, DROP ANY CUBE, DROP ANY CUBE DIMENSION, DROP ANY MEASURE FOLDER, DROP ANY HIERARCHY, DROP ANY ANALYTIC VIEW, DROP ANY ATTRIBUTE DIMENSION, DROP ANY CUBE BUILD PROCESS, DROP ANY SQL TRANSLATION PROFILE, DROP ANY SQL PROFILE, DROP LOCKDOWN PROFILE. Ces privilèges permettent une destruction massive d'objets de la base."
+            "details": "Le rôle DBA dispose de privilèges dangereux comme DROP ANY TABLE, DROP ANY INDEX, DROP ANY VIEW, GRANT ANY PRIVILEGE, GRANT ANY ROLE, CREATE ANY TABLE, etc. Ces privilèges permettent une escalade complète et la destruction de l'environnement. Le rôle IMP_FULL_DATABASE possède également des privilèges excessifs (GRANT ANY ROLE, DROP ANY TABLE, etc.)."
         },
         {
-            "nom": "Privilèges GRANT ANY excessifs",
+            "nom": "Absence de protection par mot de passe sur les rôles",
+            "severite": "Élevé",
+            "details": "Tous les rôles listés (CONNECT, RESOURCE, DBA, etc.) ont PASSWORD_REQUIRED='NO' et AUTHENTICATION_TYPE='NONE'. Cela signifie qu'aucun rôle n'est protégé par mot de passe, facilitant l'usurpation de privilèges si un compte avec ces rôles est compromis."
+        },
+        {
+            "nom": "Profils de sécurité non configurés",
+            "severite": "Élevé",
+            "details": "Tous les utilisateurs utilisent le profil DEFAULT (d'après DBA_USERS). Sans données sur DBA_PROFILES, on peut supposer que le profil DEFAULT n'a pas de limites de sécurité (FAILED_LOGIN_ATTEMPTS illimité, PASSWORD_LIFE_TIME illimité, etc.), laissant la base vulnérable aux attaques par brute-force et aux mots de passe périmés."
+        },
+        {
+            "nom": "Comptes système ouverts inutilement",
+            "severite": "Moyen",
+            "details": "Les comptes OPS$ORACLE et SYSRAC sont ouverts (ACCOUNT_STATUS='OPEN'). OPS$ORACLE a une dernière connexion récente (2026-01-12). Ces comptes présentent une surface d'attaque supplémentaire et doivent être verrouillés s'ils ne sont pas nécessaires."
+        },
+        {
+            "nom": "Privilèges GRANT ANY excessifs accordés largement",
             "severite": "Critique",
-            "details": "Le rôle DBA possède GRANT ANY PRIVILEGE, GRANT ANY ROLE, GRANT ANY OBJECT PRIVILEGE. SYS possède également GRANT ANY ROLE et GRANT ANY PRIVILEGE. Ces privilèges permettent l'escalade de privilèges et la délégation non contrôlée d'autorisations."
+            "details": "Les privilèges GRANT ANY PRIVILEGE et GRANT ANY ROLE sont accordés à SYS, DBA, IMP_FULL_DATABASE, DATAPUMP_IMP_FULL_DATABASE et EM_EXPRESS_ALL. Cela permet à tout utilisateur disposant de ces rôles d'octroyer n'importe quel privilège système, contournant le contrôle d'accès."
         },
         {
-            "nom": "Profils de mots de passe non sécurisés",
-            "severite": "Élevée",
-            "details": "Tous les utilisateurs utilisent le profil DEFAULT qui n'a pas de restrictions de sécurité configurées (pas de FAILED_LOGIN_ATTEMPTS, PASSWORD_LIFE_TIME UNLIMITED, pas de vérification de complexité). Les comptes SYS et SYSTEM sont ouverts sans expiration."
-        },
-        {
-            "nom": "Comptes système non verrouillés",
-            "severite": "Moyenne",
-            "details": "Les comptes SYS, SYSTEM, SYSRAC et OPS$ORACLE sont ouverts (ACCOUNT_STATUS=OPEN). SYS et SYSTEM ne devraient jamais être utilisés pour les opérations quotidiennes. OPS$ORACLE présente une dernière connexion récente (2026-01-12), ce qui indique une utilisation active."
-        },
-        {
-            "nom": "Rôles sans authentification",
-            "severite": "Moyenne",
-            "details": "Tous les rôles listés ont PASSWORD_REQUIRED=NO et AUTHENTICATION_TYPE=NONE (sauf GLOBAL_AQ_USER_ROLE). Cela signifie qu'aucun rôle n'est protégé par mot de passe, facilitant l'usurpation de rôles."
-        },
-        {
-            "nom": "Privilèges de débogage excessifs",
-            "severite": "Moyenne",
-            "details": "Le rôle DBA possède DEBUG CONNECT ANY et DEBUG CONNECT SESSION, permettant de déboguer n'importe quelle session utilisateur, ce qui peut exposer des données sensibles en mémoire."
-        },
-        {
-            "nom": "Privilèges d'audit mal répartis",
-            "severite": "Moyenne",
-            "details": "Le rôle DBA possède AUDIT SYSTEM et AUDIT ANY, permettant de modifier la configuration d'audit et d'effacer les traces d'activités malveillantes. Le rôle AUDIT_ADMIN existe mais n'est pas suffisamment utilisé pour séparer les responsabilités."
+            "nom": "Privilèges DROP ANY excessifs",
+            "severite": "Critique",
+            "details": "De nombreux privilèges DROP ANY (DROP ANY TABLE, DROP ANY INDEX, DROP ANY VIEW, DROP ANY PROCEDURE, etc.) sont accordés au rôle DBA et à d'autres rôles puissants. Ces privilèges permettent une destruction massive d'objets de la base."
         }
     ],
     "recommandations": [
-        "1. Créer des profils de sécurité avec FAILED_LOGIN_ATTEMPTS=3, PASSWORD_LIFE_TIME=90, PASSWORD_REUSE_MAX=10, PASSWORD_REUSE_TIME=365, PASSWORD_VERIFY_FUNCTION. Assigner ces profils à tous les utilisateurs.",
-        "2. Révoquer les privilèges DROP ANY inutiles du rôle DBA. Créer des rôles spécifiques avec uniquement les privilèges nécessaires pour les utilisateurs applicatifs.",
-        "3. Révoquer GRANT ANY PRIVILEGE, GRANT ANY ROLE, GRANT ANY OBJECT PRIVILEGE du rôle DBA. Utiliser des rôles administratifs dédiés pour la gestion des privilèges.",
-        "4. Verrouiller les comptes SYS, SYSTEM et SYSRAC pour une utilisation exclusive via SYSDBA/SYSOPER. Créer des comptes administratifs distincts avec des privilèges limités.",
-        "5. Activer l'Audit Unifié pour tracer toutes les utilisations des privilèges DROP ANY, GRANT ANY, et toutes les connexions aux comptes sensibles.",
-        "6. Implémenter le principe du moindre privilège : remplacer le rôle DBA par des rôles spécifiques (ex: APP_READ_ONLY, APP_DML, APP_DDL) avec des privilèges granulaires.",
-        "7. Configurer des rôles protégés par mot de passe (PASSWORD_REQUIRED=YES) pour les rôles administratifs critiques.",
-        "8. Révoquer DEBUG CONNECT ANY et DEBUG CONNECT SESSION du rôle DBA. Accorder uniquement aux administrateurs de débogage spécifiques lorsque nécessaire.",
-        "9. Séparer les responsabilités d'audit : utiliser le rôle AUDIT_ADMIN pour la gestion de l'audit et révoquer AUDIT ANY du rôle DBA.",
-        "10. Mettre en place une surveillance des connexions hors heures ouvrables et des changements de privilèges via les vues DBA_SYS_PRIVS et les logs d'audit."
+        "1. Réviser immédiatement la matrice des privilèges système. Retirer les privilèges DROP ANY, GRANT ANY, et CREATE ANY non essentiels du rôle DBA et des autres rôles applicatifs. Appliquer le principe du moindre privilège.",
+        "2. Créer et appliquer des profils de sécurité stricts. Définir FAILED_LOGIN_ATTEMPTS entre 3 et 5, PASSWORD_LIFE_TIME à 90 jours maximum, et utiliser une fonction de vérification de complexité des mots de passe (via UTLPWDMG). Assigner ces profils à tous les utilisateurs, en commençant par les comptes non-système.",
+        "3. Protéger les rôles sensibles avec des mots de passe. Configurer PASSWORD_REQUIRED='YES' pour les rôles DBA, RESOURCE, CONNECT, et tout rôle disposant de privilèges élevés.",
+        "4. Verrouiller les comptes système inutilisés. Vérifier la nécessité de OPS$ORACLE et SYSRAC. S'ils ne sont pas requis pour les opérations courantes, les verrouiller (ALTER USER ... ACCOUNT LOCK).",
+        "5. Implémenter un audit unifié (Unified Audit) pour tracer l'utilisation des privilèges dangereux (DROP ANY, GRANT ANY), les tentatives de connexion échouées, et les changements de privilèges. Surveiller particulièrement les actions en dehors des heures normales.",
+        "6. Segmenter les privilèges. Remplacer l'utilisation du rôle DBA omnipotent par des rôles personnalisés accordant uniquement les privilèges nécessaires à une fonction spécifique (ex: rôle de lecture seule, rôle de maintenance limité).",
+        "7. Réviser et limiter les privilèges accordés aux rôles fonctionnels comme IMP_FULL_DATABASE, EM_EXPRESS_ALL, et SCHEDULER_ADMIN pour qu'ils correspondent strictement à leur usage prévu."
     ]
 }

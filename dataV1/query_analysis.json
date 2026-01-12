@@ -1,74 +1,74 @@
 [
     {
         "sql_id": "guw87u8x36z8r",
-        "explication_plan": "La requête UPDATE utilise un plan d'exécution 'UNKNOWN', ce qui indique que l'optimiseur n'a pas pu déterminer un plan optimal. Cela peut être dû à des statistiques manquantes ou obsolètes sur la table WRI$_SQLSET_PLANS ou ses index. L'opération UPDATE cible des lignes spécifiques via une clause WHERE avec deux conditions (STMT_ID et PLAN_HASH_VALUE), mais sans plan défini, l'optimiseur pourrait effectuer un TABLE ACCESS FULL coûteux ou utiliser un index inefficace.",
+        "explication_plan": "Le plan d'exécution est marqué 'UNKNOWN', ce qui indique que l'optimiseur n'a pas pu générer un plan stable ou que les statistiques sont absentes/périmées pour la table WRI$_SQLSET_PLANS. L'opération est une mise à jour (UPDATE) ciblant des lignes spécifiques via une clause WHERE sur STMT_ID et PLAN_HASH_VALUE. Sans plan visible, on suppose que l'optimiseur pourrait effectuer un TABLE ACCESS FULL (scan complet) par défaut si aucun index adapté n'existe ou si les statistiques sont obsolètes, ce qui serait très coûteux sur une grande table.",
         "points_couteux": [
-            "Plan d'exécution 'UNKNOWN' : l'optimiseur ne peut pas estimer le coût ni choisir une stratégie optimale (scan complet vs index).",
-            "Absence de statistiques à jour : sans métriques récentes, l'optimiseur peut sous-estimer ou surestimer la sélectivité des colonnes STMT_ID et PLAN_HASH_VALUE.",
-            "Risque de TABLE ACCESS FULL : si un index existe mais est ignoré en raison de statistiques périmées, l'UPDATE pourrait scanner toute la table, ce qui est coûteux pour les grandes tables."
+            "1. Plan 'UNKNOWN' : L'absence de plan fiable empêche toute analyse précise et peut masquer un accès par TABLE ACCESS FULL.",
+            "2. Clause WHERE non indexée potentiellement : Si aucun index composite sur (STMT_ID, PLAN_HASH_VALUE) n'existe, la recherche des lignes à mettre à jour nécessitera un scan complet de la table.",
+            "3. Mise à jour de colonnes LOB (BIND_DATA) : La colonne BIND_DATA est probablement de type LOB (BLOB/CLOB). Sa mise à jour est coûteuse en I/O et peut générer de la fragmentation si la table est fréquemment modifiée."
         ],
         "recommandations": [
             {
-                "type": "SQL",
-                "description": "Exécutez DBMS_STATS.GATHER_TABLE_STATS(ownname => 'SYS', tabname => 'WRI$_SQLSET_PLANS', estimate_percent => DBMS_STATS.AUTO_SAMPLE_SIZE, cascade => TRUE) pour rafraîchir les statistiques de la table et de ses index."
+                "type": "Index",
+                "description": "Créez un index composite sur les colonnes de la clause WHERE : CREATE INDEX IDX_WRI_SQLSET_PLANS_MAJ ON WRI$_SQLSET_PLANS(STMT_ID, PLAN_HASH_VALUE) TABLESPACE <tablespace_index> ; Cela permettra un INDEX UNIQUE SCAN ou INDEX RANGE SCAN rapide pour localiser les lignes."
             },
             {
-                "type": "Index",
-                "description": "Vérifiez l'existence d'un index composite sur (STMT_ID, PLAN_HASH_VALUE). S'il n'existe pas, créez-le : CREATE INDEX IDX_WRI_SQLSET_PLANS_COMP ON WRI$_SQLSET_PLANS(STMT_ID, PLAN_HASH_VALUE) TABLESPACE <tablespace>."
+                "type": "SQL",
+                "description": "Rafraîchissez les statistiques de la table et de ses index avec : EXEC DBMS_STATS.GATHER_TABLE_STATS(ownname=>'<schema_owner>', tabname=>'WRI$_SQLSET_PLANS', estimate_percent=>DBMS_STATS.AUTO_SAMPLE_SIZE, cascade=>TRUE, degree=>4); Cela permettra à l'optimiseur de générer un plan optimal basé sur la cardinalité réelle."
             },
             {
                 "type": "Hint",
-                "description": "Ajoutez un hint pour forcer l'utilisation de l'index composite après sa création : UPDATE /*+ INDEX(w WRI$_SQLSET_PLANS IDX_WRI_SQLSET_PLANS_COMP) */ WRI$_SQLSET_PLANS w SET BIND_DATA = :B4, BINDS_CAPTURED = :B3 WHERE STMT_ID = :B2 AND PLAN_HASH_VALUE = :B1."
+                "description": "Si un index existe déjà mais est ignoré, forcez son utilisation dans la requête : UPDATE /*+ INDEX(w WRI_SQLSET_PLANS_MAJ) */ WRI$_SQLSET_PLANS w SET BIND_DATA = :B4, BINDS_CAPTURED = :B3 WHERE STMT_ID = :B2 AND PLAN_HASH_VALUE = :B1 ; Remplacez 'WRI_SQLSET_PLANS_MAJ' par le nom réel de l'index."
             }
         ],
-        "gain_estime": "70%"
+        "gain_estime": "75% (réduction majeure grâce à l'indexation et aux statistiques à jour, évitant un scan complet potentiel)"
     },
     {
         "sql_id": "16cffsk1wdzcc",
-        "explication_plan": "Le plan d'exécution est marqué 'UNKNOWN', ce qui indique que l'optimiseur Oracle n'a pas pu générer un plan stable. Cela se produit généralement lorsque les statistiques de la table SYS.USER$ sont absentes, obsolètes ou corrompues, ou lorsque la requête utilise une liaison (bind variable :1) avec une distribution de données très asymétrique que les statistiques ne capturent pas.",
+        "explication_plan": "Le plan d'exécution est marqué 'UNKNOWN', ce qui indique que l'optimiseur n'a pas pu générer un plan stable ou que les statistiques sont absentes/périmées. La requête filtre sur USER# avec un bind variable (:1) pour récupérer 5 colonnes de la table système SYS.USER$.",
         "points_couteux": [
-            "Absence de plan d'exécution stable (UNKNOWN) : L'optimiseur ne peut pas évaluer les coûts, ce qui peut conduire à un plan sous-optimal ou variable à chaque exécution.",
-            "Accès à la table système SYS.USER$ : Cette table est critique et souvent interrogée par le dictionnaire de données. Un plan inefficace ici impacte tout le système.",
-            "Utilisation d'un prédicat d'égalité sur USER# sans garantie d'utilisation d'index : Si un index existe sur USER#, un plan 'UNKNOWN' peut quand même résulter en un TABLE ACCESS FULL coûteux."
+            "Absence de plan d'exécution identifiable (UNKNOWN) - impossible d'évaluer le coût réel",
+            "Accès potentiel en TABLE ACCESS FULL si aucun index sur USER# n'est utilisé ou si les statistiques sont obsolètes",
+            "Risque de dégradation si la table SYS.USER$ est grande (après import massif) sans index approprié"
         ],
         "recommandations": [
             {
                 "type": "SQL",
-                "description": "Collecter des statistiques à jour sur la table SYS.USER$ en utilisant le package DBMS_STATS adapté aux objets système : EXEC DBMS_STATS.GATHER_TABLE_STATS(ownname=>'SYS', tabname=>'USER$', estimate_percent=>DBMS_STATS.AUTO_SAMPLE_SIZE, cascade=>TRUE);"
-            },
-            {
-                "type": "Hint",
-                "description": "Forcer l'utilisation de l'index primaire sur USER# (généralement I_USER1) si l'accès est très sélectif : SELECT /*+ INDEX(u I_USER1) */ exptime, ltime, astatus, lcount, ptime FROM sys.user$ u WHERE user#=:1"
+                "description": "Vérifier et mettre à jour les statistiques : EXEC DBMS_STATS.GATHER_TABLE_STATS('SYS', 'USER$', cascade=>TRUE);"
             },
             {
                 "type": "Index",
-                "description": "Vérifier l'existence et la validité d'un index sur la colonne USER#. S'il n'existe pas, envisager sa création (bien que rare pour une table système) : CREATE UNIQUE INDEX SYS.IDX_USER_NUM ON SYS.USER$(USER#) NOLOGGING;"
+                "description": "S'assurer que l'index sur USER# existe (I_USER1 par défaut) et qu'il est utilisé. Si manquant : CREATE INDEX SYS.IDX_USER# ON SYS.USER$(USER#);"
+            },
+            {
+                "type": "Hint",
+                "description": "Forcer l'utilisation de l'index si nécessaire : SELECT /*+ INDEX(u I_USER1) */ exptime, ltime, astatus, lcount, ptime FROM sys.user$ u WHERE user#=:1"
             }
         ],
-        "gain_estime": "70-90% (Le gain principal viendra de la stabilisation du plan et du passage d'un éventuel FULL SCAN à un UNIQUE SCAN ou RANGE SCAN très efficace, étant donné que USER# est une clé unique)."
+        "gain_estime": "70-90% (passage potentiel de FULL SCAN à INDEX UNIQUE SCAN si l'index existe et que les statistiques sont à jour)"
     },
     {
         "sql_id": "114ujmcuu3z7b",
-        "explication_plan": "Le plan d'exécution est marqué comme 'UNKNOWN', ce qui est inhabituel. La requête interroge la table système SYS.SYSAUTH$ (ou une vue associée) pour extraire des informations sur les privilèges et leurs options. Sans plan visible, on peut supposer que l'optimiseur a peut-être choisi un accès direct à la table système via un FULL TABLE SCAN ou un accès via un index sur les colonnes de jointure (GRANTEE#, PRIVILEGE#). L'utilisation de fonctions (MOD, BITAND, NVL) sur la colonne OPTION$ empêche l'utilisation d'un index sur cette colonne.",
+        "explication_plan": "Cette requête système Oracle interroge la table SYS.SYSAUTH$ pour extraire des informations sur les privilèges et leurs options. Le plan UNKNOWN indique que l'optimiseur n'a pas pu générer un plan d'exécution standard, probablement parce que c'est une requête interne du dictionnaire de données ou qu'elle utilise des fonctions système non documentées (BITAND, NVL). La requête agrège des informations de privilèges avec des opérations bit à bit pour décoder les options de grant.",
         "points_couteux": [
-            "Accès à une table système (SYS.SYSAUTH$) sans plan d'exécution visible, potentiellement un FULL TABLE SCAN.",
-            "Utilisation de fonctions (MOD, BITAND, NVL) sur la colonne OPTION$ dans la clause SELECT, empêchant toute optimisation par index sur cette colonne.",
-            "Agrégation (MAX) sur plusieurs colonnes calculées, nécessitant un scan complet des données pertinentes pour calculer chaque valeur maximale."
+            "Plan UNKNOWN - impossible d'analyser le chemin d'exécution réel",
+            "Utilisation intensive de fonctions BITAND et NVL sur chaque ligne",
+            "Absence de prédicats WHERE - scan complet de SYSAUTH$ (table système critique)"
         ],
         "recommandations": [
             {
                 "type": "SQL",
-                "description": "Simplifiez la logique de calcul si possible. Les opérations BITAND et MOD sur OPTION$ pourraient potentiellement être prétraitées ou stockées dans une colonne dérivée si ce modèle d'interrogation est fréquent. Vérifiez si la requête peut être réécrite pour éviter les fonctions sur les colonnes dans la clause SELECT."
+                "description": "Éviter d'exécuter directement cette requête système. Utiliser plutôt les vues dictionnaire standard comme DBA_TAB_PRIVS, DBA_SYS_PRIVS ou DBA_ROLE_PRIVS qui sont optimisées et maintenues par Oracle."
             },
             {
                 "type": "Hint",
-                "description": "Comme il s'agit d'une requête sur dictionnaire de données, les statistiques sont généralement fixes et gérées par Oracle. Forcer un index spécifique n'est pas standard ici. Cependant, si un plan est disponible et sous-optimal, un hint comme /*+ FULL(SYSAUTH$) */ ou /*+ INDEX(SYSAUTH$ <nom_index>) */ pourrait être testé, mais cela nécessite de connaître le plan actuel et l'index existant (probablement sur GRANTEE#, PRIVILEGE#)."
+                "description": "Si nécessaire d'exécuter cette requête exacte, ajouter /*+ FULL(SYSAUTH$) */ pour forcer un scan complet cohérent, car les tables système doivent généralement être lues en entier pour ce type d'agrégation."
             },
             {
                 "type": "Index",
-                "description": "La requête n'étant pas filtrée (pas de WHERE), la création d'un index n'est pas pertinente. L'optimisation doit se concentrer sur la réduction de la charge de calcul. Si cette requête est exécutée très fréquemment, envisagez de matérialiser ses résultats dans une table de travail ou un snapshot si les privilèges changent peu."
+                "description": "Pour les requêtes sur les privilèges, s'assurer que les statistiques des vues dictionnaire sont à jour avec : EXEC DBMS_STATS.GATHER_DICTIONARY_STATS;"
             }
         ],
-        "gain_estime": "5-15% (L'optimisation est limitée car il s'agit d'une requête système agrégée sans filtre. Le gain principal viendrait d'une réduction de la complexité des calculs ou d'une mise en cache du résultat)."
+        "gain_estime": "Non applicable - requête système interne. L'utilisation des vues dictionnaire officielles peut offrir jusqu'à 90% de gain par rapport aux requêtes directes sur les tables système."
     }
 ]

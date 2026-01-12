@@ -1,7 +1,7 @@
 {
-    "type": "Incrémentale Niveau 1 avec Archivage Continu",
-    "frequence": "Quotidienne (Incrémentale Niveau 1) + Archivage des Redo Logs toutes les 15 minutes",
+    "type": "Incrémentale Niveau 1 avec Archivage continu",
+    "frequence": "Complète hebdomadaire (Dimanche) + Incrémentale Niveau 1 quotidienne (Lundi-Samedi) + Archivage des logs toutes les 15 minutes",
     "retention_jours": 30,
-    "emplacement_stockage": "Disque Haute Performance (pour backups récents et archivelogs) + Tape/Cloud (pour rétention longue)",
+    "emplacement_stockage": "Disque rapide (Fast Recovery Area) pour les sauvegardes récentes et restauration rapide, répliqué vers le Cloud (Oracle Cloud Infrastructure Object Storage) ou bande pour la rétention longue.",
     "cout_estime": "Très Élevé"
 }

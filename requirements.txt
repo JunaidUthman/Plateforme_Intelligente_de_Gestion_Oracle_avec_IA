@@ -1,0 +1,8 @@
+flask
+requests
+chromadb
+pandas
+python-dotenv
+pyyaml
+oracledb
+wcwidth

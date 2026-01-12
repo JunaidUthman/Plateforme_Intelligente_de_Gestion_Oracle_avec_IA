@@ -1,36 +1,34 @@
--- Script pour une sauvegarde incrémentale de niveau 1 avec gestion des archivelogs.
--- Pré-requis : La base doit être en mode ARCHIVELOG.
--- Ce script est conçu pour être exécuté quotidiennement via une tâche planifiée (cron, Oracle Scheduler).
-
+-- Script de sauvegarde complète hebdomadaire (à exécuter le dimanche)
 RUN {
-    -- 1. Sauvegarde des archivelogs générés depuis la dernière sauvegarde.
-    --    Cela permet de respecter le RPO de 15 minutes en capturant tous les changements.
-    BACKUP ARCHIVELOG ALL NOT BACKED UP 1 TIMES
-        FORMAT '/chemin/vers/backups/arch_%d_%s_%p_%T'
-        DELETE ALL INPUT;
-
-    -- 2. Sauvegarde incrémentale de niveau 1 de la base de données.
-    --    Seuls les blocs modifiés depuis la dernière sauvegarde de niveau 0 sont sauvegardés.
-    BACKUP INCREMENTAL LEVEL 1
-        FORMAT '/chemin/vers/backups/inc1_%d_%s_%p_%T'
-        AS COMPRESSED BACKUPSET
+    ALLOCATE CHANNEL c1 DEVICE TYPE DISK;
+    ALLOCATE CHANNEL c2 DEVICE TYPE DISK;
+    BACKUP AS COMPRESSED BACKUPSET
+        INCREMENTAL LEVEL 0
         DATABASE
-        PLUS ARCHIVELOG; -- Capture les archivelogs générés PENDANT la sauvegarde.
-
-    -- 3. Sauvegarde du fichier de contrôle (spécifiant 'spfile' si utilisé).
-    --    Inclus automatiquement avec la commande DATABASE, mais une sauvegarde explicite est recommandée.
-    BACKUP CURRENT CONTROLFILE
-        FORMAT '/chemin/vers/backups/ctl_%d_%s_%p_%T';
-
-    -- 4. Nettoyage des sauvegardes obsolètes selon la politique de rétention.
-    --    Ici, on conserve les sauvegardes nécessaires pour une récupération jusqu'à 30 jours en arrière.
+        TAG 'FULL_WEEKLY'
+        PLUS ARCHIVELOG;
+    BACKUP CURRENT CONTROLFILE TAG 'CTRL_POST_FULL';
     DELETE NOPROMPT OBSOLETE RECOVERY WINDOW OF 30 DAYS;
-
-    -- 5. Validation de l'intégrité des sauvegardes critiques (optionnel mais recommandé).
-    VALIDATE BACKUPSET COMPLETED AFTER 'SYSDATE-1';
+    RELEASE CHANNEL c1;
+    RELEASE CHANNEL c2;
 }
 
--- Note : Pour garantir le RPO de 15 minutes, la configuration de l'archivage doit être :
---        `ALTER SYSTEM SET ARCHIVE_LAG_TARGET=900 SCOPE=BOTH;` (15 minutes = 900 secondes)
---        Cela force un changement de log archive toutes les 15 minutes maximum.
---        La première commande BACKUP ARCHIVELOG... les sauvegarde ensuite et les supprime du répertoire de destination.
+-- Script de sauvegarde incrémentale niveau 1 quotidienne (à exécuter du lundi au samedi)
+RUN {
+    ALLOCATE CHANNEL c1 DEVICE TYPE DISK;
+    ALLOCATE CHANNEL c2 DEVICE TYPE DISK;
+    BACKUP AS COMPRESSED BACKUPSET
+        INCREMENTAL LEVEL 1
+        DATABASE
+        TAG 'INC_DAILY'
+        PLUS ARCHIVELOG;
+    DELETE NOPROMPT ARCHIVELOG ALL BACKED UP 1 TIMES TO DEVICE TYPE DISK;
+    RELEASE CHANNEL c1;
+    RELEASE CHANNEL c2;
+}
+
+-- Politique de rétention et de gestion des archivlogs (à configurer une fois)
+CONFIGURE RETENTION POLICY TO RECOVERY WINDOW OF 30 DAYS;
+CONFIGURE ARCHIVELOG DELETION POLICY TO APPLIED ON ALL STANDBY BACKED UP 1 TIMES TO DEVICE TYPE DISK;
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '%F';

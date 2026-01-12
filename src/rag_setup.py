@@ -3,10 +3,10 @@ import chromadb
 from chromadb.utils import embedding_functions
 
 class OracleRAG:
-    def __init__(self, db_path="data/chroma_db"):
+    def __init__(self, db_path="datav1/chroma_db"):
         """Initialise ChromaDB avec un modèle d'embedding local [cite: 55, 58]"""
-        if not os.path.exists("data"):
-            os.makedirs("data")
+        if not os.path.exists("datav1"):
+            os.makedirs("datav1")
 
         self.client = chromadb.PersistentClient(path=db_path)
         
@@ -55,7 +55,7 @@ class OracleRAG:
 # --- BLOC DE TEST DE VALIDATION (MODULE 2) ---
 if __name__ == "__main__":
     rag = OracleRAG()
-    rag.add_documents("data/knowledge") 
+    rag.add_documents("datav1/knowledge") 
 
     # Test demandé : vérifier que "index lent" retourne des documents sur l'indexation 
     test_query = "Comment optimiser un index lent ?"
