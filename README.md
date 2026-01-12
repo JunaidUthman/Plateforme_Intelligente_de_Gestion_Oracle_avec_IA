@@ -54,7 +54,6 @@ Vous avez deux modes : **Simulation** ou **Connexion Réelle**.
   ```bash
   python src/data_extractor.py
   ```
-  *(Note : Par défaut ce script peut écrire dans `data/`, assurez-vous de déplacer/copier dans `datav1/` ou modifier le script si nécessaire pour l'analyse IA).*
 
 ### 2. Analyse et IA
 
@@ -96,11 +95,9 @@ Pour visualiser les résultats et interagir avec le Chatbot DBA :
 ```bash
 python src/webapp/app.py
 ```
-Accédez ensuite à [http://localhost:5000](http://localhost:5000) dans votre navigateur.
 
 ## Architecture des Dossiers
 
 - `src/` : Code source des modules Python.
 - `src/webapp/` : Application Flask et templates HTML.
 - `datav1/` : Dossier principal pour les données (CSV extraits, JSON résultats, Base Vectorielle ChromaDB).
-- `data/` : Dossier legacy (à ignorer).
