@@ -1,0 +1,501 @@
+SQL_ID,SQL_TEXT,ELAPSED_TIME,CPU_TIME,EXECUTIONS,DISK_READS,BUFFER_GETS,OPTIMIZER_COST
+b39m8n96gxk7c,"call dbms_autotask_prvt.run_autotask ( :0,:1 )",2502466,2184050,1,849,17451,0
+ampw9ddqufjd3,begin /*KAPI:capture*/ dbms_auto_index_internal.capture_sts; end;,2420907,2124582,1,825,17076,0
+f6cz4n8y72xdc,SELECT space_usage_kbytes  FROM  v$sysaux_occupants  WHERE occupant_name = 'SQL_MANAGEMENT_BASE',1391657,477566,1,1865,27595,1
+a8xypykqc348c,"BEGIN    dbms_stats_internal.advisor_setup_obj_filter(:tid, :rid, 'EXECUTE', FALSE); END;",1364724,216471,2,1310,4534,0
+avf5k3k0x0cxn,"           insert into stats_advisor_filter_obj$            (rule_id, obj#, flags, type)            select :rule_id, obj#, :flag_include, :type_expanded            from stats_advisor_filter_obj$      ",1113162,47705,2,2,134,3
+c61ajdcqbqn42,"SELECT  new.sql_seq, old.plan_hash_value, sqlset_row(new.sql_id,new.force_matching_signature,  new.sql_text, new.object_list,  new.bind_data, new.parsing_schema_name,  new.module, new.action, new.elap",992814,945707,1,131,3219,53
+4zrrrx9b5mvmj,"select /*+ no_monitor no_statement_queuing current_instance */      alljobs.CON_ID, OBJOID,      RETRYCNT, alljobs.FLAGS, STATUS,      ISLW, PARNT, JDESTID, LSTIME FROM (  select nvl(a.con_id,0) CON_I",877550,808233,3,23,2557,2
+02577v815yp77,BEGIN :success := dbms_ha_alerts_prvt.post_instance_up; END;,856435,734038,1,283,5420,0
+69281qgxn6jp9,"select partition_name from (select partition_name, rownum rn       from (select PARTITION_NAME             from all_tab_partitions             where table_name = 'WRP$_REPORTS_TIME_BANDS'             ",752694,134578,1,0,164,46
+35wx0ztzd89yj,begin gsmadmin_internal.dbms_gsm_cloudadmin.syncParameters; end;,722889,76132,1,84,929,0
+7hnc5ucz8grnt,SELECT VALUE(P) FROM TABLE(DBMS_SQLTUNE.SELECT_CURSOR_CACHE( BASIC_FILTER=> q'# (module is null or (module != '#' || :B1 || q'#' and module != '#' || :B2 || q'#')) and sql_text not like 'SELECT /* DS_,703359,694620,1,56,2165,29
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",693986,506474,54,1236,61660,8
+63r9sp2vyhryv,delete /* QOSH:PURGE_OLD_STS *//*+ dynamic_sampling(4) */ from sys.wri$_optstat_opr_tasks            where start_time < :1   and rownum <=  :2   ,629612,9801,1,24,148,3
+c7kptxk2fypps,"with occupant_segments as (select distinct segment_name from   (select o1.segment_name, o1.segment_name table_name    from x$kewx_segments o1    union all    select o2.lob_name, o2.table_name    from ",619075,9501,1,0,28,1
+5u7g54s63p4ts,select toid from type$ where package_obj#=:1 and typ_name=:2,617293,7311,5,3,19,2
+ct9ppzr6uuzv9,"select owner, segment_name, nvl(sum(blocks), 0)   from dba_segments  where tablespace_name = :tsname group by owner, segment_name",568674,274873,1,1855,23029,1139
+bj1mt6pa09d3p," BEGIN    DBMS_SCHEDULER.SET_JOB_ARGUMENT_VALUE (      job_name   => :job_name,      argument_position   => 2,      argument_value      => :job_magic_num);    DBMS_SCHEDULER.SET_ATTRIBUTE(      name  ",550278,475784,1,194,18751,0
+b9p45hkcx0pwh,select dbms_qopatch.get_opatch_lsinventory() from dual,520612,477847,1,105,2344,2
+fn0stp00nzmj6," SELECT /*+ first_rows(1) */ sql_id, force_matching_signature, sql_text, cast(NULL as SQL_OBJECTS) object_list, bind_data, parsing_schema_name, module, action, elapsed_time, cpu_time, buffer_gets, dis",515765,480828,1,50,1562,6
+01uy9sb7w8a9g," begin      dbms_aqadm_sys.remove_all_nondurablesub(:1, :2);   end;",490937,364269,2,49,8828,0
+b9c6ffh8tc71f,BEGIN dbms_output.enable(NULL); END;,454159,77539,5,9,146,0
+9sg6u8xys290z,"select count(*) num_enabled, sum(case optimizer_stats when 'ENABLED' then 1 else 0 end) stats_enabled from dba_autotask_window_clients where autotask_status = 'ENABLED'",372624,272236,1,1522,9100,28
+bmcj2k06ncg3y," select   /*jskqjobqlod1*/   /*+ no_monitor no_statement_queuing current_instance */   nvl(CON_ID, 0) CON_ID,  OBJOID,   CLSOID,                 RUNTIME,   2 * PRIORITY +    decode(bitand(STATUS, 4), ",339370,332025,1,18,4722,5
+77w237hm1cv26,"select sqlset_row(NULL, NULL, NULL, NULL, bind_data, 'foo', NULL,                              NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,                              NULL, NULL, NULL, NULL, NULL",324965,210727,1,65,1127,23
+dqtwcrg7mfx0d,SELECT /*+ NO_PARALLEL(d) */ DBMS_APP_CONT_PRVT.PARTITION_EXISTS(:1)   FROM DUAL d,323146,274641,1,74,1046,2
+a8xypykqc348c,"BEGIN    dbms_stats_internal.advisor_setup_obj_filter(:tid, :rid, 'EXECUTE', FALSE); END;",313446,167537,2,229,2211,0
+9ctt1scmwbmbg,begin dbsnmp.bsln_internal.maintain_thresholds; end;,295511,257962,1,107,2411,0
+01uy9sb7w8a9g," begin      dbms_aqadm_sys.remove_all_nondurablesub(:1, :2);   end;",259404,232751,1,106,993,0
+f705bwx3q0ydq,"select count(*) from dba_autotask_window_clients c, (select window_name, max(log_date) max_log_date from dba_scheduler_window_log where operation = 'OPEN' group by window_name) wo, (select window_name",254519,252162,1,30,8967,47
+5jvywuhx2xn4r,"SELECT                  SQL_ID,                  SUBSTR(SQL_TEXT, 1, 200) AS SQL_TEXT,                 ELAPSED_TIME,                  CPU_TIME,                  EXECUTIONS,                  DISK_READS",252281,242426,3,0,81,1
+bx76wwxjvpfzv,"SELECT                  SQL_ID, PLAN_HASH_VALUE, ID, OPERATION, OPTIONS,                  OBJECT_NAME, OPTIMIZER, COST, CPU_COST, IO_COST, TIME             FROM V$SQL_PLAN             WHERE ROWNUM <= ",249620,71513,3,0,88,1
+03guhbfpak0w7,"select /*+ index(idl_ub1$ i_idl_ub11) */ piece#,length,piece from idl_ub1$ where obj#=:1 and part=:2 and version=:3 order by piece#",222741,99883,77,547,1852,3
+cvnf9c2bfhj9g,SELECT high_value          FROM all_tab_partitions         WHERE table_name  = 'LTXID_TRANS'           AND table_owner = 'SYS',214840,196140,1,33,795,18
+8yu1fmd6pm6y2,BEGIN :success := dbms_ha_alerts_prvt.check_ha_resources; END;,213528,194136,1,46,548,0
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",213427,239902,1005,150,4037,3
+f705bwx3q0ydq,"select count(*) from dba_autotask_window_clients c, (select window_name, max(log_date) max_log_date from dba_scheduler_window_log where operation = 'OPEN' group by window_name) wo, (select window_name",213269,98893,1,13,2746,47
+586577qpbkgnk,select 1 from DBA_SCHEDULER_JOBS  where JOB_NAME like 'KWQICPOSTMSGDEL_1_%' and  JOB_ACTION = 'DBMS_AQADM_SYS.REMOVE_ORPHMSGS',213246,204481,1,4,5536,38
+gpydvs5fzjrun,"select name,mgmt_method,num_plan_directives,sub_plan,(select count(*) from resource_plan_directive$ where obj# = :1 and status = :2 and is_subplan <> 0), (select count(*) from resource_plan_directive$",211496,208872,3,7,85,1
+9sg6u8xys290z,"select count(*) num_enabled, sum(case optimizer_stats when 'ENABLED' then 1 else 0 end) stats_enabled from dba_autotask_window_clients where autotask_status = 'ENABLED'",199900,125036,1,1106,2720,28
+5xvx5cj5ctbkm,"select con_dbid, open_time, parallel, version, name, instance_name,host_name, platform_name, cdb, edition, db_unique_name, database_role, dbid as cdb_root_dbid     from V$DATABASE, V$INSTANCE, (select",187860,184004,1,0,227,1
+cnq31548hb8un,BEGIN    :c := dbms_spm_internal.auto_purge_sql_plan_baseline;  END;,187252,135563,1,154,1648,0
+2vhhhddmn1q32,"select '""'||name||'"" '||decode(type#,1,decode(charsetform,2,'NVARCHAR2('||decode(bitand(property,8388608),8388608,decode(spare3,0,1,spare3)||')','BYTECOUNT=>'||decode(length,0,1,length)||')'),'VARCHAR",186539,184819,4,0,12,3
+586577qpbkgnk,select 1 from DBA_SCHEDULER_JOBS  where JOB_NAME like 'KWQICPOSTMSGDEL_1_%' and  JOB_ACTION = 'DBMS_AQADM_SYS.REMOVE_ORPHMSGS',185233,178281,1,0,146,38
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",180410,88334,283,43,1808,98
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",177730,133869,136,183,2800,54
+5pj6mtazkhmdd,BEGIN /* KSXM:FLUSH DML_MON */    dbms_stats_internal.gather_scan_rate_by_mmon;  END;,171102,6969,1,0,44,0
+dqtwcrg7mfx0d,SELECT /*+ NO_PARALLEL(d) */ DBMS_APP_CONT_PRVT.PARTITION_EXISTS(:1)   FROM DUAL d,167161,144218,1,60,1820,2
+bgxtkrz2p3k08,SELECT VALUE FROM SYS.V_$PARAMETER WHERE CON_ID=:B1 AND NAME = 'compatible',167075,134779,14,0,103,1
+d1sv8jh4ac7mk,"select partition_name from (select partition_name, rownum rn       from (select PARTITION_NAME             from all_tab_partitions             where table_name = 'WRP$_REPORTS'               and inter",163276,151588,1,14,217,46
+ga4mbqqxya48k,"select t.ts#,t.file#,t.block#,nvl(t.bobj#,0),nvl(t.tab#,0),t.intcols,nvl(t.clucols,0),t.flags,t.pctfree$,t.pctused$,t.initrans,t.maxtrans,t.rowcnt,t.blkcnt,t.empcnt,t.avgspc,t.chncnt,t.avgrln,t.analyz",161163,137209,293,113,1204,2
+7z7n648sgr6h4,select rowcnt from sys.cdbvw_stats$ where objname = :1,158458,131932,8,4,65,1
+7ujay4u33g337,"SELECT BLDS.BSLN_GUID ,BLDS.METRIC_ID ,:B4 ,BLDS.TIMEGROUP ,BLDS.DBID ,BLDS.INSTANCE_NAME ,TP.THRESHOLD_METHOD ,TP.NUM_OCCURRENCES ,TP.WARNING_PARAM ,TP.CRITICAL_PARAM ,TP.FAIL_ACTION ,ST.SAMPLE_COUNT",158200,145066,1,23,855,3
+8r9xda4h00gsy,DECLARE job BINARY_INTEGER := :job;  next_date TIMESTAMP WITH TIME ZONE := :mydate;  broken BOOLEAN := FALSE;  job_name VARCHAR2(128) := :job_name;  job_subname VARCHAR2(128) := :job_subname;  job_own,155551,77658,1,0,46,0
+0sbbcuruzd66f,"select /*+ rule */ bucket_cnt, row_cnt, cache_cnt, null_cnt, timestamp#, sample_size, minimum, maximum, distcnt, lowval, hival, density, col#, spare1, spare2, avgcln, minimum_enc, maximum_enc from his",152676,215443,1876,114,5374,1
+5wua9ymkf2056,"select /*jskqjobqlod1*/                                         /**/  /*+ no_monitor no_statement_queuing current_instance */           /**/  OBJOID, CLSOID, RUNTIME, PRI, JOBTYPE,                    ",147747,122918,1,1,63,21
+gstra4sn7kzp8,"select t.schema, t.name, t.objno, t.flags, t.timezone from  system.aq$_queue_tables t, sys.aq$_queue_table_affinities aft  where aft.table_objno = t.objno and aft.owner_instance = :1  and bitand(t.fla",146392,117927,1,61,1076,4
+a6frhy5cw03g6," select   /*jskqjobqlod2*/   /*+ no_monitor no_statement_queuing current_instance */   nvl(con_id, 0) CON_ID,    obj# OBJOID,   class_oid CLSOID,         run_time RUNTIME,   2 * priority +    decode(b",143235,139167,2,0,142,3
+gngtvs38t0060,SELECT /*+ CONNECT_BY_FILTERING */ s.privilege# FROM sys.sysauth$ s        CONNECT BY s.grantee# = PRIOR s.privilege#                                 AND (s.privilege# > 0 OR s.privilege# = -352)     ,142273,144375,18,3,105,8
+c2p32r5mzv8hb,BEGIN    prvt_advisor.delete_expired_tasks;  END;,140872,112424,1,121,2761,0
+2xy16h1p7j575,"select partition_name from (select partition_name, rownum rn       from (select PARTITION_NAME             from all_tab_partitions             where table_name = 'WRP$_REPORTS_DETAILS'               a",139526,115826,1,0,164,46
+5ra3f0zhkpdqa,"SELECT USERNAME, ACCOUNT_STATUS, LOCK_DATE, EXPIRY_DATE, PROFILE, LAST_LOGIN FROM DBA_USERS",138616,115475,3,9,625,31
+bg0ucs4vg0zab,SELECT value FROM v$parameter where lower(name) = '_qa_lrg_type',132155,129645,1,0,90,1
+abz5d7mk4hw25,SELECT COUNT(*) FROM                                                            (SELECT /* interim patches */                                                          'Interim patch ' || patch_id || ',131962,91902,1,105,1859,49
+8ncaj7hgazfyp,begin /* QOSD */ dbms_spd.drop_sql_plan_directive(null); end;,131816,110752,1,42,1505,0
+16mdx8fs5jzkm,"SELECT GRANTEE, PRIVILEGE, ADMIN_OPTION FROM DBA_SYS_PRIVS",130939,112867,3,10,186,27
+gstra4sn7kzp8,"select t.schema, t.name, t.objno, t.flags, t.timezone from  system.aq$_queue_tables t, sys.aq$_queue_table_affinities aft  where aft.table_objno = t.objno and aft.owner_instance = :1  and bitand(t.fla",126152,94294,1,49,2324,4
+92f47aa2q2rmd,"SELECT INSTANCE_NAME, HOST_NAME, NVL(GVI_STARTUP_TIME, SYSTIMESTAMP) - INTERVAL '1' SECOND AS SHUTDOWN_TIME FROM (SELECT RRI.INSTANCE_NAME AS INSTANCE_NAME, RRI.HOST_NAME AS HOST_NAME, FROM_TZ(RRI.STA",123293,119744,1,0,27,97
+39quyum9057mk,DECLARE job BINARY_INTEGER := :job;  next_date TIMESTAMP WITH TIME ZONE := :mydate;  broken BOOLEAN := FALSE;  job_name VARCHAR2(128) := :job_name;  job_subname VARCHAR2(128) := :job_subname;  job_own,120758,71153,1,11,167,0
+b13g21mgg8y98,"insert /* KSXM:TAKE_SNPSHOT */ into sys.optstat_snapshot$ (obj#, inserts, updates, deletes, timestamp, flags) (select m.obj#, m.inserts, m.updates, m.deletes, systimestamp,  dbms_stats_advisor.compute",120299,89262,1,61,2809,5
+cvnf9c2bfhj9g,SELECT high_value          FROM all_tab_partitions         WHERE table_name  = 'LTXID_TRANS'           AND table_owner = 'SYS',119753,112322,1,25,929,18
+72u5s5cjckv13,"INSERT INTO AUDSYS.AUD$UNIFIED (AUDIT_TYPE, SESSIONID, PROXY_SESSIONID, OS_USER, HOST_NAME, TERMINAL, INSTANCE_ID, DBID, AUTHENTICATION_TYPE, USERID, PROXY_USERID, EXTERNAL_USERID, GLOBAL_USERID, CLIE",118576,108168,3,14,1579,1
+832kkz790r75k,"SELECT c.capture#, c.capture_name, c.flags FROM sys.streams$_capture_process c, dba_queues q, dba_queue_tables qt  ,v$instance i WHERE c.queue_owner  = q.owner   and c.queue_name   = q.name   and qt.q",116340,88899,1,29,544,46
+bgxtkrz2p3k08,SELECT VALUE FROM SYS.V_$PARAMETER WHERE CON_ID=:B1 AND NAME = 'compatible',114137,116935,7,0,41,1
+0sbbcuruzd66f,"select /*+ rule */ bucket_cnt, row_cnt, cache_cnt, null_cnt, timestamp#, sample_size, minimum, maximum, distcnt, lowval, hival, density, col#, spare1, spare2, avgcln, minimum_enc, maximum_enc from his",112987,194453,1130,99,3212,1
+19bmabs12ydx8,"select ee.ectx#, o.owner#, u.name, o.name, ee.num_rules, ee.num_boxes,  ee.ee_flags, ee.complex_operators  from rule_set_ee$ ee, obj$ o, user$ u where ee.rs_obj# = :1 and  ee.ectx# = o.obj# and o.owne",112128,100856,1,25,1065,5
+76cckj4yysvua,"select time_mp, scn, num_mappings, tim_scn_map from smon_scn_time   where scn =    (select max(scn) from smon_scn_time where scn <= :1)",110837,83987,1,1,12,1
+8m2740gp00tbk,select count(*) from user_tables where table_name= :1,110449,107201,1,7,1470,9
+fbjs6vqydm3xa,"select s.ts#, s.file#, s.block#, so.object_id, s.spare1, s.type#, s.hwmincr from seg$ s, sys_objects so where bitand(s.spare1,131072) = 0 and s.ts# = so.ts_number and s.file# = so.header_file and s.bl",108062,99209,1,0,4688,1447
+c1aqra3539hyz,"select cols,audit$,textlength,intcols,nvl(property,0),flags,rowid from view$ where obj#=:1",105861,76876,78,52,234,2
+g0t052az3rx44,"select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl",104383,57501,341,27,1254,49
+50hybrc8ffb8v,select 1 from dba_tables where owner = 'SYS' and table_name = 'BC$',103280,65737,5,5,229,10
+dvytf74k7wjzw,SELECT * FROM DBA_USERS,102758,71858,1,4,183,31
+f3ww8rgva3hrs,"update /* KSXM:FLUSH COL */ sys.col_usage$ set                  equality_preds    = equality_preds    + decode(bitand(:flag,1),0,0,1),   equijoin_preds    = equijoin_preds    + decode(bitand(:flag,2),",101661,88033,489,17,1739,1
+8vr9hwjn1zzgp,"select name, address, protocol, rule_name, ruleset_name,             negative_ruleset_name, trans_name, subscriber_id,                    subscriber_type , scn_at_add from  ""SYS"".""AQ$_ALERT_QT_S""     ",100824,99818,2,0,12,3
+5yv7yvjgjxugg,select TIME_WAITED_MICRO from V$SYSTEM_EVENT  where event = 'Shared IO Pool Memory',98951,23331,20,0,146,1
+3aapagbjphwy0,select count(*) from sys.aq_event_table as of scn (:1) where state = 0,96269,92036,2,20,4153,2
+av52cx1jr8bks,DECLARE job BINARY_INTEGER := :job;  next_date TIMESTAMP WITH TIME ZONE := :mydate;  broken BOOLEAN := FALSE;  job_name VARCHAR2(128) := :job_name;  job_subname VARCHAR2(128) := :job_subname;  job_own,94569,38053,1,2,82,0
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",93079,90035,1,0,7,6
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",92580,87032,73,107,1123,54
+3vc634zd63yf0,DECLARE job BINARY_INTEGER := :job;  next_date TIMESTAMP WITH TIME ZONE := :mydate;  broken BOOLEAN := FALSE;  job_name VARCHAR2(128) := :job_name;  job_subname VARCHAR2(128) := :job_subname;  job_own,91509,37911,1,6,34,0
+a3jpjzh7mtwwp,"select /*+ index(idl_ub2$ i_idl_ub21) */ piece#,length,piece from idl_ub2$ where obj#=:1 and part=:2 and version=:3 order by piece#",90454,8123,11,24,95,3
+g94wn7w0dr4tp,delete /* KSXM:CLEAN_PEND_COL *//*+ dynamic_sampling(4) */   from sys.wri$_optstat_histhead_history h   where not exists         (select /*+ unnest */ 1 from sys.obj$ o where o.obj# = h.obj#)     and ,88977,45320,1,22,277,3
+ga4mbqqxya48k,"select t.ts#,t.file#,t.block#,nvl(t.bobj#,0),nvl(t.tab#,0),t.intcols,nvl(t.clucols,0),t.flags,t.pctfree$,t.pctused$,t.initrans,t.maxtrans,t.rowcnt,t.blkcnt,t.empcnt,t.avgspc,t.chncnt,t.avgrln,t.analyz",86915,90324,135,85,553,2
+8m2740gp00tbk,select count(*) from user_tables where table_name= :1,85135,78317,1,6,191,9
+abz5d7mk4hw25,SELECT COUNT(*) FROM                                                            (SELECT /* interim patches */                                                          'Interim patch ' || patch_id || ',84253,58670,1,71,1118,49
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",83509,107841,350,92,1454,3
+b9j95v06zu7dk,"SELECT                  OS_USERNAME, USERNAME, USERHOST, TERMINAL, TIMESTAMP,                  OWNER, OBJ_NAME, ACTION_NAME, RETURNCODE, SQL_TEXT             FROM DBA_AUDIT_TRAIL             WHERE TIM",83400,72542,3,10,498,1085
+a3jpjzh7mtwwp,"select /*+ index(idl_ub2$ i_idl_ub21) */ piece#,length,piece from idl_ub2$ where obj#=:1 and part=:2 and version=:3 order by piece#",83201,24728,77,115,395,3
+cq8s0cpgt7xn9,"SELECT xs.sid                                                                FROM   sys.rxs$sessions xs                                                   WHERE  BITAND(xs.flag,32) <> 32 AND           ",82124,81244,1,4,236,1
+3mkdy3ns38nxf,delete /* QOSH:PURGE_OLD_STS *//*+ dynamic_sampling(4) */   from sys.wri$_optstat_histhead_history     where savtime < :1 and savtime > timestamp '1900-01-01 00:00:00 -0:0'   and rownum <=  :2   ,80978,45692,1,111,122,3
+8swypbbr0m372,"select order#,columns,types from access$ where d_obj#=:1",80677,54859,136,85,2624,3
+gtf6tgc2ycgxx,select count(*) from XDB.XDB$SCHEMA s where s.xmldata.schema_url = 'http://xmlns.oracle.com/xdb/XDBSchema.xsd',80161,47271,1,74,1003,1
+03c2bcdtn6w4r,DELETE FROM wri$_sqlset_plans p WHERE EXISTS (SELECT /*+ UNNEST */1  FROM TABLE (dbms_sqltune.transform_sqlset_cursor(:cur)) WHERE p.stmt_id = to_number(other) AND        p.plan_hash_value = plan_hash,79443,69416,1,54,2205,31
+5t2y8w72h8vh8,"select min(timeout) from sys.""CDB_SUBSCR_DUR_REGISTRATIONS""",75935,37250,2,3,1591,1
+ct6c4h224pxgz,"BEGIN   BEGIN     IF (sys.is_vpd_enabled(sys.dictionary_obj_owner, sys.dictionary_obj_name, xdb.DBMS_XDBZ.IS_ENABLED_CONTENTS)) THEN       xdb.XDB_PITRIG_PKG.pitrig_truncate(sys.dictionary_obj_owner, ",74755,64100,4,26,527,0
+9tt2m0mpc2qqp,"select /*+ index(idl_char$ i_idl_char1) */ piece#,length,piece from idl_char$ where obj#=:1 and part=:2 and version=:3 order by piece#",73159,31693,77,43,239,3
+dxkqgnf3f843s,"select count(*) as num_windows, sum(case enabled when 'TRUE' then 1 else 0 end) as num_enabled from dba_scheduler_windows",73037,47896,1,10,1410,12
+9x2prazfz86dz," select s.file#, s.block#, s.ts#, t.obj#, s.hwmincr, t.obj# from tab$ t, seg$ s where bitand(s.spare1, 4503599627370496) = 4503599627370496 and bitand(s.spare1, 65536) <> 65536  and s.file# = t.file# ",71670,68512,1,0,378,547
+gt489n9anmj7n,SELECT SUM(NUM_ROWS) FROM DBA_TABLES WHERE OWNER = 'SYS' AND TABLE_NAME = 'WRI$_SQLSET_STATEMENTS',71402,68804,1,5,152,10
+grvc6qzrs12dc,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE SHELFLIFE=30) */ ""OBJ#"",""PROGRAM_OID"",""FLAGS"",""JOB_STATUS"",""LAST_START_DATE"",""RETRY_COUNT"",""RUNNING_INSTANCE"",""RUNNING_SLAVE"",""JOB_DEST_ID"" FR",69395,61929,3,1,1400,1
+87gaftwrm2h68,"select o.owner#,o.name,o.namespace,o.remoteowner,o.linkname,o.subname from obj$ o where o.obj#=:1",68401,80932,1805,14,4033,3
+gtf6tgc2ycgxx,select count(*) from XDB.XDB$SCHEMA s where s.xmldata.schema_url = 'http://xmlns.oracle.com/xdb/XDBSchema.xsd',68098,33323,1,94,1006,1
+7usdntr2hnhn4,"SELECT USERNAME, ACTION_NAME, OBJ_NAME, TIMESTAMP FROM DBA_AUDIT_TRAIL ORDER BY TIMESTAMP DESC FETCH FIRST 20 ROWS ONLY",66534,41806,1,5,54,8
+fh5ufah919kun,"select /*+ index(idl_sb4$ i_idl_sb41) */ piece#,length,piece from idl_sb4$ where obj#=:1 and part=:2 and version=:3 order by piece#",66494,67129,77,60,427,3
+0sbbcuruzd66f,"select /*+ rule */ bucket_cnt, row_cnt, cache_cnt, null_cnt, timestamp#, sample_size, minimum, maximum, distcnt, lowval, hival, density, col#, spare1, spare2, avgcln, minimum_enc, maximum_enc from his",66188,48709,439,53,1313,1
+c3utnxsnrx8tk,"update obj$ set obj#=:4, type#=:5,ctime=:6,mtime=:7,stime=:8,status=:9,dataobj#=:10,flags=:11,oid$=:12,spare1=:13,spare2=:14,spare3=:15,signature=:16,spare7=:17,spare8=:18,spare9=:19, dflcollid=decode",65569,9698,5,0,20,3
+628z64gnn3yrg,"select directory_path, origin_con_id from dba_directories where owner='SYS' and directory_name='JAVA$JOX$CUJS$DIRECTORY$'",64758,59887,1,15,378,1
+grvc6qzrs12dc,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE SHELFLIFE=30) */ ""OBJ#"",""PROGRAM_OID"",""FLAGS"",""JOB_STATUS"",""LAST_START_DATE"",""RETRY_COUNT"",""RUNNING_INSTANCE"",""RUNNING_SLAVE"",""JOB_DEST_ID"" FR",63748,70800,3,1,31,1
+f3af1tnzpsmx9," SELECT /*jskqjobqlod3*/                                                 /**/     /*+ no_monitor no_statement_queuing current_instance */               /**/     OBJOID, CLSOID, DECODE(BITAND(FLAGS, 16",63310,59083,1,0,27,8
+g8gkh6rzw6b5h,"SELECT T.TASK_ID, T.TASK_NAME, T.OWNER FROM SYS.DBA_ADVISOR_TASKS T, WRI$_ADV_PARAMETERS P WHERE T.TASK_ID = P.TASK_ID AND T.STATUS# <> :B2 AND T.READ_ONLY = 'FALSE' AND P.NAME = 'DAYS_TO_EXPIRE' AND ",63226,50751,1,42,2150,4
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",61301,25928,115,36,727,98
+7ppwsrkr4j4dw,"select attr, value_str, value_num, value_lob    from sys.session_template$    where template_id = :1    order by attr asc",60971,53314,1,10,182,1
+832kkz790r75k,"SELECT c.capture#, c.capture_name, c.flags FROM sys.streams$_capture_process c, dba_queues q, dba_queue_tables qt  ,v$instance i WHERE c.queue_owner  = q.owner   and c.queue_name   = q.name   and qt.q",60299,47860,1,35,361,46
+c0agatqzq2jzr,"insert into ""SYS"".""ALERT_QT""  (q_name, msgid, corrid, priority, state, delay, expiration,   time_manager_info, local_order_no, chain_no, enq_time, step_no, enq_uid,   enq_tid, retry_count, exception_q",59175,36882,3,36,1533,1
+9t5n27514gdxd,select count(*) from ofsmtab$ where nodenm =:1,58225,7824,1,3,24,2
+23945tbbh3g44,select count(*) from sys.scheduler$_job_argument where oid = :1 ,58135,31841,4,4,1405,1
+0nakmm882vmq0,"select /* QOSH:DROP_STAT_HIST_PARTS */ partition_name, high_value from (select partition_name, high_value, rownum rn       from (select PARTITION_NAME, HIGH_VALUE             from dba_tab_partitions  ",58094,49825,2,5,190,22
+gjaap3w3qbf8c,select count(*) from ilmobj$ where rownum = 1,58023,36897,18,4,104,1
+5dqz0hqtp9fru,"select /*+ connect_by_filtering index(sysauth$ i_sysauth1) */ privilege#, bitand(nvl(option$, 0), 72), grantee#, level from sysauth$ connect by grantee#=prior privilege# and privilege#>0 start with gr",55998,23298,255,5,1109,12
+ct6c4h224pxgz,"BEGIN   BEGIN     IF (sys.is_vpd_enabled(sys.dictionary_obj_owner, sys.dictionary_obj_name, xdb.DBMS_XDBZ.IS_ENABLED_CONTENTS)) THEN       xdb.XDB_PITRIG_PKG.pitrig_truncate(sys.dictionary_obj_owner, ",55892,54404,1,1,80,0
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",55753,82473,219,77,963,3
+836b98xx998x3,SELECT sum(bytes)  FROM dba_data_files  WHERE tablespace_name = 'SYSAUX',53855,48265,1,7,227,4
+gtf6tgc2ycgxx,select count(*) from XDB.XDB$SCHEMA s where s.xmldata.schema_url = 'http://xmlns.oracle.com/xdb/XDBSchema.xsd',53834,31557,1,62,1168,1
+04kug40zbu4dm,"select policy#, action# from aud_object_opt$ where object# = :1 and type = 2",53392,46434,287,0,2296,2
+9zzuyxx4pjhsx,"select p_obj#, flags, code, audit$ from edition$ where obj#=:1",53307,51170,1,3,116,2
+gb7k24hgjws8h,"select re.r_obj#, o.owner#, u.name, o.name, re.property, re.rule_id,  re.r_orcount, re.r_lowbox, re.tabs_used, re.vars_used  from rule_set_re$ re, obj$ o, user$ u where re.rs_obj# = :1 and re.ec_obj# ",52733,46361,1,10,566,5
+04kug40zbu4dm,"select policy#, action# from aud_object_opt$ where object# = :1 and type = 2",51228,26068,421,8,3410,2
+6p4m180mg6y8d,"SELECT a.apply#, a.apply_name, a.flags FROM sys.streams$_apply_process a, dba_queues q, dba_queue_tables qt  ,v$instance i WHERE a.queue_owner  = q.owner   and a.queue_name   = q.name   and qt.queue_t",50433,48325,1,4,109,46
+107f5b9wqhpu5,SELECT object_id FROM dba_objects   WHERE object_name = 'LTXID_TRANS'     AND owner = 'SYS'     AND object_type = 'TABLE',50115,37034,1,34,265,11
+g0t052az3rx44,"select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl",50089,20600,128,19,532,49
+107f5b9wqhpu5,SELECT object_id FROM dba_objects   WHERE object_name = 'LTXID_TRANS'     AND owner = 'SYS'     AND object_type = 'TABLE',49240,37424,1,33,402,11
+5xvx5cj5ctbkm,"select con_dbid, open_time, parallel, version, name, instance_name,host_name, platform_name, cdb, edition, db_unique_name, database_role, dbid as cdb_root_dbid     from V$DATABASE, V$INSTANCE, (select",48663,41750,1,8,226,1
+9x2prazfz86dz," select s.file#, s.block#, s.ts#, t.obj#, s.hwmincr, t.obj# from tab$ t, seg$ s where bitand(s.spare1, 4503599627370496) = 4503599627370496 and bitand(s.spare1, 65536) <> 65536  and s.file# = t.file# ",48643,50027,1,2,174,451
+8bsngpzjm16sh,"select table_objno, primary_instance, secondary_instance, owner_instance from sys.aq$_queue_table_affinities a, system.aq$_queue_tables t where  a.owner_instance <> :1 and a.secondary_instance != -1  ",47921,46122,1,3,81,3
+0qbzfjt00pbsx,"BEGIN   dbms_isched.log_dbms_output( :logid, :errs, :outputWasEnabled ); END; ",47754,41096,1,33,2731,0
+389k0hwvasbb8,SELECT /*+ ALL_ROWS */ COUNT(*) FROM SYS.DBA_POLICIES V WHERE V.OBJECT_OWNER = :B3 AND V.OBJECT_NAME = :B2 AND (V.POLICY_NAME LIKE '%xdbrls%' OR V.POLICY_NAME LIKE '%$xd_%') AND V.FUNCTION = :B1 ,47503,47573,8,5,200,4
+avf5k3k0x0cxn,"           insert into stats_advisor_filter_obj$            (rule_id, obj#, flags, type)            select :rule_id, obj#, :flag_include, :type_expanded            from stats_advisor_filter_obj$      ",46934,49812,2,0,125,3
+3nzv2smdzzbsf,"select i.obj#, i.flags, u.name, o.name, o.type#     from sys.obj$ o, sys.user$ u, sys.ind_online$ i    where  (bitand(i.flags, 256) = 256 or bitand(i.flags, 512) = 512) and           (not((i.type# = 9",46609,39048,1,0,46,4
+c9umxngkc3byq,"select sql_id, sql_exec_id, dbop_name, dbop_exec_id, to_char(sql_exec_start, 'mm:dd:yyyy hh24:mi:ss'), to_char(first_refresh_time, 'mm:dd:yyyy hh24:mi:ss'), to_char(last_refresh_time, 'mm:dd:yyyy hh24",46348,35283,10,0,198,1
+5xvx5cj5ctbkm,"select con_dbid, open_time, parallel, version, name, instance_name,host_name, platform_name, cdb, edition, db_unique_name, database_role, dbid as cdb_root_dbid     from V$DATABASE, V$INSTANCE, (select",46219,47395,1,1,132,1
+gwj42q4g13ktg,"merge into sys.col_group_usage$ d using (select :1 obj#, :2 cols from dual) s on (d.obj# = s.obj# and d.cols = s.cols) when matched then update set d.timestamp = :3, d.flags = d.flags + :4 - bitand(d.",45986,43791,4,7,355,2
+32ss2fd6p2m4g,"INSERT INTO RECENT_RESOURCE_INCARNATIONS$ ( RESOURCE_TYPE, RESOURCE_ID, RESOURCE_NAME, DB_UNIQUE_NAME, DB_DOMAIN, INSTANCE_NAME, HOST_NAME, STARTUP_TIME, LOCATION, INCARNATION ) SELECT 'INSTANCE', INS",45740,35354,1,39,335,1
+63qh4nmssnfc0,"declare    stmt varchar2(200);    cnt number;    is_active number;    invalid_identifier exception;    pragma exception_init(invalid_identifier, -00902);    table_not_found exception;    pragma except",44947,42854,1,2,30,0
+03guhbfpak0w7,"select /*+ index(idl_ub1$ i_idl_ub11) */ piece#,length,piece from idl_ub1$ where obj#=:1 and part=:2 and version=:3 order by piece#",44939,40291,23,240,633,3
+1kb56hd6c73bv,"select count(*) num_windows, sum(case when jobs_started<>jobs_completed then 1 else 0 end) num_jobs_incomplete from  (select x.cname_ketcl client_name,       sum(case when operation = 'RUN'           ",44677,37357,1,1,1392,8
+6p4m180mg6y8d,"SELECT a.apply#, a.apply_name, a.flags FROM sys.streams$_apply_process a, dba_queues q, dba_queue_tables qt  ,v$instance i WHERE a.queue_owner  = q.owner   and a.queue_name   = q.name   and qt.queue_t",44560,34823,1,5,87,46
+03guhbfpak0w7,"select /*+ index(idl_ub1$ i_idl_ub11) */ piece#,length,piece from idl_ub1$ where obj#=:1 and part=:2 and version=:3 order by piece#",44517,24613,57,73,581,3
+9tgj4g8y4rwy8,"select type#,blocks,extents,minexts,maxexts,extsize,extpct,user#,iniexts,NVL(lists,65535),NVL(groups,65535),cachehint,hwmincr, NVL(spare1,0),NVL(scanhint,0),NVL(bitmapranges,0) from seg$ where ts#=:1 ",44502,41014,448,29,1394,2
+8swypbbr0m372,"select order#,columns,types from access$ where d_obj#=:1",44205,105961,54,36,1515,3
+a3qq272c786ff," select st.dbid, st.atskid, nvl(ctl.instance_number, 0),         st.interval, st.max_run_time, st.enable,         nvl(ctl.mrct_task_time, 0),         nvl(ctl.suspendable_time, 0),         nvl(ctl.stat",44029,36821,34,5,294,2
+02839vntc56tf,"insert into  wrh$_sysmetric_history  (dbid, per_pdb, con_dbid, snap_id, instance_number, begin_time, end_time, intsize, group_id, metric_id, value)  select  :dbid,  drmv.con_id, con_id_to_dbid(drmv.co",43844,39613,23,13,327,1
+fapvqzp8sd0zt,"select q.eventid, q.table_objno from system.aq$_queues q ",43800,22545,1,32,267,1
+2y224bpv09tr2,"SELECT /*jskqjobqlod2*/                                                /**/    /*+ no_monitor no_statement_queuing current_instance */                /**/    OBJOID, CLSOID,                           ",43605,40807,1,0,27,8
+bt85xwrxpt853,"SELECT T.SQL_HANDLE, O.NAME FROM SYS.SQL$TEXT T, SYS.SQLOBJ$ O, SYS.SQLOBJ$AUXDATA A WHERE SYSTIMESTAMP - NVL(O.LAST_EXECUTED, A.CREATED) >= :B3 AND O.OBJ_TYPE = :B2 AND O.SIGNATURE = A.SIGNATURE AND ",43255,36860,1,1,440,1
+8906gzc63y3gy,"select obj#, stab#, sobj#, sobjd#, tobj# from rmtab$  where bitand(mflags, 72) = 72",42328,20696,1,3,69,2
+ga8v7p6z5p27u,begin   dbms_service.start_service(:1);   end;,42248,29878,1,32,358,0
+6s9sc8q445a42,"declare          pdb_name varchar2(64);          begin            DBMS_SYSTEM.get_env ('ORACLE_PDB_SID', pdb_name);            if(pdb_name is not null)             then               EXECUTE IMMEDIATE",42084,13068,7,2,25,0
+a3jpjzh7mtwwp,"select /*+ index(idl_ub2$ i_idl_ub21) */ piece#,length,piece from idl_ub2$ where obj#=:1 and part=:2 and version=:3 order by piece#",42077,16767,8,110,245,3
+389k0hwvasbb8,SELECT /*+ ALL_ROWS */ COUNT(*) FROM SYS.DBA_POLICIES V WHERE V.OBJECT_OWNER = :B3 AND V.OBJECT_NAME = :B2 AND (V.POLICY_NAME LIKE '%xdbrls%' OR V.POLICY_NAME LIKE '%$xd_%') AND V.FUNCTION = :B1 ,41896,45270,2,1,18,4
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",40361,24842,76,27,489,98
+c23bfuhxt6t3w,DELETE WRI$_SQLSET_PLAN_LINES L WHERE NOT EXISTS (SELECT 0 FROM WRI$_SQLSET_PLANS P WHERE L.STMT_ID = P.STMT_ID AND L.PLAN_HASH_VALUE = P.PLAN_HASH_VALUE),40026,37731,1,33,276,8
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",40000,24830,52,7,330,6
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",39065,24179,10,2,62,6
+6yshgzfwnzbfg," select ts#, file#, block# from seg$ where type# = 11 ",39026,14704,1,134,155,21
+0wzmmkq6f8a9s,"select obj#, job_status from scheduler$_lightweight_job where  bitand(flags, 17592186044416) <> 0 and running_instance = :1",38023,15194,2,1,5,2
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",37874,61729,264,12,1048,3
+4c2hr5psc6qys,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE SHELFLIFE=30) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIGHT"",""INSTANCE_",37195,29226,1,0,1360,4
+3s1yukp05bzg6,"select   schedule_mode, start_calibrate, num_votes,   synced_time, last_vote, status from   WRI$_SCH_CONTROL where   schedule_id = :id",36643,11209,1,6,77,1
+5wxyshspv54v4,"select tc.type#,tc.intcol#,tc.position#,c.type#, c.length,c.scale,c.precision#,c.charsetid,c.charsetform, decode(bitand(c.property,8388608),8388608, c.spare3, 0) from triggercol$ tc,col$ c, trigger$ t",36189,40124,7,2,112,12
+g1021vycj5vb2,BEGIN    /* KSXM:CLEAN_SYN */    dbms_stats_internal.purge_synopsis_by_mmon;  END;,36057,28316,1,10,374,0
+7u5rpz4mw7p4u,"update sys.scheduler$_job_argument set  name = :1, type_number = :2, user_type_num = :3, value = :4, flags = :5 where  position = :6 and  oid = :7",35605,27033,1,11,1124,1
+ga4mbqqxya48k,"select t.ts#,t.file#,t.block#,nvl(t.bobj#,0),nvl(t.tab#,0),t.intcols,nvl(t.clucols,0),t.flags,t.pctfree$,t.pctused$,t.initrans,t.maxtrans,t.rowcnt,t.blkcnt,t.empcnt,t.avgspc,t.chncnt,t.avgrln,t.analyz",35349,47713,57,29,235,2
+8swypbbr0m372,"select order#,columns,types from access$ where d_obj#=:1",34580,23972,73,45,656,3
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",34558,32796,44,39,539,8
+ga4mbqqxya48k,"select t.ts#,t.file#,t.block#,nvl(t.bobj#,0),nvl(t.tab#,0),t.intcols,nvl(t.clucols,0),t.flags,t.pctfree$,t.pctused$,t.initrans,t.maxtrans,t.rowcnt,t.blkcnt,t.empcnt,t.avgspc,t.chncnt,t.avgrln,t.analyz",34485,16066,76,54,314,2
+d9pucpx55z9p6,"select rule_or_piece, num_rops, box_id, property from rule_set_ror$ where  rs_obj# = :1 and ec_obj# = :2 and rule_id = :3",33984,29400,1,7,408,2
+g0t052az3rx44,"select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl",33865,45888,71,17,268,3
+2p9fv35c7zxtg,"select /* KSXM:LOAD_DML_INF *//*+ leading(o) index(m) use_nl(m) */            nvl(m.inserts, 0) ins, nvl(m.updates, 0) upd, nvl(m.deletes, 0) del,          nvl(m.drop_segments, 0) dropseg, nvl(m.flags",33387,32346,179,5,919,5
+0qv27wt724y7s,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE SHELFLIFE=30) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""CLASS_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIG",32889,29279,2,0,13,4
+6ayccp4h1n07f,SELECT DIRECTORY_PATH FROM DBA_DIRECTORIES WHERE DIRECTORY_NAME ='OPATCH_INST_DIR' AND OWNER ='SYS',32659,36964,2,9,132,2
+2fc6yytnq6ccw,"SELECT DIR_ID DIRECTIVE_ID FROM SYS.OPT_DIRECTIVE$ D WHERE BITAND(D.FLAGS, :B3 ) != 0 AND (BITAND(D.FLAGS, :B2 ) != 0 OR D.LAST_USED < :B1 + NUMTODSINTERVAL(6.5, 'day') OR (D.LAST_USED IS NULL AND D.C",32522,35706,1,6,310,2
+dph2wc2nyfudb,"select /*+ RULE */ service_name, host, id from dbsfwuser.ip_acl, dbsfwuser.acl$_obj where host = name order by service_name, host",32257,29088,2,3,155,1
+fr31mzzknv0wh,select max(RETENTION) from SYS_FBA_FA,32110,6350,1,1,4,2
+0qv27wt724y7s,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE SHELFLIFE=30) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""CLASS_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIG",31834,30489,2,0,22,4
+gfcqpw9gnynmm,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) */ ""TIMEOUT"" FROM ""SYS"".""DBA_SUBSCR_DUR_REGISTRATIONS"" ""K"" WHERE 1=1",31730,19456,2,1,1375,2
+g4y6nw3tts7cc,"BEGIN DBMS_APPLICATION_INFO.SET_MODULE(:1,NULL); END;",31539,16004,3,19,252,0
+3hgxzypxz2xpg,"SELECT ro.obj#, '""'||ru.name||'""' || '.' || '""'||ro.name||'""',  decode(rl.ectx#, 0, decode(rm.ectx#, 0, rs.ectx#, rm.ectx#), rl.ectx#),  decode (rl.ectx#, 0, decode(rm.ectx#, 0,    (select '""'||u1.nam",31432,26022,1,17,327,20
+9c4r77fxj79q1,delete /* QOSH:PURGE_OLD_STS *//*+ dynamic_sampling(4) */   from sys.wri$_optstat_tab_history  where savtime < timestamp '1900-01-01 00:00:00 -0:0' and       savtime not in (select timestamp '0001-01-,31396,28426,1,1,56,1
+06gfrprr7w0r2,"select name,password,datats#,tempts#,type#,defrole,resource$, ptime, decode(defschclass,NULL,'DEFAULT_CONSUMER_GROUP',defschclass), spare1,spare4,ext_username,spare2,nvl(spare3,16382),spare9,spare10 f",31393,15941,244,0,488,1
+5zkaavczs7942,select cost from resource_cost$ where resource#=:1,31111,30332,10,7,224,2
+15w1t8qpdgg5k,"select i.obj#, i.flags, u.name, o.name, o.type#     from sys.obj$ o, sys.user$ u, sys.ind$ idx, sys.ind_online$ i    where  bitand(i.flags, 512) = 512 and o.obj#=idx.obj# and           o.owner# = u.us",31011,13384,1,0,0,5
+34wuxswcdkb3u,"UPDATE WRI$_SQLSET_STATISTICS SET ELAPSED_TIME = NVL(:B16 , ELAPSED_TIME), CPU_TIME = NVL(:B15 , CPU_TIME), BUFFER_GETS = NVL(:B14 , BUFFER_GETS), DISK_READS = NVL(:B13 , DISK_READS), DIRECT_WRITES = ",30857,40324,286,0,882,3
+aykvshm7zsabd,"select size_for_estimate,                      size_factor * 100 f,                    estd_physical_read_time,                estd_physical_reads              from v$db_cache_advice where id = '3'",30583,30116,20,0,146,1
+5auuumydvc0ym,"INSERT INTO WRI$_SQLSET_PLAN_LINES VALUES (:B1 ,:B2 ,:B3 ,:B4 ,:B5 ,:B6 ,:B7 ,:B8 ,:B9 ,:B10 ,:B11 ,:B12 ,:B13 ,:B14 ,:B15 ,:B16 ,:B17 ,:B18 ,:B19 ,:B20 ,:B21 ,:B22 ,:B23 ,:B24 ,:B25 ,:B26 ,:B27 ,:B28",30381,28208,6,59,440,1
+fu0fuz7m264pm,"DECLARE   PRAGMA AUTONOMOUS_TRANSACTION;   num_rows NUMBER := 0; BEGIN   SELECT COUNT(*) INTO num_rows FROM SYS.LTXID_TRANS;   IF num_rows = 0 THEN     INSERT INTO SYS.LTXID_TRANS(      MAJ_VERSION, M",30279,25338,1,14,196,0
+6h3cwmunz5z8q,"select col#, grantee#, privilege#,max(mod(nvl(option$,0),2)), max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0), 128",30191,19527,150,15,300,50
+fapvqzp8sd0zt,"select q.eventid, q.table_objno from system.aq$_queues q ",29899,18572,2,30,280,1
+d2cq9ryf9qhcq,"select distinct S1.policy#, S1.when, S4.type    from audit_ng$ S1, aud_policy$ S4    where (S4.policy# = S1.policy#) AND ((S1.how = 1 AND S1.user# = :1) OR          (S1.how = 2 AND :1 <> -1 AND       ",29839,30103,2,0,40,17
+1ssvh7sw1uupb,"SELECT EVENT, TOTAL_WAITS, TIME_WAITED, AVERAGE_WAIT              FROM V$SYSTEM_EVENT              ORDER BY TIME_WAITED DESC",29694,13710,2,0,42,1
+f809dxh6779nf,"SELECT id#, run_seq#, type, context, name, roles FROM sys.priv_capture$ WHERE enabled = 1",29564,11679,1,32,158,3
+cufjt3q4n3dzt,"select distinct o2.name table_name, o1.name index_name from sys.ind$ i, sys.obj$ o1, sys.obj$ o2 where i.ts# =       (select ts# from sys.ts$ where name = :tsname)   and i.obj# = o1.obj#   and i.bo#  ",29427,29802,1,0,2643,505
+772s25v1y0x8k,"select shared_pool_size_for_estimate s,          shared_pool_size_factor * 100 f,          estd_lc_load_time l, 0             from v$shared_pool_advice",29340,14471,20,0,123,1
+9tt2m0mpc2qqp,"select /*+ index(idl_char$ i_idl_char1) */ piece#,length,piece from idl_char$ where obj#=:1 and part=:2 and version=:3 order by piece#",29235,18079,8,31,83,3
+d2cq9ryf9qhcq,"select distinct S1.policy#, S1.when, S4.type    from audit_ng$ S1, aud_policy$ S4    where (S4.policy# = S1.policy#) AND ((S1.how = 1 AND S1.user# = :1) OR          (S1.how = 2 AND :1 <> -1 AND       ",29007,25945,2,21,169,17
+f8hdaxh0vpf18,delete /* KSXM:ACTIVITY_TABLE CLEAN NO OBJ */ from sys.activity_table$ m where not exists  (select /*+ unnest */ 1 from sys.obj$ o where o.obj# = m.obj#) ,28955,23249,1,12,143,2
+94qrpyyq3t85a,"select fragobj#, indfragobj#, ts#, file#, block#, fragflags, chunk,  pctversion$, fragpro, maxinl from lobfrag$   where parentobj# = :1 order by frag#",28845,6920,4,2,112,2
+4c2hr5psc6qys,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE SHELFLIFE=30) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIGHT"",""INSTANCE_",28800,27850,1,0,13,4
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",28792,33532,47,19,986,8
+1xdsy3y3uupcf,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIGHT"",""INSTANCE_ID"",""AFFINITY",28564,25534,1,7,1472,7
+5pnxt7ap1kvc0,"select position#,sequence#,level#,argument,type#,charsetid,charsetform,properties,nvl(length, 0), nvl(precision#, 0),nvl(scale, 0),nvl(radix, 0), type_owner,type_name,type_subname,type_linkname,pls_ty",28543,16609,188,23,2192,3
+frccccnh76gtx,select rfile# from v$datafile where file# = :1,28384,20511,1,0,47,1
+dq2dfhzctg69m,SELECT TO_NUMBER(P.VALUE) FROM SYS.V_$PARAMETER P WHERE P.NAME = '_sta_control',28164,18755,3,0,16,1
+gw788nxk7vbwg,SELECT VALUE FROM SYS.V_$PARAMETER WHERE CON_ID=:B1 AND NAME = 'db_block_size',28131,12488,2,0,16,1
+3f4yxm9y6srnk,"select table_objno, primary_instance, secondary_instance, owner_instance from sys.aq$_queue_table_affinities a, system.aq$_queue_tables t  where  a.owner_instance <> :1 and a.secondary_instance != -1 ",28010,15591,2,42,261,2
+53saa2zkr6wc3,"select intcol#,nvl(pos#,0),col#,nvl(spare1,0) from ccol$ where con#=:1",27920,32407,539,7,2198,3
+g4g72zy5kjgum,select obj# from obj$ where type#=29 and rownum<2,27891,12361,1,196,238,19
+44y3nz5tdrtw4,BEGIN   IF (ORA_DICT_OBJ_TYPE = 'USER') THEN     DELETE FROM SYSTEM.SQLPLUS_PRODUCT_PROFILE     WHERE USERID = ORA_DICT_OBJ_NAME;   END IF;   EXCEPTION WHEN OTHERS THEN   IF (SQLCODE = -4043) OR (SQLC,27638,21334,1,3,173,0
+abz5d7mk4hw25,SELECT COUNT(*) FROM                                                            (SELECT /* interim patches */                                                          'Interim patch ' || patch_id || ',27578,25338,2,17,274,3
+5n1fs4m2n2y0r,"select pos#,intcol#,col#,spare1,bo#,spare2,spare3 from icol$ where obj#=:1",27392,9054,405,6,2082,2
+5u7g54s63p4ts,select toid from type$ where package_obj#=:1 and typ_name=:2,27245,25511,160,10,460,2
+679x4qggryd2v,"select smontabv.cnt, smontabv.time_mp,    smontab.scn, smontab.num_mappings, smontab.tim_scn_map    from smon_scn_time smontab,         (select max(scn) scnmax,                 count(*)+sum(NVL2(TIM_S",27197,23478,1,15,109,4
+g0r5psznj761u,select hashcode from type$ where tvoid=:1,27071,16315,25,31,283,2
+8kun50unk7um7,"select reg_id from reg$ where bitand(qosflags, 8) = 8 and rownum < 2",26936,21595,1,9,110,2
+57antna43jh0a,"select box_id, value from rule_set_iot$ where rs_obj# = :1 and ec_obj# = :2  and rule_id = :3 and rule_or_piece = :4 and rop_id <> :5 order by rop_id",26927,23610,1,5,336,1
+fh5ufah919kun,"select /*+ index(idl_sb4$ i_idl_sb41) */ piece#,length,piece from idl_sb4$ where obj#=:1 and part=:2 and version=:3 order by piece#",26845,20183,57,30,314,3
+bbah6s85fqjv4,"select  decode(u.type#, 2, u.ext_username, u.name), o.name, trigger$.sys_evts, trigger$.type#  from   obj$ o, user$ u, trigger$  where o.type# = 12 and ((bitand(trigger$.property, 8) = 8)  or (bitand(",26461,16636,1,35,184,5
+a3jpjzh7mtwwp,"select /*+ index(idl_ub2$ i_idl_ub21) */ piece#,length,piece from idl_ub2$ where obj#=:1 and part=:2 and version=:3 order by piece#",26322,7774,57,39,342,3
+5pazx6dft6hru,"select o.owner#, o.name, o.namespace, o.obj#, d.d_timestamp,         nvl(d.property,0), o.type#, o.subname, o.status, d.d_attrs  from dependency$ d, obj$ o   where d.p_obj#=:1  and   (d.p_timestamp=nv",26311,33593,2,3,6,17
+69vx75t10wm1j,SELECT * FROM DBA_STMT_AUDIT_OPTS,26221,23175,1,5,97,3
+5v9c1x3qgnw03,delete /* KSXM:ACTIVITY_MVIEW CLEAN NO OBJ */ from sys.activity_mview$ m where not exists  (select /*+ unnest */ 1 from sys.obj$ o where o.obj# = m.obj#) ,26149,10676,1,1,102,2
+a3jff8sdb4qwn,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags, i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey, i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize",26148,19534,6,0,36,6
+a4n4ayr88dbhy,"select grantee#,privilege#,nvl(col#,0),max(mod(nvl(option$,0),2)),max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0),",26050,22977,149,17,402,50
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",25779,12914,37,31,360,54
+fu0fuz7m264pm,"DECLARE   PRAGMA AUTONOMOUS_TRANSACTION;   num_rows NUMBER := 0; BEGIN   SELECT COUNT(*) INTO num_rows FROM SYS.LTXID_TRANS;   IF num_rows = 0 THEN     INSERT INTO SYS.LTXID_TRANS(      MAJ_VERSION, M",25559,19955,1,13,185,0
+bca3vrsqm2u1v,"select u.name, o.name,         decode(i.agt_name, NULL, 'SCHEDULER$_EVENT_AGENT', i.agt_name)  from   sys.user$ u, sys.obj$ o,       (select si.obj# obj#, sm.rule_name agt_name from        sys.schedul",25169,16456,1,1,101,2
+9tt2m0mpc2qqp,"select /*+ index(idl_char$ i_idl_char1) */ piece#,length,piece from idl_char$ where obj#=:1 and part=:2 and version=:3 order by piece#",25147,6235,11,7,50,3
+3j3wd7mk999sb,SELECT STATUS FROM DVSYS.STATUS$ WHERE TYPE = :1,25127,16559,1,19,192,1
+5wxyshspv54v4,"select tc.type#,tc.intcol#,tc.position#,c.type#, c.length,c.scale,c.precision#,c.charsetid,c.charsetform, decode(bitand(c.property,8388608),8388608, c.spare3, 0) from triggercol$ tc,col$ c, trigger$ t",24453,29185,3,3,133,12
+f12y5n96ay0u0,SELECT COUNT(*) FROM SYS.V_$PARAMETER2 WHERE NAME='_gwm_database_flags',24370,20655,1,8,152,1
+g0t052az3rx44,"select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl",24174,18476,23,12,84,3
+2sxqgx5hx76qr,"select /*+ rule */ bucket, endpoint, col#, epvalue, epvalue_raw, ep_repeat_count, endpoint_enc from histgrm$ where obj#=:1 and intcol#=:2 and row#=:3 order by bucket",23919,24295,89,24,256,1
+g0r5psznj761u,select hashcode from type$ where tvoid=:1,23836,14812,24,31,280,2
+fapvqzp8sd0zt,"select q.eventid, q.table_objno from system.aq$_queues q ",23499,20155,2,26,276,1
+1kb56hd6c73bv,"select count(*) num_windows, sum(case when jobs_started<>jobs_completed then 1 else 0 end) num_jobs_incomplete from  (select x.cname_ketcl client_name,       sum(case when operation = 'RUN'           ",23372,20566,1,2,114,8
+g4g72zy5kjgum,select obj# from obj$ where type#=29 and rownum<2,22890,7635,1,218,243,12
+4m7m0t6fjcs5x,"update seq$ set increment$=:2,minvalue=:3,maxvalue=:4,cycle#=:5,order$=:6,cache=:7,highwater=:8,audit$=:9,flags=:10 where obj#=:1",22745,19879,2,1,55,1
+a3qq272c786ff," select st.dbid, st.atskid, nvl(ctl.instance_number, 0),         st.interval, st.max_run_time, st.enable,         nvl(ctl.mrct_task_time, 0),         nvl(ctl.suspendable_time, 0),         nvl(ctl.stat",22661,27122,28,4,252,2
+3dbzmtf9ahvzt,merge /* KSXM:OPTIM_DML_INF */  into sys.mon_mods_all$ m                   using dual                                                                 on (m.obj# = :objn and                            ,22486,17925,16,2,175,2
+g0t052az3rx44,"select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl",22396,19841,1,0,3,3
+8vgz0m72d5sp9,"with non_existent_objs as (select /*+ materialize */ exp_id, objn from exp_head$ e  where not exists  (select 1 from obj$ o where o.obj# = e.objn)) select /* QOSD */  exp_id, objn from ( select exp_id",22167,20387,1,9,213,10
+8k8hg8zmk3du4,"select /*+ ordered use_nl(o1 o2) */ distinct o1.name table_name, o2.name lob_name from (select obj#, lobj#, ind# from sys.lob$ l where ts# = (select ts# from sys.ts$ where name = :tsname )) s1, sys.ob",22034,15237,1,10,1341,1065
+fs3k3k8vxwqf2,select status from dvsys.config$,21921,16607,2,27,168,2
+dph2wc2nyfudb,"select /*+ RULE */ service_name, host, id from dbsfwuser.ip_acl, dbsfwuser.acl$_obj where host = name order by service_name, host",21672,25223,4,1,139,1
+gsndczacs76fc,"SELECT id,name,property FROM sys.wri$_adv_definitions ",21354,17821,1,12,133,3
+6yshgzfwnzbfg," select ts#, file#, block# from seg$ where type# = 11 ",21185,13452,1,44,62,6
+gd28w82ct6rva,select audit$ from tab$ where obj# = :1,21160,16565,387,1,1207,2
+cn3wrukcwscgh,SELECT * FROM test_audit,21118,18611,1,3,61,2
+gxrr466g0v9ck,delete /* KSXM:CLEAN_PEND_TAB *//*+ dynamic_sampling(4) */   from sys.wri$_optstat_tab_history t   where not exists         (select /*+ unnest */ 1 from sys.obj$ o where o.obj# = t.obj#)     and savti,21052,15286,1,17,111,3
+6b7hj70p170j1,select migrated from MIGRATE$,20753,20258,1,8,270,2
+0ts4drtk8pk3b,select * from  heat_map_stat$ where obj#=-1 for update,20744,13351,1,11,119,2
+2syvqzbxp4k9z,"select u.name, o.name, a.interface_version#, o.obj#      from association$ a, user$ u, obj$ o                     where a.obj# = :1                                          and a.property = :2        ",20496,16727,12,3,88,2
+fpvps147hqh7g,SELECT DBID FROM SYS.V_$DATABASE,20435,15477,1,5,168,1
+grwydz59pu6mc,select text from view$ where rowid=:1,20270,13121,146,8,314,1
+c2h8tpm85b5gb,SELECT VALUE FROM V$PARAMETER WHERE NAME='compatible',20198,13894,1,0,12,1
+d2cq9ryf9qhcq,"select distinct S1.policy#, S1.when, S4.type    from audit_ng$ S1, aud_policy$ S4    where (S4.policy# = S1.policy#) AND ((S1.how = 1 AND S1.user# = :1) OR          (S1.how = 2 AND :1 <> -1 AND       ",20186,26798,2,15,130,17
+87gumhu52bhu7,SELECT value$ FROM LBACSYS.ols$props WHERE NAME = :1,20165,9498,1,9,75,1
+8p447s6p0rv6b,"select java_pool_size_for_estimate s,           java_pool_size_factor * 100 f,           estd_lc_load_time l, 0            from v$java_pool_advice",20117,32609,20,0,123,1
+gngtvs38t0060,SELECT /*+ CONNECT_BY_FILTERING */ s.privilege# FROM sys.sysauth$ s        CONNECT BY s.grantee# = PRIOR s.privilege#                                 AND (s.privilege# > 0 OR s.privilege# = -352)     ,20067,20020,36,0,76,8
+6zu36a7z2bsjf,select host_name from v$instance,20064,20244,1,0,23,1
+5pnxt7ap1kvc0,"select position#,sequence#,level#,argument,type#,charsetid,charsetform,properties,nvl(length, 0), nvl(precision#, 0),nvl(scale, 0),nvl(radix, 0), type_owner,type_name,type_subname,type_linkname,pls_ty",20011,14986,93,16,1659,3
+87gaftwrm2h68,"select o.owner#,o.name,o.namespace,o.remoteowner,o.linkname,o.subname from obj$ o where o.obj#=:1",19979,17869,269,14,714,3
+bku5fwd8bhsn6,"select count(*) from wri$_optstat_opr o, wri$_optstat_opr_tasks t where o.id = t.op_id(+) and o.operation = 'gather_database_stats (auto)' and ((o.notes like '%<error>%' and  not regexp_like( o.notes,",19771,16540,1,16,208,28
+b1wc53ddd6h3p,"select audit$,options from procedure$ where obj#=:1",19419,14158,67,15,201,2
+g7hxzvt6ts081,select extract(day from retention)*24*60*60 +        extract(hour from retention)*60*60 +        extract(minute from retention)*60 +        extract(second from retention)   from dba_hist_wr_control,19289,4421,1,3,66,3
+35ra2cdwvqg1w,"select parttype, partcnt, partkeycols, flags, defts#, defpctfree, defpctused, definitrans, defmaxtrans, deftiniexts, defextsize, defminexts, defmaxexts, defextpct, deflists, defgroups, deflogging, spa",18733,8556,23,3,34,1
+cjwy7nwqmzxf5,"select box_id, box_type, opr_type, oet_type, oeflags, num_exprs,  opexpr_n1, opexpr_n2, opexpr_n3, opexpr_c1 from rule_set_fob$ where  rs_obj# = :1 and ec_obj# = :2",18684,16393,1,5,163,2
+fs3k3k8vxwqf2,select status from dvsys.config$,18674,12118,2,22,106,2
+04kug40zbu4dm,"select policy#, action# from aud_object_opt$ where object# = :1 and type = 2",18664,8470,189,0,1517,2
+a1xgxtssv5rrp,"select sum(used_blocks), ts.ts#   from GV$SORT_SEGMENT gv, ts$ ts   where gv.tablespace_name = ts.name and   ts.bitmapped  <> 0   group by ts.ts#",18647,25695,2,0,78,4
+8swypbbr0m372,"select order#,columns,types from access$ where d_obj#=:1",18598,10560,44,23,314,3
+ft9dsq9bj2mrg,"select o.name, o.owner# from obj$ o, collection$ c where    o.oid$=c.toid and c.elem_toid = :1 and c.elem_version#=:2",18506,19124,1,4,114,5
+9cpja2m2zgurs,"select count(aft.table_objno) from system.aq$_queue_tables t,  sys.aq$_queue_table_affinities aft where  aft.table_objno = t.objno and aft.owner_instance = :1 and  bitand(t.flags, 4+16+32+64+128+256+6",18486,22048,1,2,5,2
+0kyu4m489t26n,SELECT COUNT(*) FROM SYS.LTXID_TRANS,18380,17595,1,7,45,1
+6b7hj70p170j1,select migrated from MIGRATE$,18315,21144,1,4,210,2
+g0r5psznj761u,select hashcode from type$ where tvoid=:1,18241,9233,49,28,153,2
+2mas563p6kug8,select pval2 from sys.aux_stats$ where sname = 'SYSSTATS_INFO' and pname = 'STATUS',18162,6696,1,4,64,1
+c4psbujzwz0s6,"select a.schema, a.name, b.name, b.eventid, a.flags, a.sort_cols  from system.aq$_queues b, system.aq$_queue_tables a, sys.aq$_queue_table_affinities t  where a.objno = b.table_objno and t.table_objno",18126,19494,1,2,2,4
+gx4mv66pvj3xz,"select con#,type#,condlength,intcols,robj#,rcon#,match#,refact,nvl(enabled,0),rowid,cols,nvl(defer,0),mtime,nvl(spare1,0),spare2,spare3 from cdef$ where obj#=:1",18103,12450,143,2,972,2
+3f4yxm9y6srnk,"select table_objno, primary_instance, secondary_instance, owner_instance from sys.aq$_queue_table_affinities a, system.aq$_queue_tables t  where  a.owner_instance <> :1 and a.secondary_instance != -1 ",18053,12595,1,0,10,2
+bbah6s85fqjv4,"select  decode(u.type#, 2, u.ext_username, u.name), o.name, trigger$.sys_evts, trigger$.type#  from   obj$ o, user$ u, trigger$  where o.type# = 12 and ((bitand(trigger$.property, 8) = 8)  or (bitand(",17658,13089,1,19,180,5
+76qcscs1p75v2,"INSERT ALL WHEN (:B32 = 1) THEN INTO WRI$_SQLSET_STATEMENTS (ID, CON_DBID, SQLSET_ID, SQL_ID, FORCE_MATCHING_SIGNATURE, PARSING_SCHEMA_NAME, MODULE, ACTION, COMMAND_TYPE) VALUES (:B17 , :B15 , :B31 , ",17639,12527,6,16,159,2
+1xdsy3y3uupcf,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIGHT"",""INSTANCE_ID"",""AFFINITY",17562,21400,1,2,17,7
+5dqz0hqtp9fru,"select /*+ connect_by_filtering index(sysauth$ i_sysauth1) */ privilege#, bitand(nvl(option$, 0), 72), grantee#, level from sysauth$ connect by grantee#=prior privilege# and privilege#>0 start with gr",17518,6073,6,2,227,12
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",17480,18938,2,0,10,6
+f3djt4g0bs7bj,"SELECT S.SCHEMA, S.QUEUE_NAME, S.NAME, S.ADDRESS, S.PROTOCOL, S.SUBSCRIBER_ID FROM SYS.AQ$_SUBSCRIBER_TABLE S WHERE BITAND(S.SUBSCRIBER_TYPE, :B3 ) = :B3 AND S.INSTANCE_ID = :B2 AND S.SCN_AT_ADD < :B1",17435,11570,2,3,102,2
+8rmjzp071mt1j,"select /* KSXM:ACTIVITY_CONFIG read num */ nvl(param_num, 0) from sys.activity_config$ c where c.param_name = :pname",17348,17647,3,9,46,3
+fw07zwwyz6gva,"update link_sources$ set (LOGON_COUNT, LAST_LOGON_TIME) = (select (link_sources$.logon_count+count(*)),  MAX(LOGON_TIME) from link_logons$ where  (link_sources$.source_id = link_logons$.source_id)  AN",17192,23456,1,1,219,8
+c3zymn7x3k6wy,"select obj#, dataobj#, part#, hiboundlen, hiboundval, flags, ts#, file#, block#, pctfree$, initrans, maxtrans, analyzetime, samplesize, rowcnt, blevel, leafcnt, distkey, lblkkey, dblkkey, clufac, pctt",17172,5947,5,7,53,2
+ayfkhnatj08v0,"select min(time_manager_info) from ""SYS"".""CQN_EVENT_TABLE""",17083,15325,1,5,1425,1
+bbah6s85fqjv4,"select  decode(u.type#, 2, u.ext_username, u.name), o.name, trigger$.sys_evts, trigger$.type#  from   obj$ o, user$ u, trigger$  where o.type# = 12 and ((bitand(trigger$.property, 8) = 8)  or (bitand(",17052,12358,1,21,175,5
+g0t052az3rx44,"select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl",17022,11432,78,5,359,49
+02tpnrqf47g3v,"SELECT T.TASK_ID, T.TASK_NAME, T.OWNER, E.EXECUTION_NAME FROM SYS.DBA_ADVISOR_TASKS T, SYS.DBA_ADVISOR_EXECUTIONS E, WRI$_ADV_PARAMETERS P WHERE T.TASK_ID = P.TASK_ID AND T.TASK_ID = E.TASK_ID AND T.S",16976,15120,1,10,59,3
+cvfzdcvq3ck9b,delete from plscope_action$ where obj#=:1,16974,10739,1,29,137,7
+fndr8b2vxtvfr,delete from jirefreshsql$ where iobj# in ( select iobj# from jirefreshsql$ where tobj# = :1),16884,16218,1,1,123,1
+38fffx897xs0v,"select o.obj#, u.name, o.name, ti.parent_obj#, ti.parent_ptn_obj#    from sys.obj$ o, sys.user$ u, sys.transient_iot$ ti    where o.obj# = ti.obj# and o.owner# = u.user#",16832,9383,1,1,46,4
+bu4knv99vsx1x,"select nvl(con_id, 0), lobtsn, lobrdba, lobobjid from x$lobstat   where lobspcdealloc > 0 and lobcurrtime >= :1   order by lobspcdealloc desc",16782,10630,1,0,17,1
+996ur09n2cvtg,"SELECT CASE WHEN LOWER(VALUE) IN ('off', 'memory') THEN 0 ELSE 1 END FROM SYS.V_$PARAMETER WHERE NAME = 'cursor_bind_capture_destination'",16750,19699,1,0,16,1
+gngtvs38t0060,SELECT /*+ CONNECT_BY_FILTERING */ s.privilege# FROM sys.sysauth$ s        CONNECT BY s.grantee# = PRIOR s.privilege#                                 AND (s.privilege# > 0 OR s.privilege# = -352)     ,16626,14920,16,4,170,8
+f0h5rpzmhju11,"select SYS_CONTEXT('USERENV', 'SERVER_HOST'), SYS_CONTEXT('USERENV', 'DB_UNIQUE_NAME'), SYS_CONTEXT('USERENV', 'INSTANCE_NAME'), SYS_CONTEXT('USERENV', 'INSTANCE'), STARTUP_TIME, SYS_CONTEXT('USERENV'",16503,31002,7,0,76,1
+8r5sp8cjcpqan,select count(*) from vtable$ where obj#=:1,16489,13894,1,32,64,7
+dqabm32g3pp0v,"SELECT o.obj# FROM sys.obj$ o, sys.""_BASE_USER"" u WHERE o.owner# = u.user# AND u.name = :1 AND o.type# = 2 AND o.name = :2",16450,18879,8,7,154,3
+96fqh1b19dh67,SELECT COUNT(DISTINCT(batch#)) FROM sqllog$,16443,13966,1,2,47,1
+g4gp07gt2z920,"update sys.scheduler$_job set  last_start_date = :1, running_instance = :2, running_slave = :3, job_status = :4 where  obj# = :5",16321,9023,5,3,41,1
+50vxqdkj4zu1w,"select user#,password,datats#,tempts#,type#,defrole,resource$,ptime,decode(defschclass,NULL,'DEFAULT_CONSUMER_GROUP',defschclass),spare1,spare4,ext_username,spare2,nvl(spare3,16382),spare9,spare10 fro",16305,16454,156,4,362,1
+2g980ckhp9au1,UPDATE /*+ UNNEST(@SEL$1)             LEADING(@SEL$3FF8579E               VW_NSO_1@SEL$3FF8579E STX@UPD$1)             USE_NL(@SEL$3FF8579E STX@UPD$1)             INDEX(@SEL$3FF8579E STX@UPD$1        ,16276,19380,2,7,148,1
+f809dxh6779nf,"SELECT id#, run_seq#, type, context, name, roles FROM sys.priv_capture$ WHERE enabled = 1",16184,9958,1,18,129,3
+fh5ufah919kun,"select /*+ index(idl_sb4$ i_idl_sb41) */ piece#,length,piece from idl_sb4$ where obj#=:1 and part=:2 and version=:3 order by piece#",16151,16464,8,18,71,3
+gw788nxk7vbwg,SELECT VALUE FROM SYS.V_$PARAMETER WHERE CON_ID=:B1 AND NAME = 'db_block_size',15996,9970,1,0,12,1
+9tt2m0mpc2qqp,"select /*+ index(idl_char$ i_idl_char1) */ piece#,length,piece from idl_char$ where obj#=:1 and part=:2 and version=:3 order by piece#",15985,8610,57,15,191,3
+cm0g9aucax7rz,"delete /* QOSH:PURGE_OLD_STS *//*+ dynamic_sampling(4) */  from sys.wri$_optstat_histhead_history where savtime_date < to_date('01-01-1900', 'dd-mm-yyyy') and        savtime not in (select timestamp '",15870,19564,1,0,64,2
+3pww0rx5pqcb7,"with occupant_segments as (select distinct segment_name from   (select o1.segment_name, o1.segment_name table_name    from x$kewx_segments o1    union all    select o2.lob_name, o2.table_name    from ",15794,9774,1,0,28,1
+730vdzhng6m6g,"update sys.scheduler$_job set  next_run_date = :1, last_end_date = :2, retry_count = :3, run_count = :4, running_instance = :5, running_slave = :6, job_status = :7 where  obj# = :8",15784,19491,4,1,49,1
+f7mrw5f3wt7cp,"SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE ",15781,20425,1,0,7,32
+8nwsztmf3wt4w,"select privilege#,nvl(col#,0),max(mod(nvl(option$,0),2)),max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0), 64) /64), max(bitand(nvl(option$,0), 128) /1",15700,7533,34,18,75,4
+0kyu4m489t26n,SELECT COUNT(*) FROM SYS.LTXID_TRANS,15601,15407,1,6,45,1
+brk04qfvsb4bb,select current_value from hang_manager_parameters where name = :1,15552,10620,4,7,49,1
+9htzk07t7nuaw,"select eventid, destination, name, schema,         disabled, flags, job_name,         propagation_name, destq from (select source_queue_schema, source_queue, propagation_name,       '""' || destination",15516,12379,1,6,136,5
+8jugsqbc5fx9j,"select s.pval2 from wri$_optstat_aux_history s where s.savtime > to_timestamp('3000-12-01 01:00:00', 'yyyy-mm-dd hh24:mi:ss') -1 and s.sname = 'SYSSTATS_INFO' and s.pname = 'STATUS'",15505,14796,1,4,127,1
+6jtrvgx7rb1p0,"select /*+ NO_PARALLEL(q) */ q.ENQUEUE_ENABLED, q.DEQUEUE_ENABLED  from dba_queues q where q.name = 'SYS$SERVICE_METRICS'",15486,17016,1,1,31,5
+3un99a0zwp4vd,"select owner#,name,namespace,remoteowner,linkname,p_timestamp,p_obj#, nvl(property,0),subname,type#,flags,d_attrs from dependency$ d, obj$ o where d_obj#=:1 and p_obj#=obj#(+) order by order#",15473,12522,6,7,60,54
+f3ww8rgva3hrs,"update /* KSXM:FLUSH COL */ sys.col_usage$ set                  equality_preds    = equality_preds    + decode(bitand(:flag,1),0,0,1),   equijoin_preds    = equijoin_preds    + decode(bitand(:flag,2),",15438,19494,110,0,381,1
+9htzk07t7nuaw,"select eventid, destination, name, schema,         disabled, flags, job_name,         propagation_name, destq from (select source_queue_schema, source_queue, propagation_name,       '""' || destination",15412,11332,1,2,126,5
+dnw4gjpv5ssfr,"select min(time_manager_info) from ""SYS"".""AQ_EVENT_TABLE""",15380,8399,1,14,183,1
+87gumhu52bhu7,SELECT value$ FROM LBACSYS.ols$props WHERE NAME = :1,15347,9301,2,10,59,1
+57kr4dww1upz8,"insert into sys.audit$ (user#,proxy#,option#,success,failure)values (:1,:2,:3,:4,:5)",15309,9193,39,1,150,1
+44dn40afubks4,"select decode(u.type#, 2, u.ext_username, u.name), o.name,        t.update$, t.insert$, t.delete$, t.enabled,        decode(bitand(t.property, 8192),8192, 1, 0),        decode(bitand(t.property, 65536",15259,8973,3,0,288,9
+a3jpjzh7mtwwp,"select /*+ index(idl_ub2$ i_idl_ub21) */ piece#,length,piece from idl_ub2$ where obj#=:1 and part=:2 and version=:3 order by piece#",15220,8256,6,19,133,3
+07w31hu2urxfz,"SELECT COUNT(*) FROM DBA_SQLSET WHERE OWNER = :B2 AND NAME = :B1 AND CON_DBID = SYS_CONTEXT('userenv','con_dbid')",15038,10247,1,13,137,1
+aypft341d5mvm,"DECLARE   stmt    VARCHAR2(256);   invalid_identifier exception;   pragma exception_init(invalid_identifier, -00904);   is_active number; BEGIN    IF sys.dbms_standard.dictionary_obj_type = 'USER' THE",15023,11452,1,0,0,0
+g30ca21btqfj1,select to_number(value) from SYSDBIMFS_METADATA$ where key='SCHEMA_VER',14706,11054,1,6,101,1
+9tgj4g8y4rwy8,"select type#,blocks,extents,minexts,maxexts,extsize,extpct,user#,iniexts,NVL(lists,65535),NVL(groups,65535),cachehint,hwmincr, NVL(spare1,0),NVL(scanhint,0),NVL(bitmapranges,0) from seg$ where ts#=:1 ",14702,28658,133,16,456,2
+3fb4ax6g6jnkf,"SELECT ROLE, PASSWORD_REQUIRED, AUTHENTICATION_TYPE FROM DBA_ROLES",14690,7417,3,6,59,3
+113vsgmfvf5p0,delete from sqltxl_sql$ where obj#=:1,14540,13528,1,1,148,1
+fh5ufah919kun,"select /*+ index(idl_sb4$ i_idl_sb41) */ piece#,length,piece from idl_sb4$ where obj#=:1 and part=:2 and version=:3 order by piece#",14271,8622,6,16,122,3
+gngtvs38t0060,SELECT /*+ CONNECT_BY_FILTERING */ s.privilege# FROM sys.sysauth$ s        CONNECT BY s.grantee# = PRIOR s.privilege#                                 AND (s.privilege# > 0 OR s.privilege# = -352)     ,14260,11053,18,0,40,8
+3qdz4tzym0ssp,"select min(next_date) from ""SYS"".""AQ$_ORA$PREPLUGIN_BACKUP_QTB_T""",14255,4605,1,5,56,1
+20vv6ttajyjzq,delete from access$ where d_obj#=:1,14130,16123,10,0,43,2
+0ts4drtk8pk3b,select * from  heat_map_stat$ where obj#=-1 for update,14057,10460,1,10,135,2
+2p9fv35c7zxtg,"select /* KSXM:LOAD_DML_INF *//*+ leading(o) index(m) use_nl(m) */            nvl(m.inserts, 0) ins, nvl(m.updates, 0) upd, nvl(m.deletes, 0) del,          nvl(m.drop_segments, 0) dropseg, nvl(m.flags",14050,994,90,0,465,2
+4ysys4w9pskt3," declare     total_blocks number := 0;   begin     select nvl(sum(d.blocks), 0) into total_blocks       from x$kewx_segments d,            (select distinct o1.segment_name name from x$kewx_segments o1",13935,13272,1,0,52,0
+a81vzf0fa0q1p,delete  /* KSXM:CLEAN_PEND_IND *//*+ dynamic_sampling(4) */  from sys.wri$_optstat_ind_history i   where not exists         (select /*+ unnest */ 1 from sys.obj$ o where o.obj# = i.obj#)     and savti,13928,12510,1,16,111,3
+87gaftwrm2h68,"select o.owner#,o.name,o.namespace,o.remoteowner,o.linkname,o.subname from obj$ o where o.obj#=:1",13915,22573,218,0,529,3
+gjaap3w3qbf8c,select count(*) from ilmobj$ where rownum = 1,13909,11285,20,4,98,1
+7ppwsrkr4j4dw,"select attr, value_str, value_num, value_lob    from sys.session_template$    where template_id = :1    order by attr asc",13896,10029,1,7,188,1
+gt3y0sr7zafbx,"select program_oid, schedule_expr, schedule_id, queue_owner, queue_name,         queue_agent, event_rule, mxdur_msgid, last_enabled_time, class_oid,         next_run_date, last_start_date, last_end_da",13886,13230,4,1,133,1
+0200bsvkhc917,"select wrm.last_ash_sample_id from   WRM$_DATABASE_INSTANCE wrm,        (select max(startup_time) as latest_startup         from   WRM$_DATABASE_INSTANCE         where  instance_number    = :instance_",13815,5712,1,0,4,3
+asvzxj61dc5vs,"select timestamp, flags from fixed_obj$ where obj#=:1",13765,12271,50,0,129,2
+dxkqgnf3f843s,"select count(*) as num_windows, sum(case enabled when 'TRUE' then 1 else 0 end) as num_enabled from dba_scheduler_windows",13702,19241,1,7,122,12
+dqabm32g3pp0v,"SELECT o.obj# FROM sys.obj$ o, sys.""_BASE_USER"" u WHERE o.owner# = u.user# AND u.name = :1 AND o.type# = 2 AND o.name = :2",13531,10800,8,16,258,3
+87gaftwrm2h68,"select o.owner#,o.name,o.namespace,o.remoteowner,o.linkname,o.subname from obj$ o where o.obj#=:1",13500,20830,183,0,389,3
+g2s1gpvyan3cj,delete from jijoin$ where obj# in ( select obj# from jijoin$ where tab1obj# = :1 or tab2obj# = :1),13300,12738,1,1,125,1
+7nf0u4jpc4bs9,delete /* QOSH:PURGE_OLD_STS *//*+ dynamic_sampling(4) */  from sys.wri$_optstat_ind_history where savtime < timestamp '1900-01-01 00:00:00 -0:0' and       savtime not in (select timestamp '0001-01-01,13255,10964,1,1,60,1
+5u7g54s63p4ts,select toid from type$ where package_obj#=:1 and typ_name=:2,13239,12497,116,5,232,2
+6h3cwmunz5z8q,"select col#, grantee#, privilege#,max(mod(nvl(option$,0),2)), max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0), 128",13210,6923,28,8,56,4
+9fjf75a1s4y19,"select procedure#,procedurename,properties,itypeobj#, properties2 from procedureinfo$ where obj#=:1 order by procedurename desc, overload# desc",12980,17448,10,13,396,4
+03guhbfpak0w7,"select /*+ index(idl_ub1$ i_idl_ub11) */ piece#,length,piece from idl_ub1$ where obj#=:1 and part=:2 and version=:3 order by piece#",12943,7304,6,11,104,3
+g30ca21btqfj1,select to_number(value) from SYSDBIMFS_METADATA$ where key='SCHEMA_VER',12901,10074,1,5,119,1
+4dub32v0snhp3,"with occupant_segments as (select distinct segment_name from   (select o1.segment_name, o1.segment_name table_name    from x$kewx_segments o1    union all    select o2.lob_name, o2.table_name    from ",12740,19675,1,0,28,1
+gk2jpj9pfb1nj,"insert into WRI$_ALERT_THRESHOLD_LOG (sequence_id, object_type, object_name, object_id, opcode) values (:1, :2, :3, :4, :5)",12737,11278,5,12,86,1
+b80uys4v5f6at,select count(*) from SYS.chnf$_reg_queries,12663,7547,1,8,46,2
+f3yfg50ga0r8n,select obj# from obj$ where dataobj# = :1,12651,17187,1,2,3,3
+2vhhhddmn1q32,"select '""'||name||'"" '||decode(type#,1,decode(charsetform,2,'NVARCHAR2('||decode(bitand(property,8388608),8388608,decode(spare3,0,1,spare3)||')','BYTECOUNT=>'||decode(length,0,1,length)||')'),'VARCHAR",12633,10944,4,2,12,3
+04kug40zbu4dm,"select policy#, action# from aud_object_opt$ where object# = :1 and type = 2",12584,6783,87,0,696,2
+1mjd9xp80vuqa,"select node,owner,name from syn$ where obj#=:1",12578,9935,5,8,87,2
+8swypbbr0m372,"select order#,columns,types from access$ where d_obj#=:1",12548,8331,37,18,180,3
+a1xgxtssv5rrp,"select sum(used_blocks), ts.ts#   from GV$SORT_SEGMENT gv, ts$ ts   where gv.tablespace_name = ts.name and   ts.bitmapped  <> 0   group by ts.ts#",12444,19494,1,0,14,2
+fxpnjw7yy35hw,SELECT * FROM BSLN_BASELINES WHERE BSLN_GUID = :B1 ,12397,13863,1,4,171,1
+98zsaptdmg65n,"with occupant_segments as (select distinct segment_name from   (select o1.segment_name, o1.segment_name table_name    from x$kewx_segments o1    union all    select o2.lob_name, o2.table_name    from ",12389,9691,1,0,28,1
+c2m8bmh9u7f3s,"select t_object_type, t_object_name, t_metrics_id, lower(t_instance_name),         t_flags, t_warning_operator, t_warning_value, t_critical_operator,         t_critical_value, t_observation_period, t_",12287,8031,1,10,103,3
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",12201,8203,18,2,111,6
+ayfkhnatj08v0,"select min(time_manager_info) from ""SYS"".""CQN_EVENT_TABLE""",12170,8690,1,6,145,1
+9zzuyxx4pjhsx,"select p_obj#, flags, code, audit$ from edition$ where obj#=:1",12149,14524,1,2,102,2
+6pga46ggqways,"select count(*) from registry$ where status not in (9, 99) and  namespace='SERVER' and cid not in ('APEX', 'OWB', 'EXF', 'RUL') and  version is not null",12112,7989,1,14,91,2
+8swypbbr0m372,"select order#,columns,types from access$ where d_obj#=:1",12106,8936,47,11,882,3
+dp77gc23ppr74,delete from fed$apps    where spare1 not in (select distinct con_uid from v$containers)    and spare1<>0,12050,10670,1,6,58,2
+a764p8s485v9h,"INSERT INTO  wrh$_sqltext                     (sql_id, dbid,                       sql_text, command_type,                       snap_id, con_dbid, per_pdb)      SELECT :sql_id, :dbid,             :sq",12046,13717,6,8,57,4
+5n1fs4m2n2y0r,"select pos#,intcol#,col#,spare1,bo#,spare2,spare3 from icol$ where obj#=:1",12042,5028,191,8,934,2
+9ux4hcnsp1q8z,"select /* QOSH:ANLYZ_TIME */     from_tz(      cast ((max(analyzetime) - 1) as timestamp),      to_char(systimestamp, 'TZH:TZM'))  from sys.tab$ where analyzetime is not null",11994,10656,1,0,1895,432
+b2sb7rm7vt887,"select userid, name, subname, flags    from sys.scheduler$_lwjob_obj where obj# = :1",11914,9827,4,0,78,1
+0spyn0r7704c1,"with occupant_segments as (select distinct segment_name from   (select o1.segment_name, o1.segment_name table_name    from x$kewx_segments o1    union all    select o2.lob_name, o2.table_name    from ",11830,9639,1,0,28,1
+3dbzmtf9ahvzt,merge /* KSXM:OPTIM_DML_INF */  into sys.mon_mods_all$ m                   using dual                                                                 on (m.obj# = :objn and                            ,11800,8995,2,0,12,2
+4zmbcythh0m13,"insert into WRI$_DBU_USAGE_SAMPLE (dbid, version, last_sample_date, last_sample_date_num, last_sample_period, total_samples, sample_interval) select dbid, version, NULL, NULL, 0, 0, 604800 from v$data",11777,10144,1,5,150,94
+52hyg9duhqup3,"select numbercol,binfloatcol,bindoublecol,charcol,varcharcol,ncharcol,nvarcharcol,datecol,ts_col,tswtz_col from sys.radm_fptm$ where fpver=1",11768,11948,1,4,90,1
+6yay90qpp8483,select distinct(owner_instance) from sys.aq$_queue_shards,11724,10370,1,0,0,3
+5rurx5xtjwcu2,"SELECT /*+ OPT_PARAM('_parallel_syspls_obey_force' 'false') */ KSPPCV.KSPPSTVL FROM X$KSPPCV KSPPCV, X$KSPPI KSPPI WHERE KSPPI.INDX = KSPPCV.INDX AND KSPPI.KSPPINM = :B1 ",11523,19904,1,0,8,1
+71wxmdhdvg2a9,"delete /* QOSH:PURGE_OLD_STS *//*+ dynamic_sampling(4) */ from sys.wri$_optstat_histgrm_history where savtime_date < to_date('01-01-1900', 'dd-mm-yyyy') and       savtime not in (select timestamp '000",11521,15341,1,1,52,2
+5ty7pv13y930m,"select count(*) from sys.col_group_usage$  where obj# = :1 and cols = :2 and trunc(sysdate) = trunc(timestamp) and bitand(flags, :3) = :3 and (cols_range is null and length(:4) = 0 or cols_range is no",11505,9795,4,3,42,1
+a4n4ayr88dbhy,"select grantee#,privilege#,nvl(col#,0),max(mod(nvl(option$,0),2)),max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0),",11461,12971,61,12,185,50
+af6nyvxz737dp,DELETE WRI$_SQLSET_BINDS B WHERE NOT EXISTS (SELECT 0 FROM WRI$_SQLSET_PLANS P WHERE B.STMT_ID = P.STMT_ID AND B.PLAN_HASH_VALUE = P.PLAN_HASH_VALUE),11454,12300,1,0,176,1
+9tt2m0mpc2qqp,"select /*+ index(idl_char$ i_idl_char1) */ piece#,length,piece from idl_char$ where obj#=:1 and part=:2 and version=:3 order by piece#",11435,6427,6,11,104,3
+0k8522rmdzg4k,select privilege# from sysauth$ where (grantee#=:1 or grantee#=1) and privilege#>0,11435,19698,4,2,272,2
+5j4c2v06qdhqq,"select procedure#,ownerlength,classlength,methodlength,siglength, flagslength,cookiesize from procedurejava$ where obj#=:1 order by procedure#",11415,5218,2,29,60,3
+2w2w2x51dk89q,"select o.name from obj$ o where o.type# = 9 and bitand(o.flags, 2048) = 2048 and o.name like 'SYSFN%' and (sysdate-o.ctime) > 0.0007",11342,8671,1,6,30,20
+gngtvs38t0060,SELECT /*+ CONNECT_BY_FILTERING */ s.privilege# FROM sys.sysauth$ s        CONNECT BY s.grantee# = PRIOR s.privilege#                                 AND (s.privilege# > 0 OR s.privilege# = -352)     ,11146,15908,19,0,42,8
+a4n4ayr88dbhy,"select grantee#,privilege#,nvl(col#,0),max(mod(nvl(option$,0),2)),max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0),",11076,9712,52,12,160,50
+b9nbhsbx8tqz5,SELECT /*+ OPT_PARAM('_parallel_syspls_obey_force' 'false') */ SPARE4 FROM SYS.OPTSTAT_HIST_CONTROL$ WHERE SNAME = :B1 ,11065,9401,2,1,65,2
+7ppwsrkr4j4dw,"select attr, value_str, value_num, value_lob    from sys.session_template$    where template_id = :1    order by attr asc",11062,8558,1,7,188,1
+5u7g54s63p4ts,select toid from type$ where package_obj#=:1 and typ_name=:2,11019,12141,25,3,50,2
+1gfaj4z5hn1kf,delete from dependency$ where d_obj#=:1,11001,3618,10,0,71,2
+9tgj4g8y4rwy8,"select type#,blocks,extents,minexts,maxexts,extsize,extpct,user#,iniexts,NVL(lists,65535),NVL(groups,65535),cachehint,hwmincr, NVL(spare1,0),NVL(scanhint,0),NVL(bitmapranges,0) from seg$ where ts#=:1 ",10968,11508,75,0,224,2
+6pga46ggqways,"select count(*) from registry$ where status not in (9, 99) and  namespace='SERVER' and cid not in ('APEX', 'OWB', 'EXF', 'RUL') and  version is not null",10907,7390,1,12,91,2
+dqucusk8avvuh,delete /* KSXM:CLEAN_COL_USAGE *//*+ dynamic_sampling(4) */    from sys.col_usage$ c   where ((timestamp < sysdate - 367)          or not exists             (select /*+ unnest */ 1 from sys.obj$ o whe,10818,13909,1,6,608,2
+0m78skf1mudnb,"select audit$,properties from type_misc$ where obj#=:1",10815,5136,25,13,117,2
+avvfapa4gfgc4,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""CLASS_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIGHT"",""INSTANCE",10801,19902,2,0,43,7
+0yn07bvqs30qj,"select pctfree_stg, pctused_stg, size_stg,initial_stg, next_stg, minext_stg, maxext_stg, maxsiz_stg, lobret_stg,mintim_stg, pctinc_stg, initra_stg, maxtra_stg, optimal_stg, maxins_stg,frlins_stg, flag",10801,6226,46,6,225,1
+0yn07bvqs30qj,"select pctfree_stg, pctused_stg, size_stg,initial_stg, next_stg, minext_stg, maxext_stg, maxsiz_stg, lobret_stg,mintim_stg, pctinc_stg, initra_stg, maxtra_stg, optimal_stg, maxins_stg,frlins_stg, flag",10753,14603,35,12,231,2
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",10745,11308,69,7,267,3
+6h3cwmunz5z8q,"select col#, grantee#, privilege#,max(mod(nvl(option$,0),2)), max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0), 128",10722,9343,61,10,123,50
+c1aqra3539hyz,"select cols,audit$,textlength,intcols,nvl(property,0),flags,rowid from view$ where obj#=:1",10717,22388,31,11,93,2
+ct4hvmdaryzh7,"select ftp_port, ftp_protocol, http_port, http_protocol, http2_port,         http2_protocol, nfs_port, nfs_protocol, http_host, http2_host  from xdb.xdb$root_info",10632,7501,1,8,84,3
+0yn07bvqs30qj,"select pctfree_stg, pctused_stg, size_stg,initial_stg, next_stg, minext_stg, maxext_stg, maxsiz_stg, lobret_stg,mintim_stg, pctinc_stg, initra_stg, maxtra_stg, optimal_stg, maxins_stg,frlins_stg, flag",10586,13707,40,15,120,2
+2ajc7pwz9jsx3,select max(scn) from smon_scn_time,10580,10202,3,2,113,1
+559bfpsu8hk0k,SELECT VALUE FROM V$SESSION_FIX_CONTROL WHERE BUGNO = :B1 ,10460,15167,1,0,59,1
+1s1p0b1vz9j0z,delete from plscope_identifier$ where obj#=:1,10446,14950,1,2,95,3
+gawwr67493r4z,delete ecol$ where tabobj# = :1,10442,9709,1,1,100,1
+6uq61y45mqcxg,"select nvl(sum(blocks), 0) from x$kewx_segments where owner = :owner",10433,11006,17,0,78,1
+0s0s74y04cdmn,delete from sqltxl$ where obj#=:1,10412,17400,1,2,70,1
+2vhhhddmn1q32,"select '""'||name||'"" '||decode(type#,1,decode(charsetform,2,'NVARCHAR2('||decode(bitand(property,8388608),8388608,decode(spare3,0,1,spare3)||')','BYTECOUNT=>'||decode(length,0,1,length)||')'),'VARCHAR",10388,3271,1,0,3,3
+dycmpuj6apqjs,"select pc.intcol#, pc.col# , pc.type#, pc.spare1, pc.segcol#, pc.charsetform,   nvl(c.collintcol#, 0), nvl(c2.type#, 0), nvl(c2.charsetid, 0),    nvl(c2.charsetform , 0), nvl(c2.collid, 0) from partco",10380,15248,11,5,61,51
+2vhhhddmn1q32,"select '""'||name||'"" '||decode(type#,1,decode(charsetform,2,'NVARCHAR2('||decode(bitand(property,8388608),8388608,decode(spare3,0,1,spare3)||')','BYTECOUNT=>'||decode(length,0,1,length)||')'),'VARCHAR",10361,7056,5,5,18,3
+f0tf9r507j4gd,select count(*) from SYS_FBA_CONTEXT_LIST d where namespace='FBA_CONTEXT' and parameter='TYPICAL',10357,6590,1,5,28,2
+121ffmrc95v7g,"select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i",10319,229,5,0,38,6
+0m78skf1mudnb,"select audit$,properties from type_misc$ where obj#=:1",10308,6864,25,12,101,2
+7qvb1fw60p3r5,"select last_sample_date_num, last_sample_date, total_samples from WRI$_DBU_USAGE_SAMPLE where dbid     = :dbid and version  = :version",10246,7964,1,1,2,1
+axmdf8vq7k1rh,"select increment$,minvalue,maxvalue,cycle#,order$,cache,highwater,audit$,flags from seq$ where obj#=:1",10173,8209,6,2,101,1
+2syvqzbxp4k9z,"select u.name, o.name, a.interface_version#, o.obj#      from association$ a, user$ u, obj$ o                     where a.obj# = :1                                          and a.property = :2        ",10105,21496,62,0,62,2
+adds4wma0y8c4,"select t.obj#, t.dataobj#, t.part#, t.hiboundlen, t.hiboundval, t.ts#, t.file#, t.block#, t.pctfree$, t.pctused$, t.initrans, t.maxtrans, t.flags, t.analyzetime, t.samplesize, t.rowcnt, t.blkcnt, t.em",10088,7394,6,6,68,4
+19dnr6u8v4raz,SELECT COUNT(*) FROM CLOUD WHERE DATABASE_FLAGS = 'C',10083,7096,1,5,117,2
+gd28w82ct6rva,select audit$ from tab$ where obj# = :1,10079,4745,223,1,699,2
+av3ac12p87rx0,"select count(*)   from wrm$_wr_control  where bitand(status_flag, 16) = 16",10077,12729,1,12,56,3
+6vc4tzxw1h3b7,select 1 from sensitive_fixed$ where name=:1 and flag=:2,10070,5711,110,0,110,1
+67mg3pcuvzb4w,SELECT DDLID FROM DDLID$,10069,4757,1,10,47,3
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",10059,1589,31,0,124,3
+8kun50unk7um7,"select reg_id from reg$ where bitand(qosflags, 8) = 8 and rownum < 2",10031,7640,1,6,125,2
+1fr73dag07wrf,delete from index_orphaned_entry$ where indexobj# in (select obj# from ind$ where bo# = :1),10023,9170,1,1,70,1
+87gumhu52bhu7,SELECT value$ FROM LBACSYS.ols$props WHERE NAME = :1,10003,6259,1,9,75,1
+5rurx5xtjwcu2,"SELECT /*+ OPT_PARAM('_parallel_syspls_obey_force' 'false') */ KSPPCV.KSPPSTVL FROM X$KSPPCV KSPPCV, X$KSPPI KSPPI WHERE KSPPI.INDX = KSPPCV.INDX AND KSPPI.KSPPINM = :B1 ",9999,10230,1,0,29,1
+00yp7w9j0yqma,"select count(OBJ#) from SYS_FBA_TRACKEDTABLES where bitand(FLAGS,1)!=0",9970,13111,1,5,25,2
+0wzmmkq6f8a9s,"select obj#, job_status from scheduler$_lightweight_job where  bitand(flags, 17592186044416) <> 0 and running_instance = :1",9949,10922,1,0,60,2
+2mj59zpxsra94,"insert into WRI$_SCH_CONTROL   (schedule_id, schedule_mode, start_calibrate, num_votes,    synced_time, last_vote, status) select    :id, :smode, :stcalb, :votes, :syncoff, :lvotetm, :status from dual",9913,12810,1,10,94,2
+cn6hhn36a4rrs,"select con#,obj#,rcon#,enabled,nvl(defer,0),spare2,spare3,refact from cdef$ where robj#=:1",9911,2792,143,0,185,2
+1704fuc5p4ppt,"select tab_alias, tab_name, property, tab_id, tab_obj# from rec_tab$ where  ec_obj# = :1",9895,6020,1,3,69,2
+99rb37rjpdnbb,"select lobj#, intcol#, defts#, defchunk, defpctver$, defflags, defpro,definiexts, defextsize, defminexts, defmaxexts, defextpct, deflists, defgroups, defbufpool, defmaxsize, defretention, defmintime, ",9891,8604,2,2,92,3
+9bh0n4rbv3djj,"select pswc.pdb_uid, pswc.state, pswc.restricted, nvl(pswc.upgrade_priority, 4098) from (select p.pdb_uid, p.state, p.restricted, c.upgrade_priority from container$ c, pdbstate$ p where c.con_uid = p.",9859,8655,1,3,64,5
+cubcqrdcjb3mz,"select q.eventid, q.oid, t.schema, t.name, q.table_objno,         q.usage, t.udata_type,  q.enable_flag,         q.max_retries, q.retry_delay, q.properties, q.ret_time,         t.flags, t.sort_cols, q",9836,13949,2,4,33,4
+67mg3pcuvzb4w,SELECT DDLID FROM DDLID$,9755,7390,1,8,62,3
+16zvc7xj54fw3,SELECT Count(*) FROM ROPP$X$KCCDI WHERE RPP_CDBDBID <> 0 AND CON_ID = 0 AND RPP_TIMESTAMP = 0,9731,10165,1,6,66,2
+gpydvs5fzjrun,"select name,mgmt_method,num_plan_directives,sub_plan,(select count(*) from resource_plan_directive$ where obj# = :1 and status = :2 and is_subplan <> 0), (select count(*) from resource_plan_directive$",9730,6100,2,8,144,8
+avvfapa4gfgc4,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) */ ""OBJ#"",""CLASS_OID"",""JOB_FLAGS"",""CLASS_FLAGS"",""RUN_TIME"",""PRIORITY"",""JOB_STATUS"",""RUNNING_INSTANCE"",""SCHEDULE_LIMIT"",""JOB_WEIGHT"",""INSTANCE",9722,9108,2,0,32,7
+32gdpwrjm854v,"select a.chain_guid, a.CHAIN#, b.USER# from sys.bc_chain$ a, sys.bc$ b where a.BC_GUID = b.BC_GUID",9714,7933,1,4,134,2
+9pmhm4vq9t8rf,"select nvl(max(spare_id), 0)+1    from sys.session_template_spares$",9714,5502,1,10,50,1
+5pnxt7ap1kvc0,"select position#,sequence#,level#,argument,type#,charsetid,charsetform,properties,nvl(length, 0), nvl(precision#, 0),nvl(scale, 0),nvl(radix, 0), type_owner,type_name,type_subname,type_linkname,pls_ty",9705,5738,48,6,286,3
+1yy6mrbz80ka5,"insert into WRI$_DBU_CPU_USAGE_SAMPLE (dbid, version, last_sample_date, last_sample_date_num, last_sample_period, total_samples, sample_interval) select dbid, version, NULL, NULL, 0, 0, 43200 from v$d",9703,8703,1,2,144,94
+0bzyrc5yb4m22,"insert into sys.aud$( sessionid,entryid,statement,ntimestamp#, userid,userhost,terminal,action#,returncode, logoff$lread,logoff$pread,logoff$lwrite,logoff$dead, logoff$time,comment$text,spare1,clienti",9688,7274,1,0,3,1
+0m78skf1mudnb,"select audit$,properties from type_misc$ where obj#=:1",9686,4608,24,12,114,2
+g0r5psznj761u,select hashcode from type$ where tvoid=:1,9678,6705,6,8,18,2
+2y8mwxx6svurb,"select name, value$, comment$, sid, nvl(spare1,0), nvl(spare2,0), db_uniq_name from pdb_spfile$ where (db_uniq_name= '*' or lower(db_uniq_name)=lower(:1)) and pdb_uid=:2 order by lower(db_uniq_name), ",9654,9049,2,3,77,2
+gzrufhxt1cvn3," SELECT user_id                        FROM ALL_USERS WHERE NLSSORT(username, 'NLS_SORT=BINARY') =                              NLSSORT(:user_name, 'NLS_SORT=BINARY')",9630,3473,2,3,50,1
+acmvv4fhdc9zh,"select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9, nvl(dflcollid, 16382), creappid, creverid, modappid, modverid, crepatchid",9617,3386,87,0,347,3
+72u5s5cjckv13,"INSERT INTO AUDSYS.AUD$UNIFIED (AUDIT_TYPE, SESSIONID, PROXY_SESSIONID, OS_USER, HOST_NAME, TERMINAL, INSTANCE_ID, DBID, AUTHENTICATION_TYPE, USERID, PROXY_USERID, EXTERNAL_USERID, GLOBAL_USERID, CLIE",9598,639,34,0,78,1
+cqqpmxa4rx4a0,"SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) */ ""OBJ#"",""PROGRAM_OID"",""FLAGS"",""JOB_STATUS"",""LAST_START_DATE"",""RETRY_COUNT"",""RUNNING_INSTANCE"",""RUNNING_SLAVE"",""JOB_DEST_ID"" FROM ""SYS"".""SCH",9472,10034,3,4,139,3
+00fx7adv5q5gm,"SELECT HOUR, INTRADAY, EXTRADAY FROM BSLN_TIMEGROUPS",9464,10749,1,2,84,1
+dwuunm9zgshb3,"SELECT NVL(SUM(D.BLOCKS), 0) FROM X$KEWX_SEGMENTS D, (SELECT DISTINCT O1.SEGMENT_NAME NAME FROM X$KEWX_SEGMENTS O1 WHERE O1.SEGMENT_NAME LIKE 'LOGMNR%' AND O1.SEGMENT_NAME NOT LIKE 'LOGMNRT%' AND O1.S",9426,9515,1,0,30,2
+fba3w95qf57xz,"SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE ",9426,6623,4,0,26,1
+fh5ufah919kun,"select /*+ index(idl_sb4$ i_idl_sb41) */ piece#,length,piece from idl_sb4$ where obj#=:1 and part=:2 and version=:3 order by piece#",9415,27091,23,8,118,3
+5pcqyjwgd51y5,"SELECT /*+ OPT_PARAM('_parallel_syspls_obey_force' 'false') */ DISTINCT TO_NUMBER(SUBSTR(O.SUBNAME,3)) FROM OBJ$ O, USER$ U WHERE O.NAME = 'WRI$_OPTSTAT_SYNOPSIS$' AND O.OWNER# = U.USER# AND O.NAMESPA",9342,9916,1,0,5,4
+5pazx6dft6hru,"select o.owner#, o.name, o.namespace, o.obj#, d.d_timestamp,         nvl(d.property,0), o.type#, o.subname, o.status, d.d_attrs  from dependency$ d, obj$ o   where d.p_obj#=:1  and   (d.p_timestamp=nv",9327,7461,1,4,7,17
+6h3cwmunz5z8q,"select col#, grantee#, privilege#,max(mod(nvl(option$,0),2)), max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0),64) /64), max(bitand(nvl(option$,0), 128",9311,8112,52,9,133,50
+dhx4hx5kz79bf,delete from javaobj$ where obj#=:1,9305,11028,2,2,68,1
+4faa5w420ua14,delete /* KSXM:CLEAN_PEND_HIST *//*+ dynamic_sampling(4) */   from sys.wri$_optstat_histgrm_history g   where not exists         (select /*+ unnest */ 1 from sys.obj$ o where o.obj# = g.obj#)     and ,9295,9521,1,2,94,2
+786vm3b7ar16k,delete from sqltxl_err$ where obj#=:1,9287,8419,1,1,75,1
+7hmzwy3kdmb90,"select name, address, protocol, subscriber_type, subscriber_id  from ""SYS"".""AQ$_ALERT_QT_S""  where queue_name = :1 and  ((bitand(subscriber_type, 1) = 1) OR   (bitand(subscriber_type, 4) = 4) OR   (bi",9284,2241,2,0,13,3
+7z9gcz5k2rcf1,"SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE ",9256,9874,4,0,26,1
+7gtfgj3dcttzg,"insert into  WRM$_DATABASE_INSTANCE   (dbid, instance_number, startup_time, parallel, version, db_name, instance_name, host_name, last_ash_sample_id, platform_name, cdb, edition, db_unique_name, datab",9239,6068,1,8,208,2
+5n1fs4m2n2y0r,"select pos#,intcol#,col#,spare1,bo#,spare2,spare3 from icol$ where obj#=:1",9235,5630,136,8,614,2
+03guhbfpak0w7,"select /*+ index(idl_ub1$ i_idl_ub11) */ piece#,length,piece from idl_ub1$ where obj#=:1 and part=:2 and version=:3 order by piece#",9234,6374,8,7,43,3
+2m2kxbf5wp5s3,SELECT WRI$_SQLSET_STMT_ID_SEQ.NEXTVAL FROM DUAL,9211,9125,6,1,32,2
+guw87u8x36z8r,"UPDATE WRI$_SQLSET_PLANS SET BIND_DATA = :B4 , BINDS_CAPTURED = :B3 WHERE STMT_ID = :B2 AND PLAN_HASH_VALUE = :B1 ",9174,19517,140,0,434,3
+16cffsk1wdzcc,"select exptime, ltime, astatus, lcount, ptime from sys.user$           where user#=:1",9172,10112,1,0,5,1
+114ujmcuu3z7b,"select grantee#, privilege#, max(mod(nvl(option$,0),2)),max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16), max(bitand(nvl(option$,0), 64) /64), max(bitand(nvl(option$,0), 128) /12",9166,9971,1,1,2,4

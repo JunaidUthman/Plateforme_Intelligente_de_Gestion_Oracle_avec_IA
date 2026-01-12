@@ -1,69 +1,91 @@
 import os
 import yaml
-import google.generativeai as genai
+import requests
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
 
 class LLMEngine:
     def __init__(self):
-        """Initialisation de Gemini avec le modèle validé par le diagnostic [cite: 71]"""
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            raise ValueError("❌ Clé API Gemini manquante dans le fichier .env")
+        """Initialisation de DeepSeek engine"""
+        self.api_key = os.getenv("DEEP_SEEK_API_KEY")
+        if not self.api_key:
+            raise ValueError("❌ Clé API DeepSeek manquante dans le fichier .env (DEEP_SEEK_API_KEY)")
         
-        genai.configure(api_key=api_key)
+        self.api_url = "https://api.deepseek.com/chat/completions"
+        self.model_name = "deepseek-chat"
         
-        # Utilisation du nom exact trouvé dans votre diagnostic
-        self.model_name = 'models/gemini-2.5-flash'
-        self.model = genai.GenerativeModel(model_name=self.model_name)
-        
-        # Chargement du fichier prompts.yaml [cite: 76]
+        # Chargement du fichier prompts.yaml
         try:
             with open("data/prompts.yaml", "r", encoding='utf-8') as f:
                 self.prompts = yaml.safe_load(f)
             print(f"✅ LLMEngine initialisé avec {self.model_name}.")
         except FileNotFoundError:
             print("❌ Erreur : Fichier data/prompts.yaml introuvable.")
+            self.prompts = {}
 
     def generate(self, user_message, system_context=""):
-        """Méthode de base pour l'appel au LLM [cite: 72]"""
+        """Méthode de base pour l'appel au LLM via DeepSeek API"""
         try:
-            # On combine le rôle système et le contexte pour guider l'IA
-            full_prompt = f"{self.prompts['system_role']}\n\nCONTEXTE :\n{system_context}\n\nQUESTION :\n{user_message}"
-            response = self.model.generate_content(full_prompt)
-            return response.text
+            system_role = self.prompts.get('system_role', 'You are a helpful assistant.')
+            # Combine system context if provided
+            if system_context:
+                system_content = f"{system_role}\n\nCONTEXTE :\n{system_context}"
+            else:
+                system_content = system_role
+
+            payload = {
+                "model": self.model_name,
+                "messages": [
+                    {"role": "system", "content": system_content},
+                    {"role": "user", "content": user_message}
+                ],
+                "stream": False
+            }
+
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+
+            response = requests.post(self.api_url, headers=headers, json=payload)
+            response.raise_for_status()
+            
+            data = response.json()
+            return data['choices'][0]['message']['content']
+
         except Exception as e:
-            return f"❌ Erreur Gemini : {str(e)}"
+            return f"❌ Erreur DeepSeek : {str(e)}"
 
     def analyze_query(self, sql, plan, context):
-        """Module 5 : Optimisation de requêtes [cite: 73]"""
+        """Module 5 : Optimisation de requêtes"""
         template = self.prompts['optimization']['prompt']
         prompt_final = template.format(query=sql, plan=plan, context=context)
         return self.generate(prompt_final)
 
     def assess_security(self, config, context):
-        """Module 4 : Audit de sécurité [cite: 74]"""
+        """Module 4 : Audit de sécurité"""
         template = self.prompts['security']['prompt']
         prompt_final = template.format(config=config, context=context)
         return self.generate(prompt_final)
         
     def detect_anomaly(self, log_entry, context):
-        """Module 6 : Détection d'anomalies """
+        """Module 6 : Détection d'anomalies"""
         template = self.prompts['anomaly']['prompt']
         # On passe le log et le contexte au template
         prompt_final = template.format(logs=log_entry, context=context)
         return self.generate(prompt_final)
 
-# --- TEST DE VALIDATION DU MODULE 3 ---
+# --- TEST DE VALIDATION DU MODULE ---
 if __name__ == "__main__":
     engine = LLMEngine()
     
-    # Test : Expliquer un plan d'exécution simple [cite: 78]
+    # Test : Expliquer un plan d'exécution simple
     test_sql = "SELECT name FROM employees WHERE id = 100"
     test_plan = "INDEX UNIQUE SCAN ON EMP_PK"
     test_context = "L'opération INDEX UNIQUE SCAN est optimale pour les recherches par clé primaire."
     
-    print("\n🤖 Envoi du test d'optimisation...")
+    print("\n🤖 Envoi du test d'optimisation (DeepSeek)...")
     reponse = engine.analyze_query(test_sql, test_plan, test_context)
     print(f"\nRésultat de l'IA :\n{reponse}")

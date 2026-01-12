@@ -18,8 +18,8 @@ class QueryOptimizer:
         # 1. Chargement des métriques de performance
         df = pd.read_csv(metrics_file)
         
-        # On filtre les requêtes qui font un TABLE ACCESS FULL (simulé ici comme 'lent')
-        slow_queries = df[df['PLAN_OPERATION'] == 'TABLE ACCESS FULL']
+        # On ne filtre plus, on prend toutes les requêtes pour analyse
+        slow_queries = df
         
         results = []
 

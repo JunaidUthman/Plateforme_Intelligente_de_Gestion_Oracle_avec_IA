@@ -162,8 +162,13 @@ def chat_api():
     )
     
     # 4. Génération
-    response = llm_engine.model.generate_content(full_prompt)
-    bot_reply = response.text
+    # On passe None comme system_context car il est déjà intégré dans le full_prompt ou géré par generate
+    # Mais ici vous avez construit un "full_prompt" manuel qui contient tout.
+    # Pour respecter la signature de votre nouvelle méthode generate(user_message, system_context=""),
+    # on peut passer tout le prompt comme user_message et rien en système, ou adapter.
+    
+    # Option simple : Tout passer dans le premier argument, car le prompt est déjà formaté
+    bot_reply = llm_engine.generate(full_prompt)
     
     # 5. Mise à jour de la mémoire
     CHAT_HISTORY.append({'role': 'user', 'content': user_message})

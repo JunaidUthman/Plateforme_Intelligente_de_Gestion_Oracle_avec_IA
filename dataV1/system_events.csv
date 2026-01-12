@@ -1,0 +1,91 @@
+EVENT,TOTAL_WAITS,TIME_WAITED,AVERAGE_WAIT
+rdbms ipc message,9226,1320148,143.09
+Space Manager: slave idle wait,1020,301067,295.16
+class slave wait,82,292767,3570.33
+watchdog main loop,775,234808,302.98
+pmon timer,574,173773,302.74
+wait for unread message on broadcast channel,705,121321,172.09
+DIAG idle wait,1156,120149,103.94
+LGWR worker group idle,196,118317,603.66
+Streams AQ: qmn slave idle wait,31,89756,2895.37
+heartbeat redo informer,607,60721,100.03
+pman timer,201,60639,301.69
+lreg timer,208,60595,291.32
+OFS idle,201,60587,301.43
+Data Guard: Gap Manager,11,60496,5499.62
+PX Idle Wait,1,60406,60406.16
+Data Guard: Timer,10,60174,6017.4
+dispatcher timer,10,60007,6000.65
+Streams AQ: qmn coordinator idle wait,46,58972,1281.99
+AQPC idle,20,58180,2909.02
+Streams AQ: waiting for time management or cleanup tasks,1,56951,56950.5
+SQL*Net message from client,233,47394,203.41
+smon timer,13,30873,2374.86
+jobq slave wait,418,21339,51.05
+Streams AQ: load balancer idle,1,4503,4502.7
+VKRM Idle,1,650,649.69
+control file parallel write,273,600,2.2
+db file sequential read,6537,395,0.06
+ADR block file write,889,385,0.43
+resmgr:cpu quantum,51,364,7.13
+oracle thread bootstrap,84,263,3.13
+log file parallel write,204,153,0.75
+sort segment request,1,107,107.29
+library cache load lock,55,77,1.41
+db file async I/O submit,105,64,0.61
+ADR block file read,553,49,0.09
+resmgr:plan change,3,43,14.4
+resmgr:internal state change,3,42,14.14
+db file scattered read,394,37,0.09
+latch free,582,37,0.06
+os thread creation,88,30,0.34
+LGWR any worker group,65,23,0.35
+cursor: pin S wait on X,24,22,0.91
+enq: PR - contention,5,22,4.36
+Parameter File I/O,96,19,0.2
+rdbms ipc reply,27,17,0.64
+log file sync,22,16,0.72
+kksfbc child completion,3,16,5.25
+enq: PV - syncstart,5,15,2.91
+library cache: mutex X,42,13,0.3
+Disk file operations I/O,282,12,0.04
+cleanup of aborted process,6,11,1.8
+PGA memory operation,3389,8,0.0
+ADR file lock,834,6,0.01
+LGWR all worker groups,12,5,0.42
+control file sequential read,2126,5,0.0
+AQ Background Master: slave start,4,5,1.21
+row cache lock,124,4,0.03
+db file single write,8,2,0.31
+enq: SQ - contention,5,2,0.39
+read by other session,18,1,0.05
+enq: RO - fast object reuse,1,1,0.81
+log file single write,3,1,0.3
+cursor: pin S,5,1,0.26
+KSV master wait,59,1,0.02
+process diagnostic dump,20,1,0.07
+enq: CR - block range reuse ckpt,1,1,1.48
+enq: JG - queue lock,1,1,0.54
+OFS operation completion,1,0,0.04
+AWR Flush,2,0,0.0
+log file sequential read,3,0,0.0
+direct path write,1,0,0.32
+index (re)build lock or pin object,306,0,0.0
+row cache mutex,36,0,0.0
+cursor: mutex S,2,0,0.12
+latch: shared pool,40,0,0.01
+utl_file I/O,5,0,0.0
+SQL*Net message to client,226,0,0.0
+SQL*Net more data to client,28,0,0.01
+SQL*Net break/reset to client,6,0,0.03
+asynch descriptor resize,74,0,0.0
+reliable message,3,0,0.09
+DLM cross inst call completion,3,0,0.08
+LGWR wait for redo copy,2,0,0.02
+LGWR worker group ordering,9,0,0.04
+instance state change,2,0,0.02
+Compression analysis,13,0,0.0
+CSS initialization,1,0,0.48
+enq: DP - contention,1,0,0.05
+AQPC: new master,2,0,0.0
+latch: cache buffers chains,1,0,0.01

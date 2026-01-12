@@ -1,7 +1,7 @@
 {
-    "type": "Complète (Niveau 0) hebdomadaire, Incrémentale différentielle (Niveau 1) quotidienne, avec sauvegardes très fréquentes des fichiers d'archive (Archivelogs)",
-    "frequence": "La meilleure fréquence est une sauvegarde complète (Niveau 0) hebdomadaire (par exemple, le week-end), une sauvegarde incrémentale différentielle (Niveau 1) quotidienne (par exemple, chaque nuit), et des sauvegardes des fichiers d'archive toutes les 15 minutes. Ces fréquences garantissent un RPO de 15 minutes et un RTO de 4 heures.",
+    "type": "Complète Hebdomadaire + Incrémentale Niveau 1 Quotidienne + Archivage Continu",
+    "frequence": "La meilleure fréquence est une sauvegarde complète hebdomadaire (ex: Dimanche) couplée à une sauvegarde incrémentale de niveau 1 quotidienne (hors Dimanche), avec archivage continu des redo logs toutes les 15 minutes. Cette fréquence garantit un RPO de 24h maximum et permet une restauration rapide.",
     "retention_jours": 30,
-    "emplacement_stockage": "Disque local ou réseau (NAS/SAN), avec compression activée",
-    "cout_estime": "Moyen à Élevé"
+    "emplacement_stockage": "Disque (Fast Recovery Area) pour rapidité de restauration, avec copie éventuelle sur bande/cloud pour archivage à long terme.",
+    "cout_estime": "Moyen-Élevé (dû à la criticité, la taille estimée et la nécessité d'un stockage performant et redondé)."
 }

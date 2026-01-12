@@ -1,27 +1,38 @@
 {
-    "score": 10,
+    "score": 65,
     "risques": [
         {
-            "nom": "Utilisateur GHOST_USER avec privilèges excessifs et comportement suspect",
+            "nom": "Compte fantôme avec privilège destructeur",
             "severite": "Critique",
-            "details": "L'utilisateur 'GHOST_USER' est fortement suspect, son nom suggère un compte non officiel ou 'fantôme'. Il possède le privilège 'DROP ANY TABLE' qui est excessivement dangereux et viole le principe du moindre privilège, permettant la destruction de données sur n'importe quel schéma. Sa dernière connexion à 23:45 est une anomalie potentielle selon le contexte expert, indiquant une activité en dehors des heures de bureau habituelles. Cela représente un risque critique pour l'intégrité et la disponibilité des données."
+            "details": "L'utilisateur GHOST_USER est un compte fantôme (nom suspect, dernière connexion tardive) disposant du privilège système DROP ANY TABLE. Ce privilège permet de supprimer n'importe quelle table de la base, y compris les tables système, ce qui constitue un risque d'intégrité et de disponibilité majeur."
         },
         {
-            "nom": "Profils de mots de passe potentiellement non sécurisés",
-            "severite": "Majeure",
-            "details": "Les profils 'DEFAULT' (utilisé par SYS et GHOST_USER) et 'APP_PROFILE' (utilisé par HR_APP) n'ont pas leur configuration détaillée fournie. Par conséquent, il est une estimation probable (basée sur l'absence d'information) qu'ils ne respectent pas les bonnes pratiques de sécurité (ex: limitation des tentatives de connexion échouées, durée de vie des mots de passe, fonction de vérification de complexité), tel que spécifié dans le contexte expert. Ceci expose le système à des attaques par force brute ou à l'utilisation de mots de passe faibles/compromis."
+            "nom": "Privilèges systèmes excessifs pour le rôle DBA",
+            "severite": "Critique",
+            "details": "Le rôle DBA dispose du privilège ANY (CREATE TABLE) avec ADMIN OPTION (YES). Bien que le rôle DBA soit par définition puissant, l'option ADMIN permet à ses détenteurs de le regranter, facilitant l'escalade de privilèges. De plus, l'utilisateur SYS dispose de ANY PRIVILEGE avec ADMIN OPTION, ce qui lui permet d'accorder n'importe quel privilège à n'importe qui, y compris lui-même."
         },
         {
-            "nom": "Rôles standards sans protection par mot de passe",
-            "severite": "Modérée",
-            "details": "Les rôles 'DBA', 'CONNECT' et 'RESOURCE' sont configurés avec 'PASSWORD_REQUIRED: NO' et 'AUTHENTICATION_TYPE: NONE'. Bien que ce soit standard pour ces rôles eux-mêmes, si un attaquant parvenait à obtenir le privilège 'GRANT ANY ROLE' (ou similaire) sans autres contrôles, il pourrait s'attribuer ces rôles sans mot de passe, facilitant une escalade de privilèges."
+            "nom": "Absence de politique de mot de passe sécurisée",
+            "severite": "Élevée",
+            "details": "Les rôles DBA, CONNECT et RESOURCE ne nécessitent pas de mot de passe (PASSWORD_REQUIRED: NO, AUTHENTICATION_TYPE: NONE). Cela signifie qu'ils peuvent être activés sans vérification supplémentaire par tout utilisateur à qui ils sont accordés, réduisant la sécurité par couches. Le profil par défaut (DEFAULT) est utilisé pour des comptes sensibles (SYS, GHOST_USER), ce qui indique probablement l'absence de paramètres stricts (échecs de connexion limités, durée de vie des mots de passe)."
+        },
+        {
+            "nom": "Privilège insuffisant pour l'utilisateur applicatif",
+            "severite": "Moyenne",
+            "details": "L'utilisateur HR_APP ne dispose que du privilège CREATE SESSION. S'il s'agit d'un compte applicatif légitime, il manque très probablement des privilèges sur les objets (tables, vues, procédures) nécessaires à son fonctionnement, ce qui peut inciter à lui accorder des rôles trop permissifs (comme RESOURCE) pour pallier ce manque, violant ainsi le principe du moindre privilège."
+        },
+        {
+            "nom": "Absence de traçabilité (Audit)",
+            "severite": "Moyenne",
+            "details": "Aucune information d'audit n'est fournie dans les données. Sans audit activé sur les échecs de connexion, les privilèges DDL (comme DROP ANY TABLE) et les modifications de privilèges, il est impossible de détecter les tentatives d'intrusion, les abus de privilèges ou l'escalade de privilèges."
         }
     ],
     "recommandations": [
-        "1. **Désactiver/Supprimer GHOST_USER :** Désactiver ou supprimer immédiatement l'utilisateur 'GHOST_USER'. Si ce compte est légitime (ce qui est peu probable vu le nom et les privilèges), il doit être renommé, ses privilèges réduits au strict minimum ('CREATE SESSION' et privilèges granulaires sur des objets spécifiques), et son activité auditée rétroactivement. Le principe du moindre privilège doit être appliqué rigoureusement.",
-        "2. **Renforcer les profils de mots de passe :** Créer un ou plusieurs profils de mots de passe sécurisés. Pour chaque profil, configurer les paramètres clés : 'FAILED_LOGIN_ATTEMPTS' (ex: 3-5), 'PASSWORD_LIFE_TIME' (ex: 90 jours maximum), 'PASSWORD_GRACE_TIME' et une 'PASSWORD_VERIFY_FUNCTION' pour la complexité. Appliquer ces profils sécurisés aux utilisateurs SYS, HR_APP et tout autre utilisateur administratif ou applicatif. Le profil 'DEFAULT' ne doit pas être utilisé pour des comptes critiques.",
-        "3. **Appliquer le principe du moindre privilège :** Revoir tous les privilèges systèmes et objets accordés aux utilisateurs et rôles. Éliminer tous les privilèges excessifs, en particulier ceux avec 'ANY' (ex: 'DROP ANY TABLE', 'ALTER ANY TABLE', 'GRANT ANY PRIVILEGE', 'GRANT ANY ROLE') sauf pour les administrateurs légitimes (SYS, comptes DBA clairement définis). Privilégier des privilèges granulaires (ex: 'GRANT SELECT ON schema.table TO user').",
-        "4. **Activer l'audit de sécurité :** Mettre en place un audit robuste, de préférence l'Audit Unifié si la version d'Oracle est 12c ou supérieure. Auditer en particulier les tentatives de connexion échouées ('FAILED_LOGIN_ATTEMPTS'), les modifications de structure (DDL), les octrois de privilèges et rôles (GRANT/REVOKE), et les connexions en dehors des heures de bureau.",
-        "5. **Protéger les rôles standards :** S'assurer que le privilège 'GRANT ANY ROLE' n'est pas accordé de manière abusive. Le mécanisme d'octroi des rôles standards doit être sécurisé et soumis à l'audit. Bien que les rôles eux-mêmes n'aient pas de mot de passe, l'administration de ces rôles doit être strictement contrôlée."
+        "1. IMMÉDIAT : Révoquer le privilège DROP ANY TABLE de l'utilisateur GHOST_USER. Enquêter sur l'origine et l'utilité de ce compte. Le supprimer ou le désactiver (ALTER USER GHOST_USER ACCOUNT LOCK) s'il n'est pas légitime.",
+        "2. Réviser et limiter les privilèges avec ADMIN OPTION, notamment pour l'utilisateur SYS (privilège existant) et le rôle DBA. Éviter d'accorder ADMIN OPTION sur des privilèges puissants à des rôles largement distribués.",
+        "3. Créer et appliquer un profil de sécurité robuste (ex: SECURE_PROFILE) avec FAILED_LOGIN_ATTEMPTS = 3, PASSWORD_LIFE_TIME = 90, et une fonction de complexité. L'appliquer à tous les utilisateurs, notamment SYS et les comptes applicatifs. Remplacer le profil DEFAULT par ce nouveau profil.",
+        "4. Pour les rôles sensibles comme APP_ADMIN, s'assurer que PASSWORD_REQUIRED est activé. Éviter d'utiliser les rôles CONNECT et RESOURCE prédéfinis pour la sécurité ; créer des rôles personnalisés avec des privilèges granulaires spécifiques à l'application.",
+        "5. Implémenter l'Audit Unifié (ou standard) pour tracer : les échecs de connexion (CREATE SESSION), l'usage des privilèges ANY (DROP ANY TABLE, GRANT ANY PRIVILEGE), et les modifications des privilèges/rôles. Consulter régulièrement la vue UNIFIED_AUDIT_TRAIL (ou AUD$).",
+        "6. Pour HR_APP, auditer ses besoins réels et lui accorder des privilèges granulaires sur les objets spécifiques (GRANT SELECT, INSERT ON schema.table) plutôt que des rôles génériques puissants."
     ]
 }

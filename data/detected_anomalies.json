@@ -2,121 +2,97 @@
     {
         "timestamp": "2026-01-13 03:15:00",
         "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
+        "justification": "Connexion administrative nocturne (03:15) depuis une source 'unknown' et 'Remote'",
         "severite": 6
     },
     {
-        "timestamp": "2026-01-13 14:28:00",
+        "timestamp": "2026-01-13 13:03:00",
         "classification": "NORMAL",
-        "justification": "Opération de mise à jour standard par l'application RH.",
+        "justification": "Opération de mise à jour standard par un compte applicatif dédié aux rapports",
         "severite": 0
     },
     {
-        "timestamp": "2026-01-13 03:15:00",
+        "timestamp": "2026-01-13 16:11:00",
         "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
+        "justification": "Utilisateur FINANCE_USR modifiant la table PRODUCTS, potentiellement en dehors de son périmètre fonctionnel (principe du moindre privilège)",
+        "severite": 5
     },
     {
-        "timestamp": "2026-01-13 03:15:00",
+        "timestamp": "2026-01-13 14:40:00",
         "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
+        "justification": "Utilisateur HR_APP insérant dans la table PRODUCTS, potentiellement en dehors de son périmètre fonctionnel (principe du moindre privilège)",
+        "severite": 5
     },
     {
-        "timestamp": "2026-01-13 03:15:00",
+        "timestamp": "2026-01-13 14:22:00",
+        "classification": "NORMAL",
+        "justification": "Utilisateur FINANCE_USR mettant à jour la table EMPLOYEES (potentiellement pour des données salariales)",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 12:16:00",
+        "classification": "NORMAL",
+        "justification": "Consultation standard des employés par un bot de rapport",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 17:23:00",
+        "classification": "NORMAL",
+        "justification": "Mise à jour des employés en fin de journée par l'utilisateur financier",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 11:36:00",
+        "classification": "NORMAL",
+        "justification": "Insertion standard dans la table EMPLOYEES par un bot de rapport",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 12:42:00",
+        "classification": "NORMAL",
+        "justification": "Mise à jour standard des employés par l'application RH",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 11:49:00",
+        "classification": "NORMAL",
+        "justification": "Sélection standard des employés par un bot de rapport",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 09:59:00",
+        "classification": "NORMAL",
+        "justification": "Insertion standard dans la table EMPLOYEES par un bot de rapport en heure de bureau",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 17:25:00",
+        "classification": "NORMAL",
+        "justification": "Insertion standard dans PRODUCTS par un bot de rapport",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 08:58:00",
+        "classification": "NORMAL",
+        "justification": "Insertion standard dans EMPLOYEES par l'application RH en début de journée",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 12:02:00",
+        "classification": "NORMAL",
+        "justification": "Mise à jour standard des employés par l'utilisateur financier",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-13 17:17:00",
         "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
+        "justification": "Utilisateur HR_APP modifiant la table PRODUCTS, potentiellement en dehors de son périmètre fonctionnel (principe du moindre privilège)",
+        "severite": 5
     },
     {
-        "timestamp": "2026-01-13 11:41:00",
+        "timestamp": "2026-01-13 16:10:00",
         "classification": "NORMAL",
-        "justification": "Consultation standard par l'application RH.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 10:23:00",
-        "classification": "NORMAL",
-        "justification": "Opération d'insertion standard par l'utilisateur Finance.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 03:15:00",
-        "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
-    },
-    {
-        "timestamp": "2026-01-13 03:15:00",
-        "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
-    },
-    {
-        "timestamp": "2026-01-13 09:01:00",
-        "classification": "NORMAL",
-        "justification": "Consultation standard des employés par l'utilisateur Finance.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 13:22:00",
-        "classification": "NORMAL",
-        "justification": "Opération d'insertion standard par un processus automatisé.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 12:09:00",
-        "classification": "NORMAL",
-        "justification": "Opération de mise à jour standard des employés par l'utilisateur Finance.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 10:38:00",
-        "classification": "NORMAL",
-        "justification": "Consultation standard des produits par l'utilisateur Finance.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 03:15:00",
-        "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
-    },
-    {
-        "timestamp": "2026-01-13 03:15:00",
-        "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
-    },
-    {
-        "timestamp": "2026-01-13 11:42:00",
-        "classification": "NORMAL",
-        "justification": "Opération d'insertion standard des employés par l'utilisateur Finance.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 03:15:00",
-        "classification": "SUSPECT",
-        "justification": "Connexion administrative SYS nocturne inhabituelle et répétée.",
-        "severite": 6
-    },
-    {
-        "timestamp": "2026-01-13 08:21:00",
-        "classification": "NORMAL",
-        "justification": "Opération d'insertion standard par l'application RH.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 15:23:00",
-        "classification": "NORMAL",
-        "justification": "Consultation standard des commandes par l'utilisateur Finance.",
-        "severite": 0
-    },
-    {
-        "timestamp": "2026-01-13 12:05:00",
-        "classification": "NORMAL",
-        "justification": "Opération d'insertion standard par l'application RH.",
+        "justification": "Sélection standard des employés par un bot de rapport",
         "severite": 0
     }
 ]

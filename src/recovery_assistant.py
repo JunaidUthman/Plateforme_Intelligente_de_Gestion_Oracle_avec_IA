@@ -40,10 +40,10 @@ if __name__ == "__main__":
     print("   Scénarios : Full, PITR, Table, Row-Level")
     print("="*50)
     
-    # Test de validation imposé par le projet [cite: 171]
-    test_question = "Comment récupérer ma base au 15 mars 14h ?"
-    print(f"\n👤 DBA (Test Validation) : {test_question}")
-    print(f"🤖 Assistant :\n{assistant.chat(test_question)}")
+    # Test de validation
+    # test_question = "Comment récupérer ma base au 15 mars a 14:00:00 ? avec RMAN et une restauration complète."
+    # print(f"\n👤 DBA (Test Validation) : {test_question}")
+    # print(f"🤖 Assistant :\n{assistant.chat(test_question)}")
     
     # Boucle interactive
     while True:

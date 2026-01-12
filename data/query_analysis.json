@@ -1,58 +1,98 @@
 [
     {
         "sql_id": "sql_slow_001",
-        "explication_plan": "Le plan 'TABLE ACCESS FULL' indique que la base de données doit lire chaque bloc de données de la table SALES pour récupérer toutes les lignes. C'est le plan par défaut pour un `SELECT *` sur une table lorsque aucune clause WHERE n'est spécifiée pour filtrer les données ou qu'il n'y a pas d'index couvrant toutes les colonnes, ce qui est très coûteux sur de grandes tables.",
+        "explication_plan": "Le plan d'exécution 'TABLE ACCESS FULL' indique que l'optimiseur Oracle effectue un parcours séquentiel complet de la table SALES. Cela signifie qu'il lit toutes les lignes de la table, ce qui est coûteux en termes d'I/O et de CPU, surtout si la table est volumineuse.",
         "points_couteux": [
-            "**I/O intensif**: Nécessite la lecture de l'intégralité de la table depuis le disque ou le cache, générant une forte charge sur les sous-systèmes d'I/O et le bus de données.",
-            "**Consommation de ressources**: Utilisation élevée du CPU et de la mémoire (SGA/PGA) pour scanner, traiter et potentiellement transférer toutes les lignes, particulièrement si la table est volumineuse.",
-            "**Latence élevée**: Pour une table volumineuse, cela entraîne un temps de réponse potentiellement très long, car toutes les données doivent être lues et traitées avant de pouvoir être retournées à l'application."
+            "Scan complet de la table (lecture de toutes les lignes)",
+            "Absence d'utilisation d'index pour filtrer les données",
+            "Consommation élevée d'I/O et de mémoire tampon"
         ],
         "recommandations": [
             {
-                "type": "SQL/Conception",
-                "description": "Si l'intention n'est pas de récupérer *toutes* les lignes et *toutes* les colonnes de la table `SALES`, il est crucial de redéfinir la requête. Ajouter une clause `WHERE` pertinente pour filtrer les données et spécifier uniquement les colonnes nécessaires (éviter `SELECT *`). Cela réduira drastiquement le volume de données à traiter et permettra d'utiliser des index."
+                "type": "Index",
+                "description": "Créer un index B-Tree sur la colonne de filtrage (ex: sales_id, customer_id) si la requête contient une clause WHERE avec une forte sélectivité. Ex: CREATE INDEX idx_sales_id ON sales(sales_id);"
+            },
+            {
+                "type": "SQL",
+                "description": "Remplacer 'SELECT *' par une liste explicite de colonnes nécessaires pour réduire la charge I/O et permettre une couverture d'index."
+            },
+            {
+                "type": "Hint",
+                "description": "Si un index existe mais n'est pas utilisé, forcer son utilisation avec /*+ INDEX(sales idx_sales_id) */ avant la clause SELECT."
+            }
+        ],
+        "gain_estime": "70-95% (selon la taille de la table et la sélectivité du filtre)"
+    },
+    {
+        "sql_id": "sql_fast_002",
+        "explication_plan": "L'optimiseur Oracle utilise un INDEX UNIQUE SCAN, ce qui signifie qu'il parcourt un index unique (comme une clé primaire) pour retrouver une seule ligne correspondant exactement à la condition de la requête. C'est l'opération d'accès aux données la plus rapide pour une recherche par égalité sur une colonne indexée de manière unique.",
+        "points_couteux": [
+            "Aucun point coûteux identifié. L'INDEX UNIQUE SCAN est la méthode d'accès optimale pour ce type de requête de recherche par égalité sur un prédicat unique.",
+            "Le plan fourni ne montre pas d'opérations de jointure, de tri (SORT) ou d'agrégation coûteuses qui pourraient être problématiques.",
+            "Sans le plan d'exécution complet (COST, cardinalité, autres opérations), il est impossible d'identifier d'autres points de contention potentiels comme des conversions de type implicites ou des prédicats de filtre appliqués trop tard."
+        ],
+        "recommandations": [
+            {
+                "type": "SQL",
+                "description": "Vérifier que la colonne utilisée dans la clause WHERE (non visible dans l'extrait SQL fourni) est bien la colonne sur laquelle porte l'index unique. Éviter d'appliquer des fonctions (comme UPPER, TO_CHAR) ou des opérations arithmétiques sur cette colonne dans la clause WHERE, car cela empêcherait l'utilisation de l'index."
             },
             {
                 "type": "Index",
-                "description": "Si la requête est filtrée via une clause `WHERE` (suite à la recommandation précédente), analyser les colonnes utilisées pour le filtrage et/ou la jointure. Créer un index B-Tree sur les colonnes à forte sélectivité dans la clause `WHERE` (par exemple, un ID de transaction, une date de vente spécifique). Cela permettrait à l'optimiseur d'utiliser un `INDEX RANGE SCAN` ou `INDEX UNIQUE SCAN` pour accéder directement aux données pertinentes, évitant ainsi le `TABLE ACCESS FULL`."
+                "description": "S'assurer que l'index unique concerné est bien un index B-Tree standard. Si la requête sélectionne uniquement des colonnes présentes dans l'index (comme c'est le cas ici avec 'name' si 'name' fait partie de l'index), l'opération sera un 'INDEX FAST FULL SCAN' encore plus efficace pour des lectures multiples, mais l'INDEX UNIQUE SCAN reste parfait pour une recherche ponctuelle."
             },
             {
-                "type": "Statistiques",
-                "description": "Assurez-vous que les statistiques de la table `SALES` sont à jour. Exécutez `DBMS_STATS.GATHER_TABLE_STATS('VOTRE_SCHEMA', 'SALES', cascade=>true)` pour fournir des informations précises au CBO. *'VOTRE_SCHEMA'* est une estimation car le schéma n'est pas spécifié. Des statistiques périmées peuvent le conduire à choisir un plan inefficace comme le `TABLE ACCESS FULL` même si un index approprié existe."
-            },
-            {
-                "type": "Hint (Conditionnel)",
-                "description": "Si le `TABLE ACCESS FULL` est délibéré et considéré comme le plan optimal pour le cas d'usage (par exemple, la table est petite, ou toutes les données sont absolument nécessaires pour un rapport global), vous pouvez utiliser le hint `/*+ FULL(SALES) */` pour stabiliser le plan et s'assurer que l'optimiseur ne tente pas d'alternatives moins efficaces. *Note: Ce hint ne réduit pas le coût inhérent au full scan lui-même, mais assure la cohérence du plan choisi.*"
+                "type": "Hint",
+                "description": "Aucun hint n'est nécessaire ni recommandé. L'optimiseur a déjà choisi le plan optimal (INDEX UNIQUE SCAN). Forcer un autre accès avec un hint (comme /*+ FULL(EMP) */) dégraderait fortement les performances."
             }
         ],
-        "gain_estime": "Le gain estimé dépend fortement de la possibilité de modifier la requête. Si la requête peut être optimisée en ajoutant une clause `WHERE` qui utilise un index (par exemple, `WHERE id = 5` comme dans l'Exemple 1), le gain de performance peut être **supérieur à 90%**. Si le `TABLE ACCESS FULL` est inévitable pour l'objectif de la requête (`SELECT * FROM SALES` sur une très grande table pour des raisons légitimes), les gains d'optimisation par d'autres moyens seraient plus marginaux (<10%) et liés à l'infrastructure (optimisation I/O, cache)."
+        "gain_estime": "0% (Le plan actuel est déjà optimal pour une recherche par clé unique. Les optimisations proposées visent à maintenir cette performance et à éviter une dégradation accidentelle.)"
     },
     {
-    "sql_id": "sql_slow_002",
-    "explication_plan": "Le plan d'exécution montre un `INDEX RANGE SCAN` suivi d’un `TABLE ACCESS BY INDEX ROWID` sur la table ORDERS. Cela signifie que l'optimiseur utilise bien un index pour localiser les lignes, mais que la plage de valeurs parcourue est trop large, entraînant la lecture de nombreuses entrées d’index et un accès fréquent à la table.",
-    "points_couteux": [
-      "**Sélectivité faible de l’index** : L’index utilisé (par exemple sur `order_date`) couvre une plage trop large de valeurs, ce qui réduit son efficacité.",
-      "**Accès répétés à la table** : Chaque entrée trouvée dans l’index nécessite un accès supplémentaire à la table via le ROWID, augmentant le coût I/O.",
-      "**Charge CPU modérée** : Le traitement d’un grand nombre de lignes indexées génère une consommation CPU non négligeable, surtout en cas de concurrence élevée."
-    ],
-    "recommandations": [
-      {
-        "type": "SQL/Conception",
-        "description": "Affiner la clause `WHERE` afin de réduire la plage de valeurs scannée par l’index. Par exemple, combiner une condition sur la date avec une autre colonne plus sélective (`status`, `customer_id`)."
-      },
-      {
-        "type": "Index",
-        "description": "Créer un index composite (B-Tree) sur plusieurs colonnes utilisées conjointement dans la clause `WHERE`, par exemple `(order_date, status)`. Cela permettrait de réduire le nombre de lignes retournées par l’index et d’améliorer la sélectivité."
-      },
-      {
-        "type": "Index couvrant",
-        "description": "Si la requête sélectionne peu de colonnes, envisager un index couvrant (incluant toutes les colonnes nécessaires dans l’index). Cela peut permettre un `INDEX ONLY SCAN` et éviter totalement l’accès à la table."
-      },
-      {
-        "type": "Statistiques",
-        "description": "Vérifier et mettre à jour les statistiques des index et de la table ORDERS avec `DBMS_STATS.GATHER_TABLE_STATS('VOTRE_SCHEMA', 'ORDERS', cascade=>true)` afin que le CBO estime correctement la cardinalité et le coût du plan."
-      }
-    ],
-    "gain_estime": "Si un index composite ou couvrant est mis en place et que la sélectivité est améliorée, le gain de performance peut atteindre **60 à 80%**. Sans modification de l’index, l’amélioration restera limitée (**10 à 20%**) et dépendra principalement de la réduction du volume de données retournées."
-  }
+        "sql_id": "sql_complex_003",
+        "explication_plan": "Le plan d'exécution utilise NESTED LOOPS pour joindre les tables ORDERS et CUSTOMERS. Cette méthode lit une ligne de la table externe (driving table) puis recherche les correspondances dans la table interne via un index. Elle est efficace lorsque la table externe est petite ou très filtrée, mais peut devenir très coûteuse si les deux tables sont grandes ou si l'index de la table interne est inefficace.",
+        "points_couteux": [
+            "Utilisation de NESTED LOOPS pour joindre potentiellement de grandes tables",
+            "Absence d'information sur les filtres WHERE (risque de cartésien)",
+            "Manque de détails sur les opérations d'accès aux tables (TABLE ACCESS FULL vs INDEX SCAN)"
+        ],
+        "recommandations": [
+            {
+                "type": "SQL",
+                "description": "Ajouter des conditions WHERE explicites pour réduire le jeu de données avant la jointure. Ex: WHERE o.order_date > SYSDATE - 30 AND c.status = 'ACTIVE'"
+            },
+            {
+                "type": "Index",
+                "description": "Créer un index composite sur les colonnes de jointure et de filtrage. Ex: CREATE INDEX idx_orders_cust_date ON orders(customer_id, order_date)"
+            },
+            {
+                "type": "Hint",
+                "description": "Tester avec un hint HASH JOIN si les statistiques indiquent de grandes tables: /*+ LEADING(o) USE_HASH(c) */"
+            }
+        ],
+        "gain_estime": "60-80% si NESTED LOOPS est inapproprié et remplacé par HASH JOIN avec filtres appropriés"
+    },
+    {
+        "sql_id": "sql_sort_004",
+        "explication_plan": "L'optimiseur effectue un scan complet de la table ITEMS (TABLE ACCESS FULL) pour récupérer toutes les lignes, puis trie l'ensemble du résultat en mémoire ou sur disque via l'opération SORT ORDER BY. Ce plan est coûteux car il nécessite de lire toute la table et de trier toutes les lignes.",
+        "points_couteux": [
+            "TABLE ACCESS FULL sur ITEMS (lecture de toutes les lignes)",
+            "SORT ORDER BY (tri de l'ensemble du résultat en mémoire/disque)",
+            "Absence d'index pour éviter le tri ou optimiser l'accès"
+        ],
+        "recommandations": [
+            {
+                "type": "Index",
+                "description": "Créer un index sur la colonne price : CREATE INDEX idx_items_price ON items(price). Cela permettra à l'optimiseur d'utiliser un INDEX FULL SCAN (ordonné) pour éviter l'opération de tri explicite."
+            },
+            {
+                "type": "Hint",
+                "description": "Si l'index existe mais n'est pas utilisé, forcer son utilisation avec : SELECT /*+ INDEX(items idx_items_price) */ * FROM items ORDER BY price"
+            },
+            {
+                "type": "SQL",
+                "description": "Si seules quelques lignes sont nécessaires, limiter le résultat avec ROWNUM ou FETCH FIRST : SELECT * FROM items ORDER BY price FETCH FIRST 100 ROWS ONLY. Cela réduira considérablement la charge du tri."
+            }
+        ],
+        "gain_estime": "70-90% si un index approprié est créé et utilisé (évite le tri et peut réduire les I/O via un scan d'index au lieu d'un scan de table)."
+    }
 ]
