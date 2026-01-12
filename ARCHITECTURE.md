@@ -20,7 +20,7 @@ graph TD
     DataStore -->|Config Users| Security[Security Auditor]
     DataStore -->|Metrics System| Backup[Backup Recommender]
     
-    LLM[LLM Engine (DeepSeek)]
+    LLM["LLM Engine (DeepSeek)"]
     ChromaDB -->|Contexte RAG| Anomaly
     ChromaDB -->|Contexte RAG| Optimizer
     
