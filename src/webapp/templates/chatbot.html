@@ -1,31 +1,288 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="mb-4">Assistant DBA Conversationnel</h2>
+<!-- CDN marked.js pour le rendu Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<div class="card shadow h-100">
-    <div class="card-header bg-dark text-white d-flex justify-content-between">
-        <span><i class="fas fa-robot me-2"></i> Oracle AI Assistant</span>
-        <span class="badge bg-success">En ligne</span>
+<div class="container-fluid h-100 p-0 d-flex flex-column">
+
+    <!-- Header Spécifique Chat avec Bouton Menu -->
+    <div class="bg-dark text-white p-3 d-flex align-items-center shadow-sm">
+        <button class="btn btn-outline-light me-3" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#historySidebar" aria-controls="historySidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h4 class="m-0"><i class="fas fa-robot me-2"></i> Oracle AI Assistant</h4>
+        <span class="badge bg-success ms-auto">En ligne</span>
     </div>
-    <div class="card-body">
-        <div id="chat-box" class="chat-box mb-3">
+
+    <!-- Container Principal (Chatbox) -->
+    <div class="flex-grow-1 position-relative d-flex flex-column bg-light" style="overflow: hidden;">
+
+        <!-- Zone de messages -->
+        <div id="chat-box" class="chat-box flex-grow-1 p-4" style="overflow-y: auto;">
             <div class="message bot-msg">
-                Bonjour ! Je suis votre assistant Oracle. Je peux vous aider sur l'optimisation, la sécurité ou la restauration. Posez-moi une question !
+                Bonjour ! Je suis votre assistant Oracle. Je peux vous aider sur l'optimisation, la sécurité ou la
+                restauration. Posez-moi une question !
             </div>
         </div>
-        
-        <div class="input-group">
-            <input type="text" id="user-input" class="form-control" placeholder="Ex: Pourquoi ma requête SELECT est lente ?">
-            <button class="btn btn-primary" onclick="sendMessage()">Envoyer <i class="fas fa-paper-plane ms-1"></i></button>
+
+        <!-- Zone de saisie -->
+        <div class="p-3 bg-white border-top">
+            <div class="input-group">
+                <input type="text" id="user-input" class="form-control"
+                    placeholder="Ex: Pourquoi ma requête SELECT est lente ?" aria-label="Message">
+                <button class="btn btn-primary" onclick="sendMessage()">
+                    Envoyer <i class="fas fa-paper-plane ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Sidebar Offcanvas pour l'Historique -->
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="historySidebar"
+    aria-labelledby="historySidebarLabel">
+    <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title" id="historySidebarLabel"><i class="fas fa-history me-2"></i> Historique</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column p-0">
+        <div class="p-3">
+            <button class="btn btn-success w-100" onclick="startNewSession()">
+                <i class="fas fa-plus me-2"></i> Nouvelle Conversation
+            </button>
+        </div>
+        <div class="flex-grow-1 overflow-auto">
+            <ul class="list-group list-group-flush" id="session-list">
+                <!-- Les sessions seront chargées ici -->
+                <li class="list-group-item bg-dark text-white text-center border-secondary mt-3">Chargement...</li>
+            </ul>
         </div>
     </div>
 </div>
 
+<style>
+    /* Chat Box Styling */
+    .chat-box {
+        background-color: #f8f9fa;
+        scroll-behavior: smooth;
+    }
+
+    .message {
+        max-width: 80%;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 1rem;
+        position: relative;
+        line-height: 1.5;
+    }
+
+    .user-msg {
+        background-color: #0d6efd;
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 0.25rem;
+    }
+
+    .bot-msg {
+        background-color: #ffffff;
+        color: #212529;
+        margin-right: auto;
+        border-bottom-left-radius: 0.25rem;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Markdown Styles inside bot messages */
+    .bot-msg h1,
+    .bot-msg h2,
+    .bot-msg h3 {
+        color: #2c3e50;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    .bot-msg strong {
+        color: #d63384;
+        /* Highlight color for emphasis */
+    }
+
+    .bot-msg ul,
+    .bot-msg ol {
+        padding-left: 20px;
+        margin-bottom: 0.5rem;
+    }
+
+    .bot-msg code {
+        background-color: #f1f3f5;
+        color: #d63384;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+
+    .bot-msg pre code {
+        display: block;
+        padding: 10px;
+        overflow-x: auto;
+        color: #333;
+    }
+
+    .bot-msg pre {
+        background-color: #f1f3f5;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    /* Sidebar Items */
+    .session-item {
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border-color: #495057 !important;
+        /* Darker borders */
+    }
+
+    .session-item:hover {
+        background-color: #343a40 !important;
+    }
+
+    .session-item.active {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white;
+    }
+
+    .delete-btn {
+        opacity: 0.7;
+        color: #dc3545;
+        transition: opacity 0.2s, color 0.2s;
+    }
+
+    .delete-btn:hover {
+        opacity: 1;
+        color: #ff6b6b;
+    }
+</style>
 {% endblock %}
 
 {% block scripts %}
 <script>
+    let currentSessionId = null;
+
+    // Configuration de marked.js
+    marked.setOptions({
+        breaks: true, // Convertir \n en <br>
+        gfm: true     // GitHub Flavored Markdown
+    });
+
+    document.addEventListener("DOMContentLoaded", loadSessions);
+
+    async function loadSessions() {
+        try {
+            const response = await fetch('/api/sessions');
+            const sessions = await response.json();
+            const list = document.getElementById('session-list');
+            list.innerHTML = "";
+
+            if (sessions.length === 0) {
+                list.innerHTML = `<li class="list-group-item bg-dark text-white text-center border-secondary">Aucun historique</li>`;
+                return;
+            }
+
+            sessions.forEach(session => {
+                const li = document.createElement('li');
+                li.className = `list-group-item bg-dark text-white border-secondary session-item d-flex justify-content-between align-items-center ${session.id === currentSessionId ? 'active' : ''}`;
+                li.onclick = () => {
+                    loadSession(session.id);
+                    // Fermer la sidebar sur mobile/petit écran si besoin, ou laisser ouvert
+                    // const bsOffcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('historySidebar'));
+                    // if (bsOffcanvas) bsOffcanvas.hide();
+                };
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = "text-truncate me-2";
+                titleSpan.style.maxWidth = "200px";
+                titleSpan.textContent = session.title;
+                li.appendChild(titleSpan);
+
+                const delBtn = document.createElement('i');
+                delBtn.className = 'fas fa-trash-alt delete-btn';
+                delBtn.title = 'Supprimer';
+                delBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteSession(session.id);
+                };
+                li.appendChild(delBtn);
+
+                list.appendChild(li);
+            });
+        } catch (error) {
+            console.error("Erreur chargement sessions:", error);
+        }
+    }
+
+    async function loadSession(sessionId) {
+        if (currentSessionId === sessionId) return;
+
+        try {
+            const response = await fetch(`/api/sessions/${sessionId}`);
+            const data = await response.json();
+
+            currentSessionId = sessionId;
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = "";
+
+            data.messages.forEach(msg => {
+                const isUser = msg.role === 'user';
+                const className = isUser ? 'user-msg' : 'bot-msg';
+
+                // Rendu Markdown pour le bot, Texte brut pour user (sécurité XSS simple)
+                let content = "";
+                if (isUser) {
+                    content = msg.content; // Pas de HTML pour l'user
+                } else {
+                    content = marked.parse(msg.content);
+                }
+
+                chatBox.innerHTML += `<div class="d-flex"><div class="message ${className}">${content}</div></div>`;
+            });
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+            loadSessions(); // Update active state
+        } catch (error) {
+            console.error("Erreur chargement session:", error);
+        }
+    }
+
+    function startNewSession() {
+        currentSessionId = null;
+        document.getElementById('chat-box').innerHTML = `
+            <div class="message bot-msg">
+                Bonjour ! Je suis votre assistant Oracle. Je peux vous aider sur l'optimisation, la sécurité ou la restauration. Posez-moi une question !
+            </div>
+        `;
+        loadSessions(); // Update active state
+    }
+
+    async function deleteSession(sessionId) {
+        if (!confirm("Voulez-vous vraiment supprimer cette conversation ?")) return;
+
+        try {
+            await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' });
+            if (currentSessionId === sessionId) {
+                startNewSession();
+            } else {
+                loadSessions();
+            }
+        } catch (error) {
+            console.error("Erreur suppression:", error);
+        }
+    }
+
     async function sendMessage() {
         const input = document.getElementById('user-input');
         const chatBox = document.getElementById('chat-box');
@@ -38,36 +295,45 @@
         input.value = "";
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // 2. Afficher indicateur de chargement
+        // 2. Afficher loader
         const loadingId = "loading-" + Date.now();
         chatBox.innerHTML += `<div id="${loadingId}" class="message bot-msg"><i class="fas fa-spinner fa-spin"></i> Analyse en cours...</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
 
         try {
-            // 3. Appel API Backend
+            const payload = { message: message };
+            if (currentSessionId) {
+                payload.session_id = currentSessionId;
+            }
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify(payload)
             });
             const data = await response.json();
 
-            // 4. Remplacer chargement par réponse IA (rendu Markdown simple)
+            if (data.session_id && currentSessionId !== data.session_id) {
+                currentSessionId = data.session_id;
+                loadSessions(); // Rafraichir le titre
+            }
+
             document.getElementById(loadingId).remove();
-            // Conversion simple des sauts de ligne pour l'affichage
-            const formattedResponse = data.response.replace(/\n/g, "<br>");
+
+            // 3. Rendu Markdown de la réponse
+            const formattedResponse = marked.parse(data.response);
             chatBox.innerHTML += `<div class="d-flex"><div class="message bot-msg">${formattedResponse}</div></div>`;
-        
+
         } catch (error) {
-            document.getElementById(loadingId).remove();
+            const loader = document.getElementById(loadingId);
+            if (loader) loader.remove();
             chatBox.innerHTML += `<div class="message bot-msg text-danger">Erreur de connexion au serveur IA.</div>`;
         }
-        
+
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Envoi avec Entrée
-    document.getElementById("user-input").addEventListener("keypress", function(event) {
+    document.getElementById("user-input").addEventListener("keypress", function (event) {
         if (event.key === "Enter") sendMessage();
     });
 </script>

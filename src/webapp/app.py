@@ -98,7 +98,10 @@ def index():
         'anomalies_count': len(anomalies_alert),
         'anom_color': 'danger' if has_critical else 'warning' if anomalies_alert else 'success'
     }
-    return render_template('index.html', stats=stats)
+    
+    # Préparation des données pour les graphes
+    # On passe les données brutes, le JS se chargera du reste
+    return render_template('index.html', stats=stats, perf_data=perf_data or [], anom_data=anom_data or [])
 
 @app.route('/security')
 def security():
@@ -124,64 +127,157 @@ def backup():
 def chatbot_page():
     return render_template('chatbot.html')
 
-# --- API CHATBOT AVEC MÉMOIRE ---
+# --- GESTION DES SESSIONS (PERSISTANCE) ---
+import uuid
+import glob
+from datetime import datetime
+
+CHATS_DIR = os.path.join(os.path.dirname(__file__), '../../datav1', 'chats')
+os.makedirs(CHATS_DIR, exist_ok=True)
+
+def save_chat_session(session_id, messages):
+    """Sauvegarde l'historique d'une session dans un fichier JSON."""
+    filename = f"session_{session_id}.json"
+    filepath = os.path.join(CHATS_DIR, filename)
+    
+    # Création d'un titre basé sur le premier message utilisateur s'il existe
+    title = "Nouvelle conversation"
+    if messages:
+        first_user_msg = next((m['content'] for m in messages if m['role'] == 'user'), None)
+        if first_user_msg:
+            title = first_user_msg[:30] + "..." if len(first_user_msg) > 30 else first_user_msg
+
+    data = {
+        'id': session_id,
+        'last_update': datetime.now().isoformat(),
+        'title': title,
+        'messages': messages
+    }
+    
+    with open(filepath, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+def load_chat_session(session_id):
+    """Charge une session existante ou retourne une liste vide."""
+    filename = f"session_{session_id}.json"
+    filepath = os.path.join(CHATS_DIR, filename)
+    if os.path.exists(filepath):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                return data.get('messages', [])
+        except:
+            return []
+    return []
+
+def list_chat_sessions():
+    """Liste toutes les sessions disponibles triées par date récente."""
+    sessions = []
+    files = glob.glob(os.path.join(CHATS_DIR, "session_*.json"))
+    for fpath in files:
+        try:
+            with open(fpath, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                sessions.append({
+                    'id': data.get('id'),
+                    'title': data.get('title', 'Conversation sans titre'),
+                    'last_update': data.get('last_update', '')
+                })
+        except:
+            continue
+    # Tri décroissant par date
+    sessions.sort(key=lambda x: x['last_update'], reverse=True)
+    return sessions
+
+# --- API CHATBOT AVEC SESSIONS ---
 
 @app.route('/api/chat', methods=['POST'])
 def chat_api():
     """
-    Endpoint intelligent : RAG + Données Live + Historique
+    Endpoint intelligent : RAG + Données Live + Historique Persistant
+    Payload attendu: { "message": "...", "session_id": "..." (optionnel) }
     """
-    global CHAT_HISTORY
-    user_message = request.json.get('message')
+    data = request.json
+    user_message = data.get('message')
+    session_id = data.get('session_id')
+    
+    # Gestion de la session
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        history = []
+    else:
+        history = load_chat_session(session_id)
     
     # 1. Récupération des Contextes
     docs, _ = rag_system.retrieve_context(user_message)
     rag_context = "\n".join(docs)
     system_live_data = get_system_context()
     
-    # 2. Récupération de l'Historique (Nouveau !)
-    history_context = get_conversation_history(limit=6) # On garde les 3 derniers échanges
+    # 2. Récupération de l'Historique récent pour le prompt
+    # history contient toute la conversation, on prend les derniers échanges pour le LLM
+    recent_history_str = ""
+    limit = 6
+    if history:
+        for msg in history[-limit:]:
+            role = "UTILISATEUR" if msg['role'] == 'user' else "ASSISTANT"
+            recent_history_str += f"{role}: {msg['content']}\n"
+    else:
+        recent_history_str = "Aucun historique précédent."
     
     # 3. Construction du Prompt Complet
     system_instruction = (
         "Tu es l'assistant DBA intelligent. "
         "Tu as accès à :\n"
-        "1. L'HISTORIQUE DE LA CONVERSATION (Mémoire).\n"
+        "1. L'HISTORIQUE DE LA CONVERSATION.\n"
         "2. L'ÉTAT RÉEL DU SYSTÈME (Audit, Perf...).\n"
-        "3. LA DOCUMENTATION (RAG).\n\n"
-        "Si l'utilisateur fait référence à une discussion passée (ex: 'la requête dont on parlait'), utilise l'historique.\n"
-        "Sois concis."
+        "3. LA DOCUMENTATION (RAG).\n"
+        "Utilise ces informations pour répondre de manière concise."
     )
     
     full_prompt = (
         f"{system_instruction}\n\n"
         f"--- ÉTAT SYSTÈME ACTUEL ---\n{system_live_data}\n\n"
-        f"--- HISTORIQUE RÉCENT (MÉMOIRE) ---\n{history_context}\n\n"
+        f"--- HISTORIQUE RÉCENT ---\n{recent_history_str}\n\n"
         f"--- DOCUMENTATION (RAG) ---\n{rag_context}\n\n"
-        f"UTILISATEUR (Message Actuel): {user_message}"
+        f"UTILISATEUR: {user_message}"
     )
     
     # 4. Génération
-    # On passe None comme system_context car il est déjà intégré dans le full_prompt ou géré par generate
-    # Mais ici vous avez construit un "full_prompt" manuel qui contient tout.
-    # Pour respecter la signature de votre nouvelle méthode generate(user_message, system_context=""),
-    # on peut passer tout le prompt comme user_message et rien en système, ou adapter.
-    
-    # Option simple : Tout passer dans le premier argument, car le prompt est déjà formaté
     bot_reply = llm_engine.generate(full_prompt)
     
-    # 5. Mise à jour de la mémoire
-    CHAT_HISTORY.append({'role': 'user', 'content': user_message})
-    CHAT_HISTORY.append({'role': 'assistant', 'content': bot_reply})
+    # 5. Mise à jour et sauvegarde de la session
+    history.append({'role': 'user', 'content': user_message})
+    history.append({'role': 'assistant', 'content': bot_reply})
+    save_chat_session(session_id, history)
     
-    return jsonify({'response': bot_reply})
+    return jsonify({
+        'response': bot_reply,
+        'session_id': session_id
+    })
 
-# Route pour vider la mémoire si besoin (Optionnel)
-@app.route('/api/clear_chat', methods=['POST'])
-def clear_chat():
-    global CHAT_HISTORY
-    CHAT_HISTORY = []
-    return jsonify({'status': 'cleared'})
+@app.route('/api/sessions', methods=['GET'])
+def get_sessions():
+    """Retourne la liste des sessions passées."""
+    return jsonify(list_chat_sessions())
+
+@app.route('/api/sessions/<session_id>', methods=['GET'])
+def get_session_details(session_id):
+    """Retourne le contenu complet d'une session."""
+    messages = load_chat_session(session_id)
+    return jsonify({'messages': messages})
+
+@app.route('/api/sessions/<session_id>', methods=['DELETE'])
+def delete_session_endpoint(session_id):
+    """Supprime une session."""
+    filename = f"session_{session_id}.json"
+    filepath = os.path.join(CHATS_DIR, filename)
+    if os.path.exists(filepath):
+        try:
+            os.remove(filepath)
+            return jsonify({'status': 'deleted'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    return jsonify({'error': 'Not found'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

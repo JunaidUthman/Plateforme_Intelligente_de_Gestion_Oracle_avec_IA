@@ -4,7 +4,7 @@ from chromadb.utils import embedding_functions
 
 class OracleRAG:
     def __init__(self, db_path="datav1/chroma_db"):
-        """Initialise ChromaDB avec un modèle d'embedding local [cite: 55, 58]"""
+        """Initialise ChromaDB avec un modèle d'embedding local """
         if not os.path.exists("datav1"):
             os.makedirs("datav1")
 
@@ -21,7 +21,7 @@ class OracleRAG:
         print("✅ Base Vectorielle ChromaDB prête (Mode Local).")
 
     def add_documents(self, folder_path):
-        """Lit les fichiers .txt et les indexe dans la base [cite: 59]"""
+        """Lit les fichiers .txt et les indexe dans la base """
         if not os.path.exists(folder_path):
             print(f"⚠️ Dossier {folder_path} introuvable.")
             return

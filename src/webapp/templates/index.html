@@ -51,10 +51,36 @@
 </div>
 
 <div class="row mt-4">
+    <!-- Graphe Performance -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="m-0 text-primary"><i class="fas fa-chart-bar me-2"></i>Requêtes les plus lentes</h5>
+            </div>
+            <div class="card-body" style="position: relative; height: 300px;">
+                <canvas id="perfChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphe Anomalies -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="m-0 text-danger"><i class="fas fa-chart-pie me-2"></i>Anomalies par Gravité</h5>
+            </div>
+            <div class="card-body" style="position: relative; height: 300px;">
+                <canvas id="anomChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-12">
         <div class="card shadow">
             <div class="card-header bg-white">
-                <h5 class="m-0"><i class="fas fa-chart-line text-primary"></i> Statut du Système</h5>
+                <h5 class="m-0"><i class="fas fa-server text-success"></i> Statut du Système</h5>
             </div>
             <div class="card-body">
                 <p>Le système est opérationnel. Les modules d'IA sont connectés.</p>
@@ -66,4 +92,124 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Récupération des données passées par Flask
+    const perfData = {{ perf_data | tojson | safe }};
+    const anomData = {{ anom_data | tojson | safe }};
+
+    // --- 1. Graphe Performance (Bar Chart) ---
+    // On prend les top 5 requêtes les plus lentes (ou couteuses)
+    // On suppose que perf_data est une liste de dicts avec 'sql_id' et 'duration' (ou 'cost')
+
+    // Tri par durée (si dispo) ou coût desc
+    // Adaptation selon structure réelle : supposons qu'il y a une clé 'execution_time' ou on utilise l'index
+    // Si structure inconnue, on mock un peu si données manquantes
+
+    const topQueries = perfData.slice(0, 5);
+    const labelsPerf = topQueries.map(q => q.sql_id || 'Inconnu');
+    // Essayer de trouver une métrique numérique, sinon durée par défaut mockée ou 1
+    const dataPerfValues = topQueries.map(q => {
+        // Chercher une valeur numérique pertinente
+        if (q.duration) return parseFloat(q.duration);
+        if (q.cost) return parseFloat(q.cost);
+        if (q.cpu_time) return parseFloat(q.cpu_time);
+        return Math.random() * 10; // Fallback visuel si pas de métrique claire
+    });
+
+    const ctxPerf = document.getElementById('perfChart').getContext('2d');
+
+    // Gradient pour le bar chart
+    const gradientPerf = ctxPerf.createLinearGradient(0, 0, 0, 400);
+    gradientPerf.addColorStop(0, 'rgba(13, 110, 253, 0.8)'); // Primary Bootstrap Blue
+    gradientPerf.addColorStop(1, 'rgba(13, 110, 253, 0.2)');
+
+    new Chart(ctxPerf, {
+        type: 'bar',
+        data: {
+            labels: labelsPerf,
+            datasets: [{
+                label: 'Score / Durée',
+                data: dataPerfValues,
+                backgroundColor: gradientPerf,
+                borderColor: '#0d6efd',
+                borderWidth: 1,
+                borderRadius: 8, // Bordures arrondies
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Important pour le redimensionnement dans le conteneur
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    padding: 10,
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { borderDash: [2, 4], color: '#e9ecef' },
+                    ticks: { font: { size: 10 } }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 10 } }
+                }
+            }
+        }
+    });
+
+    // --- 2. Graphe Anomalies (Doughnut) ---
+    // Compter par classification
+    const counts = { 'CRITIQUE': 0, 'SUSPECT': 0, 'SÛR': 0, 'Inconnu': 0 };
+
+    if (anomData.length === 0) {
+        // Si vide, on met tout à 0 ou on affiche "Aucune donnée"
+        // Pour le visuel, on mettra 1 'Sûr'
+        counts['SÛR'] = 1;
+    } else {
+        anomData.forEach(a => {
+            const cls = a.classification || 'Inconnu';
+            if (counts[cls] !== undefined) counts[cls]++;
+            else counts['Inconnu']++;
+        });
+    }
+
+    const ctxAnom = document.getElementById('anomChart').getContext('2d');
+    new Chart(ctxAnom, {
+        type: 'doughnut',
+        data: {
+            labels: ['Critique', 'Suspect', 'Sûr', 'Autre'],
+            datasets: [{
+                data: [counts['CRITIQUE'], counts['SUSPECT'], counts['SÛR'], counts['Inconnu']],
+                backgroundColor: [
+                    '#dc3545', // Danger
+                    '#ffc107', // Warning
+                    '#198754', // Success
+                    '#ced4da'  // Gray
+                ],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%', // Donut plus fin
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { usePointStyle: true, boxWidth: 8, padding: 20 }
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

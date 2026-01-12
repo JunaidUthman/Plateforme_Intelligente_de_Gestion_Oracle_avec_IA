@@ -1,0 +1,15 @@
+{
+  "id": "862aa950-0bab-42d2-a3ce-6617f9f79d73",
+  "last_update": "2026-01-12T23:13:24.101921",
+  "title": "c'est quoi un plan d'execution",
+  "messages": [
+    {
+      "role": "user",
+      "content": "c'est quoi un plan d'execution"
+    },
+    {
+      "role": "assistant",
+      "content": "Un **plan d'exécution** est le chemin d'accès aux données choisi par l'optimiseur d'Oracle (CBO) pour exécuter une requête SQL. Il détaille, étape par étape, les opérations (scans, jointures, tris) et l'ordre dans lequel elles sont effectuées.\n\nD'après la documentation (RAG), il montre le \"chemin choisi par l'optimiseur\". Par exemple :\n*   **`INDEX RANGE SCAN`** : Indique une recherche efficace dans une plage d'index.\n*   **`HASH JOIN`** : Souvent plus performant que `NESTED LOOPS` pour joindre de grandes tables.\n*   **`FULL TABLE SCAN`** : Lecture séquentielle de toute la table.\n\nUn **coût (COST)** élevé dans le plan indique souvent un manque de statistiques à jour (cf. `DBMS_STATS.GATHER_TABLE_STATS` dans la doc) ou une jointure mal optimisée.\n\n**Comment l'obtenir ?**\n```sql\n-- Méthode la plus courante (depuis SQL*Plus ou SQLcl)\nEXPLAIN PLAN FOR\nVOTRE_REQUETE_SQL;\n\nSELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);\n```\n\n**Contexte actuel :**\nVotre système présente **3 requêtes lentes** (ex: `guw87u8x36z8r`). Analyser leur plan d'exécution est l'étape critique pour diagnostiquer la cause racine (ex: statistiques périmées, index manquants, jointure sous-optimale)."
+    }
+  ]
+}
