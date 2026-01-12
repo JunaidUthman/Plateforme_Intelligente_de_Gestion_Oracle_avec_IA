@@ -10,16 +10,43 @@ class QueryOptimizer:
         self.engine = LLMEngine() # Module 3
         self.rag = OracleRAG()     # Module 2
 
-    def analyze_slow_queries(self, metrics_file="data/performance_metrics.csv"):
+    def analyze_slow_queries(self, metrics_file="datav1/performance_metrics.csv"):
         """Analyse toutes les requêtes lentes détectées dans le Module 1 """
         if not os.path.exists(metrics_file):
             return {"error": "Fichier de métriques introuvable. Relancez le Module 1."}
 
-        # 1. Chargement des métriques de performance
-        df = pd.read_csv(metrics_file)
+        # 1. Chargement des métriques de performance et des plans
+        df_metrics = pd.read_csv(metrics_file)
         
-        # On ne filtre plus, on prend toutes les requêtes pour analyse
-        slow_queries = df
+        # Chargement des plans pour avoir l'opération
+        plans_file = "datav1/execution_plans.csv"
+        if os.path.exists(plans_file):
+            df_plans = pd.read_csv(plans_file)
+            # On cherche l'opération la plus coûteuse ou la première significative
+            # Nettoyage et tri par COST descendant pour chaque SQL_ID
+            if 'COST' in df_plans.columns:
+                df_plans['COST'] = pd.to_numeric(df_plans['COST'], errors='coerce').fillna(0)
+                df_plans = df_plans.sort_values(by=['SQL_ID', 'COST'], ascending=[True, False])
+            
+            # On garde une seule ligne par SQL_ID (celle avec le coût le plus élevé ou la première)
+            df_plans_unique = df_plans.drop_duplicates(subset=['SQL_ID'])
+            
+            # Fusion
+            df = pd.merge(df_metrics, df_plans_unique[['SQL_ID', 'OPERATION', 'OBJECT_NAME']], on='SQL_ID', how='left')
+            df.rename(columns={'OPERATION': 'PLAN_OPERATION'}, inplace=True)
+        else:
+            df = df_metrics
+            df['PLAN_OPERATION'] = 'UNKNOWN'
+            df['OBJECT_NAME'] = ''
+
+        # Gestion des valeurs manquantes après fusion
+        df['PLAN_OPERATION'] = df['PLAN_OPERATION'].fillna('UNKNOWN')
+        df['OBJECT_NAME'] = df['OBJECT_NAME'].fillna('')
+
+        # On ne filtre plus, on prend les 3 dernières requêtes pour analyse (ou les 3 premières selon le tri)
+        # Comme l'extraction trie par ELAPSED_TIME DESC, head(3) sont les plus lentes.
+        # Le code précédent utilisait tail(3)... on garde tail(3) pour la cohérence demandée ("3 derniers")
+        slow_queries = df.tail(3)
         
         results = []
 
@@ -47,7 +74,7 @@ class QueryOptimizer:
                 results.append({"sql_id": sql_id, "raw_response": analysis_raw})
 
         # 4. Sauvegarde des analyses pour le Dashboard (Module 9)
-        with open("data/query_analysis.json", "w", encoding='utf-8') as f:
+        with open("datav1/query_analysis.json", "w", encoding='utf-8') as f:
             json.dump(results, f, indent=4, ensure_ascii=False)
 
         return results

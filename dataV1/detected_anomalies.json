@@ -1,0 +1,32 @@
+[
+    {
+        "timestamp": "2026-01-12 15:07:03",
+        "classification": "NORMAL",
+        "justification": "Connexion standard du compte SYSTEM depuis un terminal connu",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-12 15:07:03",
+        "classification": "NORMAL",
+        "justification": "Requête SELECT sur DUAL par SYSTEM, opération standard de test de connexion",
+        "severite": 0
+    },
+    {
+        "timestamp": "2026-01-12 15:07:46",
+        "classification": "SUSPECT",
+        "justification": "Accès répété et concentré aux dictionnaires de données SYS (USER$, OBJ$, USER_EDITIONING$, RLS$, DBA_POLICIES) par SYSTEM",
+        "severite": 6
+    },
+    {
+        "timestamp": "2026-01-12 15:07:46",
+        "classification": "CRITIQUE",
+        "justification": "Échec (RETURNCODE 955) de création de table TEST_AUDIT par SYSTEM, possible tentative d'action non autorisée ou d'exploitation",
+        "severite": 9
+    },
+    {
+        "timestamp": "2026-01-12 15:07:46",
+        "classification": "SUSPECT",
+        "justification": "Séquence d'actions (connexion, accès dictionnaire, création échouée) sur un intervalle très court (43 secondes), pattern potentiel de reconnaissance",
+        "severite": 7
+    }
+]

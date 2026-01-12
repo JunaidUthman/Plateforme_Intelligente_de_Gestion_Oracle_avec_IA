@@ -1,0 +1,74 @@
+[
+    {
+        "sql_id": "guw87u8x36z8r",
+        "explication_plan": "La requête UPDATE utilise un plan d'exécution 'UNKNOWN', ce qui indique que l'optimiseur n'a pas pu déterminer un plan optimal. Cela peut être dû à des statistiques manquantes ou obsolètes sur la table WRI$_SQLSET_PLANS ou ses index. L'opération UPDATE cible des lignes spécifiques via une clause WHERE avec deux conditions (STMT_ID et PLAN_HASH_VALUE), mais sans plan défini, l'optimiseur pourrait effectuer un TABLE ACCESS FULL coûteux ou utiliser un index inefficace.",
+        "points_couteux": [
+            "Plan d'exécution 'UNKNOWN' : l'optimiseur ne peut pas estimer le coût ni choisir une stratégie optimale (scan complet vs index).",
+            "Absence de statistiques à jour : sans métriques récentes, l'optimiseur peut sous-estimer ou surestimer la sélectivité des colonnes STMT_ID et PLAN_HASH_VALUE.",
+            "Risque de TABLE ACCESS FULL : si un index existe mais est ignoré en raison de statistiques périmées, l'UPDATE pourrait scanner toute la table, ce qui est coûteux pour les grandes tables."
+        ],
+        "recommandations": [
+            {
+                "type": "SQL",
+                "description": "Exécutez DBMS_STATS.GATHER_TABLE_STATS(ownname => 'SYS', tabname => 'WRI$_SQLSET_PLANS', estimate_percent => DBMS_STATS.AUTO_SAMPLE_SIZE, cascade => TRUE) pour rafraîchir les statistiques de la table et de ses index."
+            },
+            {
+                "type": "Index",
+                "description": "Vérifiez l'existence d'un index composite sur (STMT_ID, PLAN_HASH_VALUE). S'il n'existe pas, créez-le : CREATE INDEX IDX_WRI_SQLSET_PLANS_COMP ON WRI$_SQLSET_PLANS(STMT_ID, PLAN_HASH_VALUE) TABLESPACE <tablespace>."
+            },
+            {
+                "type": "Hint",
+                "description": "Ajoutez un hint pour forcer l'utilisation de l'index composite après sa création : UPDATE /*+ INDEX(w WRI$_SQLSET_PLANS IDX_WRI_SQLSET_PLANS_COMP) */ WRI$_SQLSET_PLANS w SET BIND_DATA = :B4, BINDS_CAPTURED = :B3 WHERE STMT_ID = :B2 AND PLAN_HASH_VALUE = :B1."
+            }
+        ],
+        "gain_estime": "70%"
+    },
+    {
+        "sql_id": "16cffsk1wdzcc",
+        "explication_plan": "Le plan d'exécution est marqué 'UNKNOWN', ce qui indique que l'optimiseur Oracle n'a pas pu générer un plan stable. Cela se produit généralement lorsque les statistiques de la table SYS.USER$ sont absentes, obsolètes ou corrompues, ou lorsque la requête utilise une liaison (bind variable :1) avec une distribution de données très asymétrique que les statistiques ne capturent pas.",
+        "points_couteux": [
+            "Absence de plan d'exécution stable (UNKNOWN) : L'optimiseur ne peut pas évaluer les coûts, ce qui peut conduire à un plan sous-optimal ou variable à chaque exécution.",
+            "Accès à la table système SYS.USER$ : Cette table est critique et souvent interrogée par le dictionnaire de données. Un plan inefficace ici impacte tout le système.",
+            "Utilisation d'un prédicat d'égalité sur USER# sans garantie d'utilisation d'index : Si un index existe sur USER#, un plan 'UNKNOWN' peut quand même résulter en un TABLE ACCESS FULL coûteux."
+        ],
+        "recommandations": [
+            {
+                "type": "SQL",
+                "description": "Collecter des statistiques à jour sur la table SYS.USER$ en utilisant le package DBMS_STATS adapté aux objets système : EXEC DBMS_STATS.GATHER_TABLE_STATS(ownname=>'SYS', tabname=>'USER$', estimate_percent=>DBMS_STATS.AUTO_SAMPLE_SIZE, cascade=>TRUE);"
+            },
+            {
+                "type": "Hint",
+                "description": "Forcer l'utilisation de l'index primaire sur USER# (généralement I_USER1) si l'accès est très sélectif : SELECT /*+ INDEX(u I_USER1) */ exptime, ltime, astatus, lcount, ptime FROM sys.user$ u WHERE user#=:1"
+            },
+            {
+                "type": "Index",
+                "description": "Vérifier l'existence et la validité d'un index sur la colonne USER#. S'il n'existe pas, envisager sa création (bien que rare pour une table système) : CREATE UNIQUE INDEX SYS.IDX_USER_NUM ON SYS.USER$(USER#) NOLOGGING;"
+            }
+        ],
+        "gain_estime": "70-90% (Le gain principal viendra de la stabilisation du plan et du passage d'un éventuel FULL SCAN à un UNIQUE SCAN ou RANGE SCAN très efficace, étant donné que USER# est une clé unique)."
+    },
+    {
+        "sql_id": "114ujmcuu3z7b",
+        "explication_plan": "Le plan d'exécution est marqué comme 'UNKNOWN', ce qui est inhabituel. La requête interroge la table système SYS.SYSAUTH$ (ou une vue associée) pour extraire des informations sur les privilèges et leurs options. Sans plan visible, on peut supposer que l'optimiseur a peut-être choisi un accès direct à la table système via un FULL TABLE SCAN ou un accès via un index sur les colonnes de jointure (GRANTEE#, PRIVILEGE#). L'utilisation de fonctions (MOD, BITAND, NVL) sur la colonne OPTION$ empêche l'utilisation d'un index sur cette colonne.",
+        "points_couteux": [
+            "Accès à une table système (SYS.SYSAUTH$) sans plan d'exécution visible, potentiellement un FULL TABLE SCAN.",
+            "Utilisation de fonctions (MOD, BITAND, NVL) sur la colonne OPTION$ dans la clause SELECT, empêchant toute optimisation par index sur cette colonne.",
+            "Agrégation (MAX) sur plusieurs colonnes calculées, nécessitant un scan complet des données pertinentes pour calculer chaque valeur maximale."
+        ],
+        "recommandations": [
+            {
+                "type": "SQL",
+                "description": "Simplifiez la logique de calcul si possible. Les opérations BITAND et MOD sur OPTION$ pourraient potentiellement être prétraitées ou stockées dans une colonne dérivée si ce modèle d'interrogation est fréquent. Vérifiez si la requête peut être réécrite pour éviter les fonctions sur les colonnes dans la clause SELECT."
+            },
+            {
+                "type": "Hint",
+                "description": "Comme il s'agit d'une requête sur dictionnaire de données, les statistiques sont généralement fixes et gérées par Oracle. Forcer un index spécifique n'est pas standard ici. Cependant, si un plan est disponible et sous-optimal, un hint comme /*+ FULL(SYSAUTH$) */ ou /*+ INDEX(SYSAUTH$ <nom_index>) */ pourrait être testé, mais cela nécessite de connaître le plan actuel et l'index existant (probablement sur GRANTEE#, PRIVILEGE#)."
+            },
+            {
+                "type": "Index",
+                "description": "La requête n'étant pas filtrée (pas de WHERE), la création d'un index n'est pas pertinente. L'optimisation doit se concentrer sur la réduction de la charge de calcul. Si cette requête est exécutée très fréquemment, envisagez de matérialiser ses résultats dans une table de travail ou un snapshot si les privilèges changent peu."
+            }
+        ],
+        "gain_estime": "5-15% (L'optimisation est limitée car il s'agit d'une requête système agrégée sans filtre. Le gain principal viendrait d'une réduction de la complexité des calculs ou d'une mise en cache du résultat)."
+    }
+]

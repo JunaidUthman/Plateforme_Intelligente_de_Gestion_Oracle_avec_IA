@@ -22,9 +22,9 @@ CHAT_HISTORY = []
 
 # --- FONCTIONS UTILITAIRES ---
 
-def load_json_data(filename):
-    """Charge un fichier JSON depuis le dossier data/"""
-    filepath = os.path.join(os.path.dirname(__file__), '../../data', filename)
+def load_json_data(filename, directory='datav1'):
+    """Charge un fichier JSON depuis le dossier spécifié (défaut: datav1/)"""
+    filepath = os.path.join(os.path.dirname(__file__), '../../', directory, filename)
     if os.path.exists(filepath):
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
@@ -46,7 +46,7 @@ def get_system_context():
     context = "--- ÉTAT RÉEL DU SYSTÈME (Données Live) ---\n"
     
     # Sécurité
-    sec = load_json_data('last_audit.json')
+    sec = load_json_data('last_audit.json', directory='datav1')
     if sec:
         risques = [r['nom'] for r in sec.get('risques', [])]
         context += f"[SÉCURITÉ] Score: {sec.get('score')}/100. Risques: {', '.join(risques[:3])}.\n"
@@ -58,7 +58,7 @@ def get_system_context():
         context += f"[PERFORMANCE] {len(perf)} requêtes lentes. Ex: {', '.join(exemples)}.\n"
     
     # Anomalies
-    anom = load_json_data('detected_anomalies.json')
+    anom = load_json_data('detected_anomalies.json', directory='datav1')
     if anom and isinstance(anom, list):
         critiques = [a for a in anom if a.get('classification') == 'CRITIQUE']
         context += f"[ANOMALIES] {len(critiques)} menaces CRITIQUES détectées.\n"
@@ -84,9 +84,9 @@ def get_conversation_history(limit=3):
 
 @app.route('/')
 def index():
-    sec_data = load_json_data('last_audit.json')
+    sec_data = load_json_data('last_audit.json', directory='datav1')
     perf_data = load_json_data('query_analysis.json')
-    anom_data = load_json_data('detected_anomalies.json') or []
+    anom_data = load_json_data('detected_anomalies.json', directory='datav1') or []
     
     anomalies_alert = [a for a in anom_data if a.get('classification') in ['CRITIQUE', 'SUSPECT']]
     has_critical = any(a.get('classification') == 'CRITIQUE' for a in anomalies_alert)
@@ -102,7 +102,7 @@ def index():
 
 @app.route('/security')
 def security():
-    data = load_json_data('last_audit.json')
+    data = load_json_data('last_audit.json', directory='datav1')
     return render_template('security.html', data=data or {'score': 0, 'risques': [], 'recommandations': []})
 
 @app.route('/performance')
@@ -112,8 +112,8 @@ def performance():
 
 @app.route('/backup')
 def backup():
-    plan = load_json_data('backup_plan.json') or {}
-    rman_path = os.path.join(os.path.dirname(__file__), '../../data', 'backup_script.rman')
+    plan = load_json_data('backup_plan.json', directory='datav1') or {}
+    rman_path = os.path.join(os.path.dirname(__file__), '../../datav1', 'backup_script.rman')
     rman_content = "Aucun script généré."
     if os.path.exists(rman_path):
         with open(rman_path, 'r', encoding='utf-8') as f:

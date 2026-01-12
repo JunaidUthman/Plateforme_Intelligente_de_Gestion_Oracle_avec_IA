@@ -10,7 +10,7 @@ class AnomalyDetector:
         self.engine = LLMEngine() # Module 3 [cite: 71]
         self.rag = OracleRAG()     # Module 2 [cite: 55]
 
-    def analyze_logs(self, logs_file="data/audit_logs.csv"):
+    def analyze_logs(self, logs_file="datav1/audit_logs.csv"):
         """Analyse les logs d'audit Oracle """
         if not os.path.exists(logs_file):
             return {"error": "Fichier de logs introuvable."}
@@ -36,7 +36,7 @@ class AnomalyDetector:
             clean_json = analysis_raw.replace("```json", "").replace("```", "").strip()
             results = json.loads(clean_json)
             
-            with open("data/detected_anomalies.json", "w", encoding='utf-8') as f:
+            with open("datav1/detected_anomalies.json", "w", encoding='utf-8') as f:
                 json.dump(results, f, indent=4, ensure_ascii=False)
                 
             return results
@@ -46,7 +46,7 @@ class AnomalyDetector:
     def validate_chatbot(self, question):
         """Réponse aux questions d'intrusion (Livrable Validation) """
         try:
-            with open("data/detected_anomalies.json", "r", encoding='utf-8') as f:
+            with open("datav1/detected_anomalies.json", "r", encoding='utf-8') as f:
                 data = json.load(f)
             
             # On cherche s'il y a des anomalies critiques ou suspectes

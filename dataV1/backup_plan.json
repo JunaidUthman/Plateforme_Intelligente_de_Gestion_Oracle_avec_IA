@@ -1,0 +1,7 @@
+{
+    "type": "Incrémentale Niveau 1 avec Archivage Continu",
+    "frequence": "Quotidienne (Incrémentale Niveau 1) + Archivage des Redo Logs toutes les 15 minutes",
+    "retention_jours": 30,
+    "emplacement_stockage": "Disque Haute Performance (pour backups récents et archivelogs) + Tape/Cloud (pour rétention longue)",
+    "cout_estime": "Très Élevé"
+}

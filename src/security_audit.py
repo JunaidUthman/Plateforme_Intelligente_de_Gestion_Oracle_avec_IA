@@ -17,9 +17,9 @@ class SecurityAuditor:
         """
         # Liste des fichiers extraits par le Module 1
         security_files = [
-            "data/dba_users.csv", 
-            "data/dba_roles.csv", 
-            "data/dba_sys_privs.csv"
+            "datav1/dba_users.csv", 
+            "datav1/dba_roles.csv", 
+            "datav1/dba_sys_privs.csv"
         ]
         
         all_config_text = ""
@@ -35,7 +35,7 @@ class SecurityAuditor:
                 found_files += 1
         
         if found_files == 0:
-            return {"error": "Aucun fichier de configuration (users, roles, privs) trouvé dans data/."}
+            return {"error": "Aucun fichier de configuration (users, roles, privs) trouvé dans datav1/."}
 
         # 2. Récupération du contexte via le RAG (Top-5 docs)
         # Recherche basée sur les thèmes du Module 4
@@ -53,8 +53,8 @@ class SecurityAuditor:
             report_data = json.loads(clean_json)
             
             # Sauvegarde pour le Dashboard final (Module 9)
-            os.makedirs("data", exist_ok=True)
-            with open("data/last_audit.json", "w", encoding='utf-8') as f:
+            os.makedirs("datav1", exist_ok=True)
+            with open("datav1/last_audit.json", "w", encoding='utf-8') as f:
                 json.dump(report_data, f, indent=4, ensure_ascii=False)
                 
             return report_data

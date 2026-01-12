@@ -9,8 +9,8 @@ class BackupRecommender:
         # Initialisation du moteur IA (Module 3)
         self.engine = LLMEngine() 
         # Chemins vers les fichiers de métriques générés par le Module 1
-        self.metrics_path = "data/performance_metrics.csv"
-        self.roles_path = "data/dba_roles.csv" 
+        self.metrics_path = "datav1/performance_metrics.csv"
+        self.roles_path = "datav1/dba_roles.csv" 
 
     def fetch_real_metrics(self):
         """
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     json_res, rman_res = recommender.generate_full_plan()
     
     # 2. Sauvegarde des fichiers sur le disque (C'est ce qui manquait !)
-    output_dir = "data"
+    output_dir = "datav1"
     os.makedirs(output_dir, exist_ok=True) # Crée le dossier s'il n'existe pas
 
     # Sauvegarde du JSON
