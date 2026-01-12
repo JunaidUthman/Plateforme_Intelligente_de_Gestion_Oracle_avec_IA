@@ -11,9 +11,9 @@ class OracleSimulator:
         print(f"🚀 Simulateur Oracle initialisé (Version Complète Module 1 & 6).")
 
     def generate_audit_logs(self):
-        """Livrable : Logs d'audit (table AUD$) [cite: 48, 116]"""
+        """Livrable : Logs d'audit (table AUD$) """
         data = []
-        # 50 logs normaux [cite: 239]
+        # 50 logs normaux 
         for i in range(50):
             hour = random.randint(8, 17)
             data.append({

@@ -10,7 +10,6 @@ class OracleRAG:
 
         self.client = chromadb.PersistentClient(path=db_path)
         
-        # Modèle local conforme à l'approche gratuite [cite: 13, 15]
         self.emb_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
             model_name="all-MiniLM-L6-v2"
         )

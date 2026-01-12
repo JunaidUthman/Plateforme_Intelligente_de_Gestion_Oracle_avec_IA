@@ -8,7 +8,7 @@ import datetime
 # CONFIGURATION DE LA CONNEXION (Docker / Local)
 # =============================================================================
 DB_CONFIG = {
-    "username": "SYS",  # Au lieu de SYSTEM
+    "username": "SYS",  
     "password": "Oradoc_password1",
     "host": "localhost",
     "port": "1521",
@@ -87,7 +87,7 @@ class OracleDataExtractor:
         """
         self.extract_query_to_csv(q_audit, "audit_logs.csv", "Logs d'audit")
 
-        # 2. Plans d'exécution (V$SQL_PLAN) [Livrable 49]
+        # 2. Plans d'exécution (V$SQL_PLAN) 
         q_plans = """
             SELECT 
                 SQL_ID, PLAN_HASH_VALUE, ID, OPERATION, OPTIONS, 
@@ -97,7 +97,7 @@ class OracleDataExtractor:
         """
         self.extract_query_to_csv(q_plans, "execution_plans.csv", "Plans d'exécution")
 
-        # 3. Configurations de sécurité [Livrable 50]
+        # 3. Configurations de sécurité 
         # A. Users
         self.extract_query_to_csv(
             "SELECT USERNAME, ACCOUNT_STATUS, LOCK_DATE, EXPIRY_DATE, PROFILE, LAST_LOGIN FROM DBA_USERS",
@@ -114,7 +114,7 @@ class OracleDataExtractor:
             "dba_sys_privs.csv", "Privilèges Système"
         )
 
-        # 4. Métriques de performance [Livrable 51]
+        # 4. Métriques de performance 
         # A. SQL Stats
         q_sqlstat = """
             SELECT 

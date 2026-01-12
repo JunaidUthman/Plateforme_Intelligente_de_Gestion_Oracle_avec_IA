@@ -7,8 +7,8 @@ from data_extractor import OracleSimulator
 
 class AnomalyDetector:
     def __init__(self):
-        self.engine = LLMEngine() # Module 3 [cite: 71]
-        self.rag = OracleRAG()     # Module 2 [cite: 55]
+        self.engine = LLMEngine() 
+        self.rag = OracleRAG()     
 
     def analyze_logs(self, logs_file="datav1/audit_logs.csv"):
         """Analyse les logs d'audit Oracle """
@@ -20,11 +20,11 @@ class AnomalyDetector:
         # Analyse des 20 derniers logs (échantillon pour l'IA)
         logs_text = df.tail(20).to_string(index=False)
         
-        # 2. Récupération du contexte RAG [cite: 63]
+        # 2. Récupération du contexte RAG 
         context_docs, _ = self.rag.retrieve_context("patterns injection SQL, escalade privilèges, accès hors heures")
         context_text = "\n".join(context_docs)
         
-        # 3. Analyse par Gemini (Module 3) [cite: 75, 122-124]
+        # 3. Analyse par Gemini 
         print("🕵️ Analyse de cybersécurité en cours...")
         prompt_template = self.engine.prompts['anomaly']['prompt']
         analysis_raw = self.engine.generate(

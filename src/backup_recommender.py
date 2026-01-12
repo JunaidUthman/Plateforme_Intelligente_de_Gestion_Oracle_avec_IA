@@ -6,7 +6,7 @@ from llm_engine import LLMEngine
 
 class BackupRecommender:
     def __init__(self):
-        # Initialisation du moteur IA (Module 3)
+        # Initialisation du moteur IA 
         self.engine = LLMEngine() 
         # Chemins vers les fichiers de métriques générés par le Module 1
         self.metrics_path = "datav1/performance_metrics.csv"
